@@ -1,0 +1,16 @@
+Source: chronos-http
+Section: admin
+Priority: optional
+Maintainer: Owen Kirby <oskirby@gmail.com>
+Build-Depends: debhelper (>=9), dh-systemd (>=1.5)
+Standards-Version: 3.9.7
+Homepage: http://krontech.ca/
+
+Package: chronos-http
+Architecture: all
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, chronos-tools, lighttpd
+Description: HTTP API and Web interface for the Chronos Camera
+ This package provides the HTTP API service and web interface for
+ the Chronos high speed camera, and is intended to integrate with
+ the lighttpd web server.

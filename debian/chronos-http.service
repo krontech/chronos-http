@@ -1,0 +1,13 @@
+[Unit]
+Description=HTTP control interface for the Chronos High Speed Camera
+After=chronos-video.service chronos-control.service lighttpd.service
+Requires=chronos-video.service chronos-control.service lighttpd.service
+
+[Service]
+ExecStart=/usr/bin/cam-scgi
+StandardOutput=journal+console
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target
+
