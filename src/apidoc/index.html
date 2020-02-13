@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Chronos API Documentation</title>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+       <h1 class="h2">Chronos API Documentation</h1>
+       <hr>
+    </div>
+
+    <!-- Big list of API parameters -->
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody id="parameters">
+        <!-- To be filled in by javascript -->
+      </tbody>
+    </table>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/js/jquery-3.3.1.js" crossorigin="anonymous"></script>
+    <script src="/js/popper.min.js" crossorigin="anonymous"></script>
+    <script src="/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    
+    <!-- Generate the API documentation using JavaScript -->
+    <script>
+      function updateValues(result) {
+        for (let name in result) {
+          let row = document.getElementById(name);
+          let value = document.createElement("pre");
+          value.setAttribute("class", "pre-scrollable");
+          value.innerHTML = JSON.stringify(result[name], null, 2);
+          row.cells[3].innerHTML = "";
+          row.cells[3].appendChild(value);
+        }
+      }
+
+      function buildParam(table, name, data) {
+        /* Create the table row for the parameter*/
+        let row = table.insertRow();
+        row.id = name;
+
+        let namecell = document.createElement("code");
+        namecell.innerText = name;
+
+        /* Describe the parameter. */
+        row.insertCell(0).appendChild(namecell);
+        row.insertCell(1).innerText = "TODO: Type";
+        row.insertCell(2).innerText = data['doc'];
+        row.insertCell(3).innerText = "TODO: Value";
+      }
+
+      function buildAPIDocs(result) {
+        let ptable = document.getElementById("parameters");
+        let keys = Object.keys(result).sort();
+        keys.forEach(function(name) { buildParam(ptable, name, result[name])} );
+
+        /* Retrieve the current values for all the parameters */
+        fetch('/control/get', {
+          body: JSON.stringify(keys),
+          headers: {"Content-Type": "application/json"},
+          method: "POST",
+          cache: "no-cache",
+        }).then((response) => response.json()).then((data) => { updateValues(data); })
+      }
+
+      /* Build the list of parameters */
+      $.getJSON("/control/describe", buildAPIDocs);
+
+      /* Subscribe to the event stream to show parameter value changes. */
+      evtSource = new EventSource("/control/subscribe");
+      evtSource.addEventListener("notify", function(event) {updateValues(JSON.parse(event.data));});
+    </script>
+  </body>
+</html>

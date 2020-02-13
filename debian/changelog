@@ -1,5 +1,9 @@
-chronos-http (0.4.0) unstable; urgency=medium
+chronos-http (0.4.0~beta4) unstable; urgency=medium
 
-  * Chronos HTTP interface release 0.4.0
+  * Add first cut at API documentation.
+  * Added camera control webpage
+  * Fix lighttpd handling of HTTP/1.1 large payloads.
+  * Add skeleton Debian packaging and hello world HTML.
+  * Upstream release v0.4.0-beta
 
- -- Owen Kirby <oskirby@gmail.com>  Wed, 05 Feb 2020 12:55:08 -0800
+ -- Owen Kirby <oskirby@gmail.com>  Wed, 12 Feb 2020 19:09:09 -0800
