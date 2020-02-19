@@ -18,19 +18,21 @@
     </div>
 
     <!-- Big list of API parameters -->
-    <table class="table table-striped table-sm">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody id="parameters">
-        <!-- To be filled in by javascript -->
-      </tbody>
-    </table>
+    <div class="container-fluid">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr class="row">
+            <th class="col-sm-2">Name</th>
+            <th class="col-sm-1">Type</th>
+            <th class="col-sm-6">Description</th>
+            <th class="col-sm-3">Value</th>
+          </tr>
+        </thead>
+        <tbody id="parameters">
+          <!-- To be filled in by javascript -->
+        </tbody>
+      </table>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -51,19 +53,54 @@
         }
       }
 
+      function describeType(type) {
+        if (!(typeof type === 'string' || type instanceof String)) {
+          return "unknown";
+        }
+
+        if (type == "a{sv}") return "dictionary";
+        if (type == "i") return "int";
+        if (type == "s") return "string";
+        if (type == "b") return "boolean";
+        if (type == "d") return "float";
+        
+        /* If the type is an array, use some recursion. */
+        if (type.charAt(0) == 'a') {
+          return "array[" + describeType(type.slice(1)) + "]";
+        }
+
+        /* Otherwise, we can't make sense of this D-Bus type */
+        return "unknown";
+      }
+
       function buildParam(table, name, data) {
         /* Create the table row for the parameter*/
         let row = table.insertRow();
         row.id = name;
+        row.setAttribute("class", "row");
 
         let namecell = document.createElement("code");
         namecell.innerText = name;
 
+        let typecell = document.createElement("code");
+        typecell.innerText = describeType(data['type']);
+
         /* Describe the parameter. */
-        row.insertCell(0).appendChild(namecell);
-        row.insertCell(1).innerText = "TODO: Type";
-        row.insertCell(2).innerText = data['doc'];
-        row.insertCell(3).innerText = "TODO: Value";
+        let ncell = row.insertCell(0);
+        ncell.appendChild(namecell);
+        ncell.setAttribute("class", "col-sm-2");
+
+        let tcell = row.insertCell(1);
+        tcell.appendChild(typecell);
+        tcell.setAttribute("class", "col-sm-1");
+
+        let dcell = row.insertCell(2);
+        dcell.innerText = data['doc'];
+        dcell.setAttribute("class", "col-sm-6");
+
+        let vcell = row.insertCell(3);
+        vcell.innerText = "TODO: Value";
+        vcell.setAttribute("class", "col-sm-3");
       }
 
       function buildAPIDocs(result) {
