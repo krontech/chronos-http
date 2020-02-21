@@ -15,6 +15,7 @@ body{
 	font-family: 'Montserrat', "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	color: white;
 	min-width: 165px;
+	z-index: 0;
 }
 a { color:white; text-decoration:none; }
 
@@ -33,6 +34,7 @@ a { color:white; text-decoration:none; }
 .titleImage img {
 	width: 400px;
 	height: auto;
+	display: inline-block;
 }
 
 .title {
@@ -47,27 +49,14 @@ a { color:white; text-decoration:none; }
 }
 
 
-.mainContainer { /* this sets the width of the window */
-	display: block;
-	max-width: 806px;
-}
 
 
-input{ display: none; }
-.Button{
-	background-color: #333;
-	display: inline-block;
-	width: 133px;
-	padding: 6px;
-	transition: all 0.3s ease;
-	border-radius:10px;
-	cursor: pointer;
-	text-align: center;
-}
+
 
 .videoDisplay{
 	box-sizing: border-box;
-	width: 100%;
+/*	width: 100%; */
+	max-width: 800px;
 	height: 450px;
 	border-radius: 10px;
 	border: 3px solid #13455f;
@@ -75,11 +64,24 @@ input{ display: none; }
 
 	text-align: center;
 }
+
 img{
 	text-align: center;
 	border-radius: 6px;
 }
 
+
+.heading-bar {
+	margin: 20px 0px;
+	width: 100%;
+	min-width: 200px;
+	background-color: #333;
+	overflow: auto;
+	border-radius: 10px;
+	border: none;
+	overflow: hide;
+	white-space: nowrap ;
+}
 
 .Text-bar {
 	margin: 20px 0px;
@@ -88,10 +90,9 @@ img{
 	background-color: #333;
 	overflow: auto;
 	border-radius: 10px;
-	position: relative;
 	border: none;
 }
-.Text-bar a {
+.Text-bar a, .heading-bar a {
 	float: left;
 	text-align: center;
 	width: 120px;
@@ -104,18 +105,198 @@ img{
 	justify-content: center;
 	flex-direction: column; */
 }
-.Text-bar a:hover{
+.Text-bar a:hover, .heading-bar a:hover {
 	background-color: #777; /* inactive hover color */
 	cursor: pointer;
 }
-.Text-bar .active{
+.Text-bar .active, .heading-bar .active{
 	background-color: white;
 	color: black;
 /*	font-weight:bold; */
 }
-.Text-bar .active:hover{
+.Text-bar .active:hover, .heading-bar .active-hover {
 	background-color: #aaa; /* active hover color */
 }
+
+.heading-bar a {
+	float: left;
+	text-align: center;
+	width: auto;
+	height: 100%;
+	padding: 22px;
+	transition: all 0.3s ease;
+	border-radius: 10px;
+}
+.Text-bar .no-click, .heading-bar .no-click {
+	float: left;
+	display: inline-block;
+	text-align: center;
+	width: 120px;
+	height: 100%;
+	padding: 22px 4px;
+	transition: all 0.3s ease;
+	border-radius: 10px;
+}
+
+
+
+.hidden { display: none; }
+
+
+
+
+.mainContainer { /* this sets the width of the window */
+	display: block;
+	width: 100%;
+	overflow: auto;
+}
+
+
+.newContainer {
+	display: block;
+	vertical-align: top;
+}
+
+
+.leftContainer {
+	max-width: 806px;
+	display: inline-block;
+}
+
+.rightContainer {
+	display: inline-block;
+	vertical-align: top;
+/*	border: 3px dotted green; */
+	max-width: 900px;
+	border-radius: 10px;
+	
+}
+.horizLayout {
+	display: inline-block;
+	vertical-align: top;
+	background: #333;
+	border-radius: 10px;
+	padding: 10px;
+	margin: 1.5px;
+	overflow: auto;
+	max-width: 100%;
+}
+.vertLayout {
+	display: block;
+	vertical-align: top;
+	overflow: auto;
+}
+
+
+
+
+
+.slider{
+	display: inline-block;
+	-webkit-appearance: none;
+	width: 250px;
+	height: 6px;
+	border-radius: 8px;
+/*	background: #333; */
+	background-image: linear-gradient(to right, black, white);
+	border: 6px solid black;
+	margin: 0px;
+}
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 6px;
+	height: 25px;
+	background: #333;
+	border-radius: 10px;
+	border: 3px solid black;
+	cursor: pointer;
+}
+.slider::-moz-range-thumb {
+	width: 6px;
+	height: 25px;
+	background: #ddd;
+	border-radius: 10px;
+	border: 3px solid black;
+	cursor: pointer;
+}
+
+
+
+
+.selectContainerHolder {
+	display: inline-block;
+	background-color: white;
+	color: black;
+	padding: 6px 10px;
+	border-radius: 10px 10px 10px 0;
+	margin: 6px;
+}
+
+.selectContainer {
+	position: absolute;
+	min-width: 10px;
+	height: 0;
+	margin-left: -10px;
+}
+
+.selectContainer a {
+	position: relative;
+	top: 0;
+	left: 0;
+	right: 0;
+	display: none;
+	padding: 6px 10px;
+	color: black;
+	transition: all 0.3s ease;
+	z-index: 55;
+	background-color: white;
+}
+.selectContainer a:first-child { border-radius: 0 10px 0 0; }
+.selectContainer a:last-child { border-radius: 0 0 10px 10px; }
+.selectContainer a:hover {
+	background-color: #aaa; /* Add a hover color */
+	cursor: pointer;
+	border-radius: 10px;
+	z-index: 99;
+}
+
+.selectContainerHolder:hover a{ display: block; }
+
+
+
+.menuContainer {
+	position: absolute;
+	right: 8px;
+	display: none;
+	height: 72px;
+	width: 0;
+}
+.menuContainer a {
+	position: relative;
+	display: block;
+	text-align: right;
+	top: 100%;
+	right: 280px;
+	height: auto;
+	width: 250px;
+	padding: 10px 15px;
+	background: white;
+	border-radius: 0;
+	color: black;
+}
+.menuContainer a:first-child { border-radius: 10px 0 0 0; }
+.menuContainer a:last-child { border-radius: 0 0 10px 10px; }
+.menuContainer a:hover {
+	border-radius: 10px;
+	background-color: #ddd;
+}
+
+ /* show the menu */
+#menu.active + .menuContainer, #menu:hover + .menuContainer, .menuContainer:hover { display: block; }
+
+
+
 
 /******** Icons ********/
 
@@ -197,15 +378,13 @@ img{
 
 .menuIcon {
 	display: inline-block;
-	margin-right: 8px;
-	margin-bottom: 0;
+	margin: 0;
+	margin-bottom: 8px;
 	height: 3px;
 	width: 25px;
 	background-color: white;
 	transition: all 0.3s ease;
 	border-radius: 2px;
-	margin: 0;
-	margin-bottom: 8px;
 }
 .menuIcon:before {
 	content: '';
@@ -236,33 +415,143 @@ img{
 
 
 
+.homeIcon {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	margin-right: 6px;
+	margin-bottom: 0;
+	height: 15px;
+	width: 20px;
+	background-color: white;
+	transition: all 0.3s ease;
+	border-radius: 5px 5px 2px 2px;
+}
+.homeIcon:after {
+	content: '';
+	height: 0;
+	width: 0;
+	transition: all 0.3s ease;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
+	border-bottom: 16px solid white;
+	position: relative;
+	top: -40px;
+	left: -6px;
+}
+.active .homeIcon { background-color: #333; }
+.active .homeIcon:after { border-bottom: 16px solid #333; }
+
+.playIcon {
+	display: inline-block;
+	margin: 0;
+	margin-bottom: -2px;
+/*	margin-right: 8px; */
+	height: 0;
+	width: 0;
+	border-top: 12px solid transparent;
+	border-bottom: 12px solid transparent;
+	border-left: 20px solid white;
+	transition: all 0.3s ease;
+	border-radius: 2px;
+}
+.active .playIcon { border-left-color: #333; }
+
+
+
+.saveIcon {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 0;
+	margin-bottom: 4px;
+	height: 20px;
+	width: 18px;
+	background-color: white;
+	border-radius: 2px;
+}
+.saveIcon:after {
+	content: '';
+	width: 0;
+	height: 0;
+	border-top: 12px solid #333;
+	border-right: 12px solid transparent;
+	position: relative;
+	top: 10px;
+	left: -6px;
+}
+.active .saveIcon { background-color: #333; }
+.active .saveIcon:after { border-top-color: white; }
+a:hover .saveIcon:after { border-top-color: #777; }
+.active a:hover .saveicon:after { border-top-color: #aaa; }
+
+
+
+
+.settingsIcon {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 6px;
+	margin-bottom: 0;
+	height: 20px;
+	width: 6px;
+	background-color: white;
+	border-radius: 2px;
+	position: relative;
+}
+.settingsIcon:before {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	background-color: white;
+	top: -4px;
+	left: -4.5px;
+	border-radius: 10px;
+}
+.settingsIcon:after {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 7px;
+	height: 10px;
+	background-color: #333;
+	border-radius: 0 0 5px 5px;
+	position: absolute;
+	top: -4.5px;
+	left: -0.5px;
+}
+a:hover .settingsIcon:after { background-color: #777; }
+
+
+.helpIcon {
+	display: inline-block;
+	margin-right: 0;
+	margin-bottom: 0px;
+	height: 20px;
+	width: 30px;
+	border-radius: 20px;
+	background-color: white;
+	color: #333;
+	font-weight: 900;
+	margin-top: -5px;
+	padding-bottom: 10px;
+}
+
+
+
+
 /******** Specific to this page ********/
 
+#record		{ width: 170px; padding: 22px 0; }
 #record.active {
 	background-color: #a00;
 	color: white;
 }
 #record.active:hover { background-color: #800; }
 
-#menu		{ width: 200px; padding: 22px 0;}
-#menu.active{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-#battery	{ width: 130px; padding: 22px 0;}
-#storage	{ width: 150px; padding: 22px 0;}
-#playSave	{ width: 155px; }
-#record		{ width: 170px; padding: 22px 0; }
-
-
-#resFPS		  { width: 150px; }
-
-#exposure	  { width: 130px; }
-#exposure:hover{ background-color: black; }
-#exposure.active{ background-color: #1D6262; color: white;}
-#exposure.active:hover{ background-color: #1b4546; }
-
-#whiteBalance { width: 120px; }
-#whiteBalance:hover{ background-color: #1a1a1a; }
-#whiteBalance.active{ background-color: #1D6262; color: white;}
-#whiteBalance.active:hover{ background-color: #1b4546; }
+#menu		{ float: right; }
+#menu.active { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 
 #blackCal	  { width: 140px; }
 #blackCal:hover{ background-color: #1a1a1a; }
@@ -277,6 +566,9 @@ img{
 #focusPeaking:hover{ background-color: #13455f; }
 #focusPeaking.active:hover { background-color: #1e6c94; }
 
+
+#analogGain { width: 100px; }
+
 .swatch {
 	display: inline-block;
 	height: 100px;
@@ -287,45 +579,67 @@ img{
 
 
 
-@media screen and (max-width: 941px) { /* change formatting when screen size is less than 932px*/
+@media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
+	#main { display: none; } /* hide the main button */
+	/* show the main button in the menu drop-down ? */
 
-/*	.menuContainer { top: 231px; } */
+}
 
+@media screen and (max-width: 925px) { /* change formatting when screen size is narrower than this */
+	#help { display: none; } /* hide the help button */
+	/* show the help button in the menu drop-down ? */
+}
+
+@media screen and (max-width: 700px) { /* change formatting when screen size is narrower than this */
+	#storage { display: none; } /* hide the storage button */
+	/* show the storage button in the menu drop-down ? */
+
+	.subTitle { display: none; }
+}
+
+@media screen and (max-width: 535px) { /* change formatting when screen size is narrower than this */
+	#playSave { display: none; } /* hide the playSave button */
+	/* show the playSave button in the menu drop-down ? */
+}
+
+@media screen and (max-width: 455px) { /* change formatting when screen size is narrower than this */
+	.titleImage img { width: 100%; height: auto; }
+}
+
+@media screen and (max-width: 330px) { /* change formatting when screen size is narrower than this */
+	#settings { display: none; } /* hide the settings button */
+	/* show the settings button in the menu drop-down ? */
+	#menu { width: 100%; }
 }
 
 
 
 
-.menuContainer {
-	position: absolute;
-	display: none;
-	z-index: 50;
-	background-color: white;
-	color: black;
-	top: 214px;
-
-	margin: 6px 0px;
-	width: auto;
-	min-width: 1px;
-/*	background-color: #333; */
-	overflow: auto;
-	border-radius: 0 10px 10px 10px; /* TL-TR-BR-BL */
-/*	position: relative; */
-	border: none;
-}
 
 
-.menuContainer a {
-	display: block;
-	padding: 6px 10px;
-	color: black;
-	transition: all 0.3s ease;
-}
-.menuContainer a:hover {
-	background-color: #aaa; /* Add a hover color */
-	cursor: pointer;
+input[type="number"]{
+	-webkit-appearance: textfield;
+	-moz-appearance: textfield;
+	appearance: textfield;
+	
+	text-align: center;
+	width: 100px;
+	padding: 6px 0;
 	border-radius: 10px;
+	background-color: black;
+	border: none;
+	color: white;
+	font-size:100%;
+	font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	outline: none;
+	box-shadow: none;
 }
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+}
+
+
 
 
 
@@ -345,76 +659,136 @@ img{
 		<div class="subTitle">by <a href="https://www.krontech.ca" target="_blank">Kron Technologies</a></div>
 	</div>
 
-	<div id="menuList" class="menuContainer menuClickOk">
-		<a> About Camera </a>
-		<a> App & Internet </a>
-		<a> Camera Settings </a>
-		<a> Custom Scripts </a>
-		<a> Factory Utilites </a>
-		<a> Interface Options </a>
-		<a> Record Mode </a>
-		<a> Review Saved Videos </a>
-		<a> Triggers & IO </a>
-		<a> Update Camera </a>
-		<a> Documentation </a>
-		<a> Nicholas was here </a>
-	</div>
+	
+	<div class="heading-bar">
+		<a id="main" class="active"> <div class="homeIcon"></div> Main </a>
+		<a id="playSave"> <div class="playIcon"></div> Play & Save </a>
+		<a id="storage"> <div class="saveIcon"></div> Storage </a>
+		<a id="settings"> <div class="settingsIcon"></div> Settings </a>
+		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Help / About </a>
 
-	<div class="Text-bar">
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
-
-		<a id="battery" onclick="dataGetter('get', 'batteryChargePercent'); dataGetter('get','externalPower')">
-			<div id="batteryContainer" class="battery">
-				<div id="battery-level"></div>
-			</div>
-			<span id="battery%">--</span>
-		</a>
-
-		<a id="storage">Storage</a>
-		<a id="playSave">Play & Save 2nd Line</a>
-		<a id="record" onclick="toggler(this)"><div class="recordCircle"></div>Record</a>
-	</div>
-
-
-	<div id="videoDisplay" class="videoDisplay">
-		<div id="spacer"> </div>
-		<img id="imageDisplay" alt="Video Display">
-	</div>
-
-	<div class="Text-bar">
-		<a id="resFPS" onclick="toggler(this)">1280x1024 @1079fps</a>
-		<a id="exposure" onclick="toggler(this)">Exposure Control</a>
-		<a id="whiteBalance" onclick="toggler(this)">White Balance</a>
-		<a id="blackCal" onclick="toggler(this)">Black Calibration</a>
-		<a id="zebraStripes" onclick="toggler(this)">Zebra Stripes</a>
-		<a id="focusPeaking" onclick="toggler(this)">Focus Peaking</a>
-	</div>
-
-	<div class="tabSection">
-		<div class="tabSelection">
+		<div id="menuList" onmouseover="menuKeeper()" class="menuContainer menuClickOk">
+			<a> About Camera </a>
+			<a> Camera Settings </a>
+			<a> Custom Scripts </a>
+			<a> Factory Utilites </a>
+			<a> Interface Options </a>
+			<a> Record Mode </a>
+			<a> Review Saved Videos </a>
+			<a> Triggers & IO </a>
+			<a> Update Camera </a>
+			<a> Documentation </a>
+			<a> Nicholas was here </a>
 		</div>
 
 	</div>
 
 
-	<div class="Text-bar">
-		<a id="tester1" onclick="dataSender2('subscribe', 'state')"> tester1 </a>
-		<a id="tester2" onclick="dataSender2('subscribe/state', '')"> tester2 </a>
-		<a id="tester3" onclick="dataSender('subscribe', 'state')"> tester3 </a>
+
+	<div class="newContainer">
+	<div class="leftContainer">
+
+		<div id="videoDisplay" class="videoDisplay">
+			<div id="spacer"> </div>
+			<img id="imageDisplay" alt="Video Display">
+		</div>
+
+		<div class="Text-bar">
+			<a id="record" onclick="toggler(this)"><div class="recordCircle"></div>Record</a>
+			<div id="battery" class="no-click">
+				<div id="batteryContainer" class="battery">
+					<div id="battery-level"></div>
+				</div>
+				<span id="battery%">98%</span>
+			</div>
+			<a id="blackCal" onclick="toggler(this)">Black Calibration</a>
+			<a id="zebraStripes" onclick="toggler(this)">Zebra Stripes</a>
+			<a id="focusPeaking" onclick="toggler(this)">Focus Peaking</a>
+		</div>
+
+		<div class="tabSection">
+			<div class="tabSelection">
+			</div>
+
+		</div>
+
+
 	</div>
 
-<!--	<div class="settingsContainer">
-		<div id="recordSettings" class="settingsContainer">
-			-- Record Settings --
-			<div id="recordPresets" class="menuContainer presetClickOk">
-				<a>1280x1024 @ 1060fps</a>
-				<a>1280x720 @ 1519fps</a>
-				<a>1280x512 @ 2134fps</a>
+		<div class="rightContainer">
+
+			<div class="horizLayout">
+				<b> Exposure (Shutter) </b>
+				<input class="slider" type="range" id="shutter">
+				<br>
+				<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.5"> &deg;
+				&emsp;
+				<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.5"> %
+				&emsp;
+				<input type="number" id="exposureTime"> ms
 			</div>
+
+			<div class="horizLayout">
+				<b> Analog Gain </b>
+
+				<div class="selectContainerHolder">SELECT<div id="analogGain" class="selectContainer">
+					<a> x1 </a>
+					<a> x2 </a>
+					<a> x4 </a>
+					<a> x8 </a>
+					<a> x16 </a>
+				</div></div>
+			</div>
+
+			<div class="horizLayout">
+				<b> Resolution </b> &ensp;
+				<div class="selectContainerHolder">Presets<div id="resolution" class="selectContainer">
+					<a> Unset (are you sure that you're connected with javascript enabled?) </a>
+				</div></div>
+				<br>
+				<input type="number" id="hRes" onInput="typehRes()"> x <input type="number" id="vRes" onInput="typevRes()">
+				<br> <br>
+				<b> Offset </b>
+				<br>
+				<input type="number" id="hOff" onInput="typehOff()"> x <input type="number" id="vOff" onInput="typevOff()">
+				<br><br>
+				<b> Frame Rate </b>
+				<br>
+				<input type="number" id="fps" onInput="typeFps()">
+				<a id="maxButton"> MAX </a>
+			</div>
+
+
+			<div class="horizLayout">
+				<b> White Balance </b> <div class="selectContainerHolder">Presets<div id="whiteBalance" class="selectContainer">
+					<a> 8000K </a>
+					<a> 6500K </a>
+					<a> 5600K </a>
+					<a> 5250K </a>
+					<a> 2300K </a>
+				</div></div>
+			</div>
+
+
+			<div class="horizLayout">
+				<b> Save As </b> location: [ location ] &emsp; name: [ name ] <br>
+			</div>
+
 		</div>
 	</div>
 
--->
+
+
+	<br>
+	<br>
+	<br>
+
+	<div class="Text-bar">
+		<a id="tester1" onclick="tester1func()"> tester1 </a>
+		<a id="tester2" onclick="tester2func()"> tester2 </a>
+		<a id="tester3" onclick="tester3func()"> tester3 </a>
+	</div>
 
 	<br>
 	<br>
@@ -452,6 +826,9 @@ img{
 	<div class="swatch" style="background-color: #e7ba00;">#e7ba00</div> <!-- Nicholas's yellow -->
 
 
+
+
+
 </div>
 
 <br>
@@ -464,6 +841,83 @@ img{
 </body>
 
 <script>
+
+
+var exposureValue = document.getElementById("shutter").value ;
+var exposureMin = 1000 ;
+var exposureMax = 2000 ;
+var framePeriod = 2000 ;
+
+var lastSentExposureValue = exposureValue ;
+
+document.getElementById("shutter").onchange = function() {
+//	exposureValue = this.value ;
+	exposureValue = Math.pow( ((this.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
+//	exposureValue = Math.sqrt(this.value / exposureMax) * exposureMax ;
+	dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
+}
+
+function tester1func() {
+	
+}
+
+
+var resolutionPresets = [	[1280, 1024, 0],
+							[1280, 720, 0],
+							[1280, 512, 0],
+							[1280, 360, 0],
+							[1280, 240, 0],
+							[1280, 120, 0],
+							[1280, 96, 0],
+							[1024, 768, 0],
+							[1024, 576, 0],
+							[800, 600, 0],
+							[800, 480, 0],
+							[640, 480, 0],
+							[640, 360, 0],
+							[640, 240, 0],
+							[640, 120, 0],
+							[640, 96, 0],
+							[336, 240, 0],
+							[336, 120, 0],
+							[336, 96, 0],
+						] ;
+
+
+function tester2func() {
+
+}
+
+var counter = 0 ;
+
+function tester3func() {
+
+}
+
+
+
+function findFrameRates() {
+	if (counter < resolutionPresets.length) {
+		var retrieval = function (stringBack) { // what to do with the data that comes back
+//			resolutionPresets[counter][2] = valueFromKey(stringBack, "minFramePeriod") ;
+			var jsonBack = JSON.parse(stringBack) ;
+			if ("minFramePeriod" in jsonBack)
+				resolutionPresets[counter][2] = jsonBack.minFramePeriod ;
+			counter++ ; // increase the counter for next time
+			findFrameRates() ; // call again (with the next resolution)
+		}
+		dataRequester("getResolutionTimingLimits", '{"hRes":' + resolutionPresets[counter][0] + ',"vRes":' + resolutionPresets[counter][1] + '}', retrieval) ;
+	}
+	else { // finished getting all of the frame rates, so populate the list
+		var list = document.getElementById("resolution") ;
+		list.innerHTML = "" ; // clear the list before (re)populating the list
+		for (var i = 0 ; i < resolutionPresets.length ; i++) {
+			 // put in the resolution and framerates
+			list.innerHTML += "<a>" + resolutionPresets[i][0] + "x" + resolutionPresets[i][1] + " @ " + Math.floor(1000000000 / resolutionPresets[i][2]) + "fps </a>"
+		}
+	}
+}
+
 
 window.onclick = function(event) { // check where a click was: if it was outside a menu, close that menu
 	if ( !event.target.matches(".menuClickOk") && (event.target.parent == undefined || !event.target.parent.matches(".menuClickOk"))
@@ -561,6 +1015,12 @@ function stateSelecter(element, state) { // this is like toggler above, but does
 
 
 
+function menuKeeper() {
+	document.getElementById("menu").classList.remove("inactive");
+	document.getElementById("menu").classList.add("active");
+}
+
+
 function batteryPercent(level, charging) { // set the percentage (level) of the battery (and whether it's charging)
 	var indicator = document.getElementById("battery-level") ;
 	var text = document.getElementById("battery%") ;
@@ -584,8 +1044,6 @@ function batteryPercent(level, charging) { // set the percentage (level) of the 
 				indicator.style.backgroundColor = "#e7ba00" ; // yellow (less than half)
 			else
 				indicator.style.backgroundColor = "green" ; // green (fine / more than half)
-
-//			indicator.innerText = "" ;
 		}
 	}
 }
@@ -595,60 +1053,117 @@ var lastKnownBatteryLevel = 0 ;
 var lastKnownExternalPower = false ;
 
 
+function pageUpdate(rawData){
+	var parsedData = JSON.parse(rawData) ;
 
-function pageUpdate(string){
-//	document.getElementById("debugger").innerHTML = string
 
-	var temp = string.replace(/[^:\w,.]/gi, '') ; // strip out anything other than : and normal characters
-	var pieces = temp.split(",") ; // split up the contents by parameter (key)
-	document.getElementById("debugger2").innerHTML = "" ;
-	for (var i = 0 ; i < pieces.length ; i++) // step through each parameter returned
-	{
-		var keyValuePair = pieces[i].split(":") ;
-		switch (keyValuePair[0]) { // switch on the key (first element)
-
-			case "state": // got the state
-				switch(keyValuePair[1]) { // switch on the value (second element)
-					case "idle": // state is idle
-						videoWindow.style.border = "3px solid #13455f"; // set the idle outline colour
-						stateSelecter(document.getElementById("record"), 0) ; // turn off the record button
-						break ;
-					case "recording": // state is recording
-						videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
-						stateSelecter(document.getElementById("record"), 1) ; // turn on the record button
-						break ;
-				}
-				break ;
-
-			case "batteryChargePercent": // got the battery charge percentage
-				lastKnownBatteryLevel = Math.round(keyValuePair[1]) ; // get the latest battery level
-				batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
-				break ;
-			case "externalPower": // got the external power connection status
-				if (keyValuePair[1] == "true") // get the latest power connection info
-					lastKnownExternalPower = true ;
-				else
-					lastKnownExternalPower = false ;
-				batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
-			break ;
-
-			case "focusPeakingLevel": // got the focus peaking level
-				if (keyValuePair[1] == "0")
-					stateSelecter(document.getElementById("focusPeaking"), 0) ; // no focus peaking
-				else
-					stateSelecter(document.getElementById("focusPeaking"), 1) ; // focus peaking
-				break ;
-
-			case "zebraLevel": // got the zebra level
-				if (keyValuePair[1] == "0")
-					stateSelecter(document.getElementById("zebraStripes"), 0) ; // no zebra stripes
-				else
-					stateSelecter(document.getElementById("zebraStripes"), 1) ; // zebra stripes
-				break ;
-
-		}
-		document.getElementById("debugger2").innerHTML += keyValuePair[0] + " - " + keyValuePair[1] + " - - - " ;
+	if (parsedData.state == "idle") {
+		videoWindow.style.border = "3px solid #13455f"; // set the idle outline colour
+		stateSelecter(document.getElementById("record"), 0) ; // turn off the record button
 	}
+	else if (parsedData.state == "recording") {
+		videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
+		stateSelecter(document.getElementById("record"), 1) ; // turn on the record button
+	}
+
+
+	if ("batteryChargePercent" in parsedData) {
+		lastKnownBatteryLevel = Math.round(parsedData.batteryChargePercent) ; // set the last known battery percent value
+		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
+	}
+
+	if ("externalPower" in parsedData) {
+		lastKnownExternalPower = parsedData.externalPower ; // set the last known power connection
+		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
+	}
+
+	if (parsedData.focusPeakingLevel == 0)
+		stateSelecter(document.getElementById("focusPeaking"), 0) ; // no focus peaking
+	else if (parsedData.focusPeakingLevel > 0)
+		stateSelecter(document.getElementById("focusPeaking"), 1) ; // focus peaking
+
+
+	if (parsedData.zebraLvl == 0) // zebra off
+		stateSelecter(document.getElementById("zebraStripes"), 0) ; // no zebra stripes
+	else if (parsedData.zebraLvl > 0) // zebra on
+		stateSelecter(document.getElementById("zebraStripes"), 1) ; // zebra stripes
+
+	if ("resolution" in parsedData) { // get some of the data from the resolution section
+		if ("hRes" in parsedData.resolution)
+			document.getElementById("hRes").value = parsedData.resolution.hRes ; // show the horizontal resolution
+
+		if ("vRes" in parsedData.resolution)
+			document.getElementById("vRes").value = parsedData.resolution.vRes ; // show the vertical resolution
+
+		if ("hOffset" in parsedData.resolution)
+			document.getElementById("hOff").value = parsedData.resolution.hOffset ; // show the horizontal offset
+
+		if ("vOffset" in parsedData.resolution)
+			document.getElementById("vOff").value = parsedData.resolution.vOffset ; // show the vertical offset
+	}
+
+	if ("frameRate" in parsedData)
+		document.getElementById("fps").value = Math.floor(parsedData.frameRate) ; // show the frame rate
+
+	if ("framePeriod" in parsedData)
+		framePeriod = parsedData.framePeriod ; // get the frame period (save for other calculations)
+
+
+	if ("exposureMin" in parsedData) {
+		document.getElementById("shutter").min = parsedData.exposureMin ;
+		document.getElementById("exposureTime").min = parsedData.exposureMin / 1000 ;
+
+		exposureMin = parsedData.exposureMin ; // set the minimum (save for other calculations)
+	}
+
+	if ("exposureMax" in parsedData) {
+		document.getElementById("shutter").max = parsedData.exposureMax ;
+		document.getElementById("exposureTime").max = parsedData.exposureMax / 1000 ;
+
+		exposureMax = parsedData.exposureMax ; // set the maximum (save for other calculations)
+	}
+
+	if ("exposurePeriod" in parsedData) {
+		document.getElementById("exposureTime").value = parseFloat(parsedData.exposurePeriod / 1000).toFixed(2) ;
+//		document.getElementById("shutter").value = parsedData.exposurePeriod ; // this is for using a linear slider
+
+		exposureValue = parsedData.exposurePeriod ; // set the exposure value (used for some other calculations)
+
+		 // slider is not linear; it is parabolic
+//		document.getElementById("shutter").value = Math.pow( (exposureValue - exposureMin) / (exposureMax - exposureMin), 2 ) * exposureMax ;
+		document.getElementById("shutter").value = Math.sqrt(exposureValue / exposureMax) * exposureMax ;
+
+		 // calculate the exposure as a percent and report it
+		document.getElementById("exposurePercent").value = parseFloat(exposureValue / exposureMax * 100).toFixed(1) ;
+
+		 // calculate the exposure angle
+		document.getElementById("exposureDegrees").value = parseFloat(exposureValue / framePeriod * 360).toFixed(1) ;
+	}
+
+	if ("exposurePercent" in parsedData)
+		document.getElementById("exposurePercent").value = parseFloat(parsedData.exposurePercent).toFixed(1) ;
+
+	if ("shutterAngle" in parsedData)
+		document.getElementById("exposureDegrees").value = parseFloat(parsedData.shutterAngle).toFixed(1) ;
+
+}
+
+function valueFromKey2(inputString, key) {
+}
+
+
+function dataRequester(method, parameter, callMeMaybe) {
+	var requestSender = new XMLHttpRequest() ;
+	requestSender.open("POST", "/control/" + method) ;
+	requestSender.setRequestHeader("Content-Type", "application/json") ;
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){
+			callMeMaybe(requestSender.responseText) ;
+		}
+	}
+
+	requestSender.send(parameter) ;
 }
 
 
@@ -657,25 +1172,19 @@ function dataSender(method, parameter){
 	requestSender.open("POST", "/control/" + method) ;
 	requestSender.setRequestHeader("Content-Type", "application/json") ;
 
-//	requestSender.onreadystatechange = function(){ // do something with the response
-//		if (this.readyState == 4 && this.status == 200){
-//			pageUpdate(requestSender.responseText) ; // call this function to deal with the input and update the page
-			// might want to do this differently
-//		}
-//	}
-
 	requestSender.send(parameter) ;
 }
 
-function dataGetter(method, parameter){
+function dataGetter(method, parameter, callMeMaybe){
 	var requestSender = new XMLHttpRequest() ;
 	requestSender.open("GET", "/control/" + method + ( (parameter !== "") ? "?" + parameter : "")) ;
 	requestSender.setRequestHeader("Content-Type", "application/json") ;
 
 	requestSender.onreadystatechange = function(){ // do something with the response
 		if (this.readyState == 4 && this.status == 200){
-			pageUpdate(requestSender.responseText) ; // call this function to deal with the input and update the page
-			// might want to do this differently
+			callMeMaybe(requestSender.responseText) ; // call this function to deal with the input and update the page
+			 // callback function, passing in the string we got back
+
 		}
 	}
 
@@ -691,64 +1200,58 @@ evtSource.addEventListener("notify", function(event) { document.getElementById("
 evtSource.addEventListener("complete", function(event) { document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
 
 
-dataGetter("p", "") ; // get all the data on startup
+dataGetter("p", "", pageUpdate) ; // get all the data on startup
+
+findFrameRates() ; // get the frame rates when this page loads
+
 
 
 var PollCounter = 1 ;
 function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
 
 	if (PollCounter % 15 == 0) { // every 15-ish seconds
-		dataGetter('get', 'batteryChargePercent') ; // ask for the battery charge level
+		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
 	}
 
 	PollCounter++ ;
 }
 
 
-var intervalID = setInterval(pollOnlyUpdates, 1000) ; // change the battery level to indicate level
+//var intervalID = setInterval(pollOnlyUpdates, 1000) ; // change the battery level to indicate level
 
 
 
-
-
-
-var levelChanger = 50 ;
-function changesDemo() {
-	if (levelChanger >= 200)
-		levelChanger = 0 ;
-	else
-		levelChanger++ ;
-
-	if (levelChanger > 100)
-		batteryPercent(200 - levelChanger, false) ;
-	else
-		batteryPercent(levelChanger, true) ;
-}
-
-var image = 2 ;
-function changeImageSrc() {
-	switch (image) {
-		case 1:
-			img.src = "https://media.giphy.com/media/nkt8sNb0adCwM/giphy.gif" ;
-			break ;
-		case 2:
-			img.src = "https://media.giphy.com/media/Q4sjT8WOcE1Ow/giphy.gif" ;
-			break ;
-		case 3:
-			img.src = "https://media.giphy.com/media/wtWqhxI5vzVL2/giphy.gif" ;
-			break ;
-		case 4:
-			img.src = "https://media.giphy.com/media/rsUgj6XKdR2IE/giphy.gif" ;
-			break ;
-		default:
-			image = 0 ;
+function valueFromKey(inputString, key) {
+	var temp = inputString.replace(/[^:\w,.]/gi, '') ; // strip out anything other than : and normal characters
+	var pieces = temp.split(",") ; // split up the contents by parameter (key)
+	document.getElementById("debugger2").innerHTML = "" ;
+	for (var i = 0 ; i < pieces.length ; i++) // step through each parameter returned
+	{
+		var keyValuePair = pieces[i].split(":") ;
+		if (keyValuePair[0] == key) // see if the first value is a match
+			return keyValuePair[1] ; // send back the next value
+		else if (keyValuePair[1] == key) // sometimes, two keys will stack up when there are nested curly braces
+			return keyValuePair[2] ; // send back the next value
 	}
-
-	image++ ;
+	return "" ; // didn't find anything
 }
 
-//var intervalID1 = setInterval(changesDemo, 150) ; // change the battery level to indicate level
-//var intervalID2 = setInterval(changeImageSrc, 10000) ; // switch images to test different resolutions
+
+
+function typehRes() {
+}
+function typevRes() {
+}
+function typehOff() {
+}
+function typevOff() {
+}
+function typeFps() {
+}
+
+
+
+
 
 </script>
 
