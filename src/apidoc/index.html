@@ -15,6 +15,9 @@
       div.container {
         padding-top: 75px;
       }
+      @media only screen and (min-width : 992px) {
+        .container { max-width: 1200px; }
+      }
       </style>
   </head>
 
@@ -67,8 +70,6 @@
         these operations do not fit well into the REST model, they are performed using the HTTP
         POST method, with their arguments provided in JSON format as the HTTP POST body.</p>
       
-      <h2>get</h2>
-      <h2>set</h2>
       <h2>describe</h2>
       <p>The <code>describe</code> method is accessible by the <code>/control/describe</code>
         endpoint, and returns a description of the available parameters and methods that can be
@@ -181,7 +182,7 @@ data:}
         Parameters are accessed via standard HTTP requests in JSON format, and where possible
         the Chronos API uses appropriate verbs for each action:</p>
 
-        <table class="table table-striped table-sm">
+        <table class="table table-striped">
           <thead>
             <tr>
               <th>Verb</th>
@@ -209,13 +210,16 @@ data:}
         </table>
         </p>
 
-      <table class="table table-striped table-sm">
+        <p>The Chronos API makes the following parameters accessible to the user:</p>
+
+        <table class="table table-striped">
         <thead>
           <tr class="row">
-            <th class="col-sm-2">Name</th>
-            <th class="col-sm-1">Type</th>
-            <th class="col-sm-6">Description</th>
-            <th class="col-sm-3">Value</th>
+            <th class="col-2">Name</th>
+            <th class="col-1">Type</th>
+            <th class="col-1">Flags</th>
+            <th class="col-5">Description</th>
+            <th class="col-3">Value</th>
           </tr>
         </thead>
         <tbody id="parameters">
@@ -235,12 +239,8 @@ data:}
     <script>
       function updateValues(result) {
         for (let name in result) {
-          let row = document.getElementById(name);
-          let value = document.createElement("pre");
-          value.setAttribute("class", "pre-scrollable");
-          value.innerHTML = JSON.stringify(result[name], null, 2);
-          row.cells[3].innerHTML = "";
-          row.cells[3].appendChild(value);
+          let e = document.getElementById("value-" + name);
+          e.innerText = JSON.stringify(result[name], null, 2);
         }
       }
 
@@ -264,34 +264,61 @@ data:}
         return "unknown";
       }
 
+      function buildArgTable(data, typename) {
+        let argtable = document.createElement("table");
+        let arghead = document.createElement("thead");
+        let argbody = document.createElement("tbody");
+        arghead.innerHTML = "<tr><th>" + typename + "</th><th>Type</th><th>Description</th></tr>";
+        argtable.appendChild(arghead);
+        argtable.appendChild(argbody);
+        argtable.setAttribute("class", "table table-striped table-sm");
+
+        let names = Object.keys(data).sort();
+        for (let i = 0; i < names.length; i++) {
+          let row = document.createElement("tr");
+          let argdata = data[names[i]];
+          row.innerHTML += "<td class=\"text-nowrap\"><code>" + names[i] + "</code></td>";
+          row.innerHTML += "<td>" + argdata['type'] + "</td>";
+          row.innerHTML += "<td>" + argdata['doc'] + "</td>";
+
+          argbody.appendChild(row);
+        }
+
+        return argtable;
+      }
+
       function buildParam(table, name, data) {
         /* Create the table row for the parameter*/
         let row = table.insertRow();
         row.id = name;
         row.setAttribute("class", "row");
 
-        let namecell = document.createElement("code");
-        namecell.innerText = name;
-
-        let typecell = document.createElement("code");
-        typecell.innerText = describeType(data['type']);
-
         /* Describe the parameter. */
         let ncell = row.insertCell(0);
-        ncell.appendChild(namecell);
-        ncell.setAttribute("class", "col-sm-2");
+        ncell.innerHTML = "<code>" + name + "</code>";
+        ncell.setAttribute("class", "col-2 text-nowrap");
 
         let tcell = row.insertCell(1);
-        tcell.appendChild(typecell);
-        tcell.setAttribute("class", "col-sm-1");
+        tcell.innerHTML = "<code>" + describeType(data['type']) + "</code>";
+        tcell.setAttribute("class", "col-1 text-nowrap");
 
-        let dcell = row.insertCell(2);
+        let fcell = row.insertCell(2);
+        fcell.setAttribute("class", "col-1");
+        fcell.innerHTML = "<code>" + (data.get ? "r" : "-") + (data.set ? "w" : "-") + (data.notifies ? "n" : "-") + "</code>";
+
+        let dcell = row.insertCell(3);
         dcell.innerText = data['doc'];
-        dcell.setAttribute("class", "col-sm-6");
+        dcell.setAttribute("class", "col-5");
 
-        let vcell = row.insertCell(3);
-        vcell.innerText = "TODO: Value";
-        vcell.setAttribute("class", "col-sm-3");
+        let vcell = row.insertCell(4);
+        let pre = document.createElement("pre");
+        let code = document.createElement("code");
+        code.setAttribute("class", "language-javascript");
+        code.id = "value-" + name;
+        pre.setAttribute("class", "pre-scrollable");
+        pre.appendChild(code);
+        vcell.appendChild(pre);
+        vcell.setAttribute("class", "col-3");
       }
 
       function buildAPIDocs(result) {
@@ -308,7 +335,65 @@ data:}
         }).then((response) => response.json()).then((data) => { updateValues(data); })
       }
 
-      /* Build the list of parameters */
+      function buildCall(section, name, data) {
+        let header = document.createElement("h2");
+        header.innerText = name;
+        header.setAttribute("id", name);
+        section.appendChild(header);
+
+        /* Create a brief description of the API method */
+        let paragraph = document.createElement("p");
+        paragraph.innerHTML = "The <code>" + name + "</code> method is accessible by the <code>/control/" + name + "</code> endpoint.";
+        paragraph.innerHTML += "This method " + data['brief'].charAt(0).toLowerCase() + data['brief'].slice(1);
+        section.appendChild(paragraph);
+
+        /* If a detailed descrition was provided, render it as multiple paragraphs. */
+        if (data.hasOwnProperty("description")) {
+          let desc = data.description.split("\n");
+          for (let i = 0; i < desc.length; i++) {
+            let paragraph = document.createElement("p");
+            paragraph.innerText = desc[i];
+            section.appendChild(paragraph);
+          }
+        }
+
+        /* If arguments exists, build a table to describe them */
+        if (data.hasOwnProperty("args")) {
+          let paragraph = document.createElement("p");
+          paragraph.innerHTML = "The <code>" + name + "</code> method accepts the following arguments:";
+          section.appendChild(paragraph);
+          section.appendChild(buildArgTable(data.args, "Argument"));
+        }
+
+        /* If return datum exists, build a table to describe them */
+        if (data.hasOwnProperty("returns")) {
+          let paragraph = document.createElement("p");
+          paragraph.innerHTML = "The <code>" + name + "</code> method returns the a dictionary with the following members:";
+          section.appendChild(paragraph);
+          section.appendChild(buildArgTable(data.returns, "Return Value"));
+        }
+
+        /* If this function yeilds, then it actually an asychronous method. */
+        /* TODO: This is a leaky abstraction, yielding is a python internal detail */
+        if (data.hasOwnProperty("yields")) {
+          let paragraph = document.createElement("p");
+          paragraph.innerHTML  = "This method starts an asynchronous process that changes the camera's state ";
+          paragraph.innerHTML += "and executes in the background. The results of the <code>" + name + "</code> ";
+          paragraph.innerHTML += "method will be returned to the user in the <code>complete</code> event, ";
+          paragraph.innerHTML += "with a <code>method</code> equal to <code>" + name + "</code>.";
+          section.appendChild(paragraph);
+        }
+        
+      }
+
+      function buildAPICalls(result) {
+        let section = document.getElementById("section-methods");
+        keys = Object.keys(result).sort();
+        keys.forEach(function(name) { buildCall(section, name, result[name])});
+      }
+
+      /* Build the list of parameters and callable methods */
+      $.getJSON("/control/availableCalls", buildAPICalls);
       $.getJSON("/control/describe", buildAPIDocs);
 
       /* Subscribe to the event stream to show parameter value changes. */
