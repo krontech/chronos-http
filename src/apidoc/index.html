@@ -264,6 +264,12 @@ data:}
         return "unknown";
       }
 
+      function escapeDocstring(docstring) {
+        /* If there are backtick quoted sections, turn them into code tags instead. */
+        const btickRegex = /\`([^`]*)\`/gi;
+        return docstring.replace(btickRegex, '<code>$1</code>')
+      }
+
       function buildArgTable(data, typename) {
         let argtable = document.createElement("table");
         let arghead = document.createElement("thead");
@@ -279,7 +285,7 @@ data:}
           let argdata = data[names[i]];
           row.innerHTML += "<td class=\"text-nowrap\"><code>" + names[i] + "</code></td>";
           row.innerHTML += "<td>" + argdata['type'] + "</td>";
-          row.innerHTML += "<td>" + argdata['doc'] + "</td>";
+          row.innerHTML += "<td>" + escapeDocstring(argdata['doc']) + "</td>";
 
           argbody.appendChild(row);
         }
@@ -307,8 +313,21 @@ data:}
         fcell.innerHTML = "<code>" + (data.get ? "r" : "-") + (data.set ? "w" : "-") + (data.notifies ? "n" : "-") + "</code>";
 
         let dcell = row.insertCell(3);
-        dcell.innerText = data['doc'];
+        if (data.hasOwnProperty('doc')) {
+          dcell.innerHTML = escapeDocstring(data.doc);
+        }
         dcell.setAttribute("class", "col-5");
+
+        /* If the description includes enumerations, list them. */
+        if (data.hasOwnProperty("enum")) {
+          let list = document.createElement("ul");
+          for (const key of Object.keys(data.enum)) {
+            let item = document.createElement("li");
+            item.innerHTML = "<b>" + key + "</b>: " + escapeDocstring(data.enum[key]);
+            list.appendChild(item);
+          }
+          dcell.appendChild(list);
+        }
 
         let vcell = row.insertCell(4);
         let pre = document.createElement("pre");
@@ -352,7 +371,7 @@ data:}
           let desc = data.description.split("\n");
           for (let i = 0; i < desc.length; i++) {
             let paragraph = document.createElement("p");
-            paragraph.innerText = desc[i];
+            paragraph.innerText = escapeDocstring(desc[i]);
             section.appendChild(paragraph);
           }
         }
