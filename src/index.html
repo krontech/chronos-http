@@ -159,6 +159,7 @@ img{
 
 
 .leftContainer {
+	width: 100%;
 	max-width: 806px;
 	display: inline-block;
 }
@@ -229,8 +230,17 @@ img{
 	background-color: white;
 	color: black;
 	padding: 6px 10px;
-	border-radius: 10px 10px 10px 0;
+	border-radius: 10px;
 	margin: 6px;
+}
+.selectContainerHolder:after { /* draw the drop-down triangle */
+	content: '';
+	display: inline-block;
+	height: 0;
+	width: 0;
+	border: 10px solid transparent;
+	border-top: 10px solid black;
+	margin: -5px 0 -7px 7px;
 }
 
 .selectContainer {
@@ -549,14 +559,12 @@ a:hover .settingsIcon:after { background-color: #777; }
 	color: white;
 }
 #record.active:hover { background-color: #800; }
+#record.disabled { background-color: #1a1a1a; }
 
 #menu		{ float: right; }
 #menu.active { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 
 #blackCal	  { width: 140px; }
-#blackCal:hover{ background-color: #1a1a1a; }
-#blackCal.active{ background-color: #1e6c94; color: white;}
-#blackCal.active:hover{ background-color: #13455f; }
 
 #zebraStripes { width: 110px; }
 #zebraStripes.active{ background-color: #1e6c94; color: white;}
@@ -567,7 +575,8 @@ a:hover .settingsIcon:after { background-color: #777; }
 #focusPeaking.active:hover { background-color: #1e6c94; }
 
 
-#analogGain { width: 100px; }
+#analogGainInner { width: 160px; }
+#whiteBalanceInner { width: 135px; }
 
 .swatch {
 	display: inline-block;
@@ -649,7 +658,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 <body>
 
-<div class="mainContainer">
+<!-- <div class="mainContainer"> -->
 	<div class="header">
 		<div class="titleImage">
 			<img src="Chronos High Speed logo.png">
@@ -732,12 +741,12 @@ input[type=number]::-webkit-outer-spin-button {
 			<div class="horizLayout">
 				<b> Analog Gain </b>
 
-				<div class="selectContainerHolder">SELECT<div id="analogGain" class="selectContainer">
-					<a> x1 </a>
-					<a> x2 </a>
-					<a> x4 </a>
-					<a> x8 </a>
-					<a> x16 </a>
+				<div id="analogGain" class="selectContainerHolder">SELECT<div id="analogGainInner" class="selectContainer">
+					<a onclick="dropDownSelect(this)"> 0dB (x1) </a>
+					<a onclick="dropDownSelect(this)"> 6dB (x2) </a>
+					<a onclick="dropDownSelect(this)"> 12dB (x4) </a>
+					<a onclick="dropDownSelect(this)"> 18dB (x8) </a>
+					<a onclick="dropDownSelect(this)"> 24dB (x16) </a>
 				</div></div>
 			</div>
 
@@ -761,7 +770,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 			<div class="horizLayout">
-				<b> White Balance </b> <div class="selectContainerHolder">Presets<div id="whiteBalance" class="selectContainer">
+				<b> White Balance </b> <div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
 					<a> 8000K </a>
 					<a> 6500K </a>
 					<a> 5600K </a>
@@ -781,8 +790,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 	<br>
-	<br>
-	<br>
 
 	<div class="Text-bar">
 		<a id="tester1" onclick="tester1func()"> tester1 </a>
@@ -790,7 +797,6 @@ input[type=number]::-webkit-outer-spin-button {
 		<a id="tester3" onclick="tester3func()"> tester3 </a>
 	</div>
 
-	<br>
 	<br>
 
 	<span id="debugger">Debugger: </span>
@@ -829,7 +835,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 
-</div>
+<!-- </div> -->
 
 <br>
 <br>
@@ -857,8 +863,36 @@ document.getElementById("shutter").onchange = function() {
 	dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
 }
 
+
+var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGain": 1}'); },
+						  "6dB (x2)":		function(){ dataSender("set",'{"currentGain": 2}'); },
+						  "12dB (x4)":		function(){ dataSender("set",'{"currentGain": 4}'); },
+						  "18dB (x8)":		function(){ dataSender("set",'{"currentGain": 8}'); },
+						  "24dB (x16)":	function(){ dataSender("set",'{"currentGain": 16}'); }
+						}
+
+const dbFromMult = { 1:0, 2:6, 4:12, 8:18, 16:24 } // provide a multiple, get back the dB value
+
+function dropDownSelect (element) {
+	if (element.innerText in dropDownFunctions) // if the key-value exists
+		dropDownFunctions[element.innerText]() ; // run the function
+
+	document.getElementById("debugger").innerHTML = "drop down item clicked" ;
+}
+
 function tester1func() {
 	
+}
+
+
+function tester2func() {
+
+}
+
+var counter = 0 ;
+
+function tester3func() {
+
 }
 
 
@@ -884,22 +918,9 @@ var resolutionPresets = [	[1280, 1024, 0],
 						] ;
 
 
-function tester2func() {
-
-}
-
-var counter = 0 ;
-
-function tester3func() {
-
-}
-
-
-
 function findFrameRates() {
 	if (counter < resolutionPresets.length) {
 		var retrieval = function (stringBack) { // what to do with the data that comes back
-//			resolutionPresets[counter][2] = valueFromKey(stringBack, "minFramePeriod") ;
 			var jsonBack = JSON.parse(stringBack) ;
 			if ("minFramePeriod" in jsonBack)
 				resolutionPresets[counter][2] = jsonBack.minFramePeriod ;
@@ -960,19 +981,25 @@ img.onload = function scaleToFit(){
 //	space.style.height = y.toString() + "px" ;
 }
 
+//function scaleToFit(){
+//	vidContext.clearRect(0,0, videoWindow.width, videoWindow.height) ;
+//	var scale = Math.min(videoWindow.width / img.width, videoWindow.height / img.height) ;
+//	var x = (videoWindow.width / 2) - (img.width / 2) * scale;
+//	var y = (videoWindow.height / 2) - (img.height / 2) * scale;
+//	vidContext.drawImage(img, x, y, img.width * scale, img.height * scale) ;
+//}
+
 
 
 					//	 key	 	 inactive		active
-var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"],
-						"button1": 	["Button1", "BUTTON1"],
-						"button2": 	["Button2", "BUTTON2"],
-						"button3": 	["Button3", "BUTTON3"]
+var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
-var buttonFunctions = {	"record":  [ function(){ dataSender("stopRecording", "");}, function(){ dataSender("startRecording", ""); } ],
-						"menu":  [ function(){ document.getElementById("menuList").style.display = "none" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
-						"focusPeaking":  [ function(){ dataSender("set", '{"focusPeakingLevel": 0}') ;}, function(){ dataSender("set", '{"focusPeakingLevel": 0.2}') ;} ],
-						"zebraStripes":  [ function(){ dataSender("set", '{"zebraLevel": 0}') ;}, function(){ dataSender("set", '{"zebraLevel": 0.01}') ;} ]
+var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ dataSender("startRecording", ""); } ],
+						"menu":			[ function(){ document.getElementById("menuList").style.display = "none" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
+						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
+						"focusPeaking":	[ function(){ dataSender("set", '{"focusPeakingLevel": 0}') ;}, function(){ dataSender("set", '{"focusPeakingLevel": 0.2}') ;} ],
+						"zebraStripes":	[ function(){ dataSender("set", '{"zebraLevel": 0}') ;}, function(){ dataSender("set", '{"zebraLevel": 0.01}') ;} ]
 					  }
 
 
@@ -984,6 +1011,9 @@ function toggler(element) { // toggle the class (active/inactive), change the na
 		element.classList.remove("active") ; // remove the "active" styling
 		element.classList.add("inactive") ; // use the "inactive" styling
 		leftRight = 0 ; // use the 'left' column for names / functions
+	}
+	else if (element.classList.contains("disabled")) { // button disabled
+		return ; // don't do anything
 	}
 	else {
 		element.classList.remove("inactive") ; // remove the "inactive" styling
@@ -1057,13 +1087,25 @@ function pageUpdate(rawData){
 	var parsedData = JSON.parse(rawData) ;
 
 
-	if (parsedData.state == "idle") {
+	if (parsedData.state == "idle") { // idle (ready to record)
 		videoWindow.style.border = "3px solid #13455f"; // set the idle outline colour
-		stateSelecter(document.getElementById("record"), 0) ; // turn off the record button
+		recButton = document.getElementById("record") ; // get the record button
+		recButton.classList.remove("disabled") ; // take away the 'disabled' class
+		stateSelecter(recButton, 0) ; // turn off the record button
+		stateSelecter(document.getElementById("blackCal"), 0) ; // turn off the blackCal button
 	}
-	else if (parsedData.state == "recording") {
+	else if (parsedData.state == "recording") { // recording
 		videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
-		stateSelecter(document.getElementById("record"), 1) ; // turn on the record button
+		recButton = document.getElementById("record") ; // get the record button
+		recButton.classList.remove("disabled") ; // take away the 'disabled' class
+		stateSelecter(recButton, 1) ; // turn on the record button
+	}
+	else if (parsedData.state == "blackcal") { // doing a calibration
+		videoWindow.style.border = "3px dashed white"; // set the blackCal outline color
+		recButton = document.getElementById("record") ; // get the record button
+		recButton.classList.remove("active") ;
+		recButton.classList.add("disabled") ;
+		stateSelecter(document.getElementById("blackCal"), 1) ; // turn on the blackCal button
 	}
 
 
@@ -1146,9 +1188,17 @@ function pageUpdate(rawData){
 	if ("shutterAngle" in parsedData)
 		document.getElementById("exposureDegrees").value = parseFloat(parsedData.shutterAngle).toFixed(1) ;
 
-}
+	if ("currentGain" in parsedData) { // set the current gain (also called analog gain)
+		var truncatedValue = Math.floor(parsedData.currentGain) ; // get the value as an integer (truncated)
+		document.getElementById("analogGain").firstChild.textContent = dbFromMult[truncatedValue] + "dB (x" + truncatedValue + ")" ;
+	}
 
-function valueFromKey2(inputString, key) {
+// got notify:{ "calSuggested": false, "state": "blackcal" } Debugger2: 
+
+	if ("calSuggested" in parsedData) { // something changed, and a blackCal is needed
+	}
+
+
 }
 
 
@@ -1213,28 +1263,13 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
 	}
 
+	img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
+
 	PollCounter++ ;
 }
 
 
-//var intervalID = setInterval(pollOnlyUpdates, 1000) ; // change the battery level to indicate level
-
-
-
-function valueFromKey(inputString, key) {
-	var temp = inputString.replace(/[^:\w,.]/gi, '') ; // strip out anything other than : and normal characters
-	var pieces = temp.split(",") ; // split up the contents by parameter (key)
-	document.getElementById("debugger2").innerHTML = "" ;
-	for (var i = 0 ; i < pieces.length ; i++) // step through each parameter returned
-	{
-		var keyValuePair = pieces[i].split(":") ;
-		if (keyValuePair[0] == key) // see if the first value is a match
-			return keyValuePair[1] ; // send back the next value
-		else if (keyValuePair[1] == key) // sometimes, two keys will stack up when there are nested curly braces
-			return keyValuePair[2] ; // send back the next value
-	}
-	return "" ; // didn't find anything
-}
+var intervalID = setInterval(pollOnlyUpdates, 1000) ; // change the battery level to indicate level
 
 
 

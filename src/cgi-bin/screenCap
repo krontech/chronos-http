@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## let's see if this script can run...
+
+string="Oh hai,Mark"
+
+echo "Status: 200"
+echo "Content-Type: image/jpg"
+echo ""
+
+cat /tmp/cam-screencap.jpg
