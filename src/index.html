@@ -48,9 +48,19 @@ a { color:white; text-decoration:none; }
 	white-space: nowrap;
 }
 
+.colourHolder {
+	/* Kron light blue */
+	color: #3D87CB; /* pantone 2143 */
 
+	/* Kron mid blue */
+	color: #0067B9; /* pantone 2144 */
 
+	/* Kron blue */
+	color: #004EA8; /* pantone 2145 */
 
+	/* Kron gray */
+	color: #9C9687; /* pantone 402 */
+}
 
 
 .videoDisplay{
@@ -59,7 +69,7 @@ a { color:white; text-decoration:none; }
 	max-width: 800px;
 	height: 450px;
 	border-radius: 10px;
-	border: 3px solid #13455f;
+	border: 3px solid #0067B9; /* pantone 2144 */
 	background-color: black;
 
 	text-align: center;
@@ -200,7 +210,7 @@ img{
 	border-radius: 8px;
 /*	background: #333; */
 	background-image: linear-gradient(to right, black, white);
-	border: 6px solid black;
+	border: 3px solid black;
 	margin: 0px;
 }
 .slider::-webkit-slider-thumb {
@@ -648,7 +658,39 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
+input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
+
+.button {
+	display: inline-block;
+	background-color: white;
+	color: black;
+	text-align: center;
+	padding: 6px 10px;
+	border-radius: 10px;
+	margin: 6px;
+	transition: all 0.3s ease;
+}
+.button:hover {
+	background-color: #aaa; /* active hover color */
+	cursor: pointer;
+}
+
+
+
+#sensorBackground {
+	display: block ;
+	height: 102.4px ;
+	width: 128.0px ;
+	background-color: orange;
+}
+
+#sensorWindow {
+	display: block;
+	background-color: magenta;
+}
+
+#applyButton { float: right; }
 
 
 
@@ -694,13 +736,12 @@ input[type=number]::-webkit-outer-spin-button {
 	</div>
 
 
-
 	<div class="newContainer">
 	<div class="leftContainer">
 
 		<div id="videoDisplay" class="videoDisplay">
 			<div id="spacer"> </div>
-			<img id="imageDisplay" alt="Video Display">
+			<img id="imageDisplay" alt="Screenshot Display">
 		</div>
 
 		<div class="Text-bar">
@@ -709,7 +750,7 @@ input[type=number]::-webkit-outer-spin-button {
 				<div id="batteryContainer" class="battery">
 					<div id="battery-level"></div>
 				</div>
-				<span id="battery%">98%</span>
+				<span id="battery%">0%</span>
 			</div>
 			<a id="blackCal" onclick="toggler(this)">Black Calibration</a>
 			<a id="zebraStripes" onclick="toggler(this)">Zebra Stripes</a>
@@ -731,11 +772,11 @@ input[type=number]::-webkit-outer-spin-button {
 				<b> Exposure (Shutter) </b>
 				<input class="slider" type="range" id="shutter">
 				<br>
-				<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.5"> &deg;
+				<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.1"> &deg;
 				&emsp;
-				<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.5"> %
+				<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.1"> %
 				&emsp;
-				<input type="number" id="exposureTime"> ms
+				<input type="number" id="exposureTime" step="0.01"> µs
 			</div>
 
 			<div class="horizLayout">
@@ -756,26 +797,29 @@ input[type=number]::-webkit-outer-spin-button {
 					<a> Unset (are you sure that you're connected with javascript enabled?) </a>
 				</div></div>
 				<br>
-				<input type="number" id="hRes" onInput="typehRes()"> x <input type="number" id="vRes" onInput="typevRes()">
+				<input type="number" id="hRes" onChange="updatePreviewWindow()"> x <input type="number" id="vRes" onChange="updatePreviewWindow()">
 				<br> <br>
 				<b> Offset </b>
 				<br>
-				<input type="number" id="hOff" onInput="typehOff()"> x <input type="number" id="vOff" onInput="typevOff()">
+				<input type="number" id="hOff" onChange="updatePreviewWindow()"> x <input type="number" id="vOff"  onChange="updatePreviewWindow()">
+				<div id="sensorBackground" style="display:inline-block"><div id="sensorWindow"></div></div>
 				<br><br>
 				<b> Frame Rate </b>
 				<br>
-				<input type="number" id="fps" onInput="typeFps()">
-				<a id="maxButton"> MAX </a>
+				<input type="number" id="fps" >
+				<a id="maxButton" class="button" onclick="getMaxFrameRate()"> MAX </a>
+				<a id="applyButton" class="button" onclick="applyResolution()"> Apply </a>
 			</div>
 
 
 			<div class="horizLayout">
 				<b> White Balance </b> <div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
-					<a> 8000K </a>
-					<a> 6500K </a>
-					<a> 5600K </a>
-					<a> 5250K </a>
-					<a> 2300K </a>
+					<a onclick="dropDownSelect(this)"> 8000K </a> <!-- Cloudy Sky -->
+					<a onclick="dropDownSelect(this)"> 6500K </a> <!-- Noon Daylight -->
+					<a onclick="dropDownSelect(this)"> 5600K </a> <!-- Avg Daylight -->
+					<a onclick="dropDownSelect(this)"> 5250K </a> <!-- Flash -->
+					<a onclick="dropDownSelect(this)"> 4600K </a> <!-- Flourescent -->
+					<a onclick="dropDownSelect(this)"> 3200K </a> <!-- Tungsten -->
 				</div></div>
 			</div>
 
@@ -809,12 +853,12 @@ input[type=number]::-webkit-outer-spin-button {
 	<div class="swatch" style="background-color: black;">black</div> <!-- black -->
 	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div> <!-- black -->
 	<div class="swatch" style="background-color: #333;">#333</div> <!--#*screen* background color-->
+	<div class="swatch" style="background-color: #606060;">#606060</div>
 	<div class="swatch" style="background-color: rgb(96,96,96);">rgb(96,96,96)</div> <!--#widget active background color (pressed button)-->
 	<div class="swatch" style="background-color: #777;">#777</div> <!--#selected text background-->
 	<div class="swatch" style="background-color: #aaa;">#aaa</div> <!--#disabled/placeholder text-->
 	<div class="swatch" style="background-color: #ddd;">#ddd</div> <!--#selected text letters-->
 	<div class="swatch" style="background-color: white;">white</div> <!--#normal text, buttons, labels, etc.-->
-
 
 	<div class="swatch" style="background-color: #1e6c94;">#1e6c94</div>
 	<div class="swatch" style="background-color: #13455f;">#13455f</div>
@@ -831,6 +875,10 @@ input[type=number]::-webkit-outer-spin-button {
 	<div class="swatch" style="background-color: yellow;">yellow</div> <!-- yellow -->
 	<div class="swatch" style="background-color: #e7ba00;">#e7ba00</div> <!-- Nicholas's yellow -->
 
+	<div class="swatch" style="background-color: #3D87CB;">#3D87CB</div> <!-- pantone 2143 -->
+	<div class="swatch" style="background-color: #0067B9;">#0067B9</div> <!-- pantone 2144 -->
+	<div class="swatch" style="background-color: #004EA8;">#004EA8</div> <!-- pantone 2145 -->
+	<div class="swatch" style="background-color: #9C9687 ;">#9C9687 </div> <!-- pantone 402 -->
 
 
 
@@ -852,15 +900,26 @@ input[type=number]::-webkit-outer-spin-button {
 var exposureValue = document.getElementById("shutter").value ;
 var exposureMin = 1000 ;
 var exposureMax = 2000 ;
-var framePeriod = 2000 ;
+var framePeriod = 3000 ;
 
 var lastSentExposureValue = exposureValue ;
 
-document.getElementById("shutter").onchange = function() {
-//	exposureValue = this.value ;
+document.getElementById("shutter").onchange = function() { // note that this is not linear
 	exposureValue = Math.pow( ((this.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
-//	exposureValue = Math.sqrt(this.value / exposureMax) * exposureMax ;
 	dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
+}
+
+
+document.getElementById("exposureDegrees").onchange = function() { // send the exposure time in nanosecods when it's changed
+	dataSender ("set", '{"shutterAngle":' + parseFloat(this.value) + '}') ;
+}
+
+document.getElementById("exposurePercent").onchange = function() { // send the exposure as a percent when it's changed
+	dataSender ("set", '{"exposurePercent":' + parseFloat(this.value) + '}') ;
+}
+
+document.getElementById("exposureTime").onchange = function() { // send the exposure time in nanoseconds when it's changed
+	dataSender ("set", '{"exposurePeriod":' + parseInt(this.value * 1000) + '}') ;
 }
 
 
@@ -868,7 +927,14 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "6dB (x2)":		function(){ dataSender("set",'{"currentGain": 2}'); },
 						  "12dB (x4)":		function(){ dataSender("set",'{"currentGain": 4}'); },
 						  "18dB (x8)":		function(){ dataSender("set",'{"currentGain": 8}'); },
-						  "24dB (x16)":	function(){ dataSender("set",'{"currentGain": 16}'); }
+						  "24dB (x16)":		function(){ dataSender("set",'{"currentGain": 16}'); },
+
+						  "8000K":			function(){ dataSender("set", '{"wbTemperature": 8000}') ;},
+						  "6500K":			function(){ dataSender("set", '{"wbTemperature": 6500}') ;},
+						  "5600K":			function(){ dataSender("set", '{"wbTemperature": 5600}') ;},
+						  "5250K":			function(){ dataSender("set", '{"wbTemperature": 5250}') ;},
+						  "4600K":			function(){ dataSender("set", '{"wbTemperature": 4600}') ;},
+						  "3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}') ;}
 						}
 
 const dbFromMult = { 1:0, 2:6, 4:12, 8:18, 16:24 } // provide a multiple, get back the dB value
@@ -877,11 +943,63 @@ function dropDownSelect (element) {
 	if (element.innerText in dropDownFunctions) // if the key-value exists
 		dropDownFunctions[element.innerText]() ; // run the function
 
-	document.getElementById("debugger").innerHTML = "drop down item clicked" ;
+	document.getElementById("debugger2").innerHTML = "drop down item clicked" ;
 }
 
+
+function applyResolution() {
+	var parameters = '{"resolution": {"hRes": ' + document.getElementById("hRes").value ;
+	parameters += ', "vRes": ' + document.getElementById("vRes").value ;
+	parameters += ', "hOffset": ' + document.getElementById("hOff").value ;
+	parameters += ', "vOffset": ' + document.getElementById("vOff").value ;
+	parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ) ;
+	parameters += '}}' ;
+
+	dataSender("set", parameters) ; // request these settings
+}
+
+function getMaxFrameRate() {
+	var retrieval = function (stringBack) { // what to do with the data that comes back
+		var jsonBack = JSON.parse(stringBack) ;
+		if ("minFramePeriod" in jsonBack)
+			document.getElementById("fps").value = Math.floor(1000000000 / jsonBack.minFramePeriod) ;
+	}
+	dataRequester("getResolutionTimingLimits", '{"hRes":' + document.getElementById("hRes").value + ',"vRes":' + document.getElementById("vRes").value + '}', retrieval) ;	
+}
+
+function usePresetResolution(element) {
+	var temp = element.innerText.replace(/[^\d]/gi, ' ') ; // strip out anything other than digits
+	var pieces = temp.split(/(\s+)/) ; // split up the contents
+
+	document.getElementById("hRes").value = pieces[0] ; // set the preset horizontal resolution
+	document.getElementById("vRes").value = pieces[2] ; // set the preset vertical resolution
+	document.getElementById("fps").value = pieces[4] ; // set the preset framerate
+
+	// calculate horizontal offset (to center the window on the sensor)
+	document.getElementById("hOff").value = Math.floor((1280 - pieces[0]) / 2) ;
+
+	// calculate vertical offset (to center the window on the sensor)
+	document.getElementById("vOff").value = Math.floor((1024 - pieces[2]) / 2) ;
+
+	updatePreviewWindow() ; // update the sensor preview window
+}
+
+
+function updatePreviewWindow() { // show a preview of the sensor usage window
+	var window = document.getElementById("sensorWindow") ;
+
+	window.style.width = (document.getElementById("hRes").value / 10) + "px" ;
+	window.style.marginLeft = (document.getElementById("hOff").value / 10) + "px" ;
+
+	window.style.height = (document.getElementById("vRes").value / 10) + "px";
+	window.style.marginTop = (document.getElementById("vOff").value / 10) + "px" ;
+}
+
+
+
+
 function tester1func() {
-	
+
 }
 
 
@@ -889,7 +1007,7 @@ function tester2func() {
 
 }
 
-var counter = 0 ;
+
 
 function tester3func() {
 
@@ -918,6 +1036,7 @@ var resolutionPresets = [	[1280, 1024, 0],
 						] ;
 
 
+var counter = 0 ;
 function findFrameRates() {
 	if (counter < resolutionPresets.length) {
 		var retrieval = function (stringBack) { // what to do with the data that comes back
@@ -934,7 +1053,7 @@ function findFrameRates() {
 		list.innerHTML = "" ; // clear the list before (re)populating the list
 		for (var i = 0 ; i < resolutionPresets.length ; i++) {
 			 // put in the resolution and framerates
-			list.innerHTML += "<a>" + resolutionPresets[i][0] + "x" + resolutionPresets[i][1] + " @ " + Math.floor(1000000000 / resolutionPresets[i][2]) + "fps </a>"
+			list.innerHTML += '<a onclick="usePresetResolution(this)">' + resolutionPresets[i][0] + "x" + resolutionPresets[i][1] + " @ " + Math.floor(1000000000 / resolutionPresets[i][2]) + "fps </a>"
 		}
 	}
 }
@@ -959,7 +1078,7 @@ var img = document.getElementById("imageDisplay") ;
 var videoWindow = document.getElementById("videoDisplay");
 
 img.onload = function scaleToFit(){
-	videoWindow.style.height = "500px" ;
+	videoWindow.style.height = "600px" ;
 
 	var scale = Math.min(videoWindow.clientWidth / img.width, videoWindow.clientHeight / img.height) ;
 	var x = (videoWindow.clientWidth / 2) - (img.width / 2) * scale;
@@ -1086,9 +1205,10 @@ var lastKnownExternalPower = false ;
 function pageUpdate(rawData){
 	var parsedData = JSON.parse(rawData) ;
 
+	document.getElementById("debugger").innerHTML += "<br><br>got notify:" + rawData;
 
 	if (parsedData.state == "idle") { // idle (ready to record)
-		videoWindow.style.border = "3px solid #13455f"; // set the idle outline colour
+		videoWindow.style.border = "3px solid #0067B9" ; /* pantone 2144 */ // set the idle outline colour
 		recButton = document.getElementById("record") ; // get the record button
 		recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 0) ; // turn off the record button
@@ -1144,11 +1264,30 @@ function pageUpdate(rawData){
 			document.getElementById("vOff").value = parsedData.resolution.vOffset ; // show the vertical offset
 	}
 
-	if ("frameRate" in parsedData)
-		document.getElementById("fps").value = Math.floor(parsedData.frameRate) ; // show the frame rate
+	if ("sensorHIncrement" in parsedData) // set the horizontal resolution increment
+		document.getElementById("hRes").step = parsedData.sensorHIncrement ;
 
-	if ("framePeriod" in parsedData)
-		framePeriod = parsedData.framePeriod ; // get the frame period (save for other calculations)
+	if ("sensorVIncrement" in parsedData) // set the vertical resolution increment
+		document.getElementById("vRes").step = parsedData.sensorVIncrement ;
+
+	if ("sensorHMin" in parsedData) // set the minimum horizontal resolution
+		document.getElementById("hRes").min = parsedData.sensorHMin ;
+
+	if ("sensorVMin" in parsedData) // set the minimum vertical resolution
+		document.getElementById("vRes").min = parsedData.sensorVMin ;
+
+	if ("sensorHMax" in parsedData) // set the maximum horizontal resolution
+		document.getElementById("hRes").max = parsedData.sensorHMax ;
+
+	if ("sensorVMax" in parsedData) // set the maximum vertical resolution
+		document.getElementById("vRes").max = parsedData.sensorVMax ;
+
+
+	if ("frameRate" in parsedData) // show the frame rate of the camera
+		document.getElementById("fps").value = Math.floor(parsedData.frameRate) ;
+
+	if ("framePeriod" in parsedData) // get the frame period (save for other calculations)
+		framePeriod = parsedData.framePeriod ;
 
 
 	if ("exposureMin" in parsedData) {
@@ -1172,7 +1311,6 @@ function pageUpdate(rawData){
 		exposureValue = parsedData.exposurePeriod ; // set the exposure value (used for some other calculations)
 
 		 // slider is not linear; it is parabolic
-//		document.getElementById("shutter").value = Math.pow( (exposureValue - exposureMin) / (exposureMax - exposureMin), 2 ) * exposureMax ;
 		document.getElementById("shutter").value = Math.sqrt(exposureValue / exposureMax) * exposureMax ;
 
 		 // calculate the exposure as a percent and report it
@@ -1193,10 +1331,14 @@ function pageUpdate(rawData){
 		document.getElementById("analogGain").firstChild.textContent = dbFromMult[truncatedValue] + "dB (x" + truncatedValue + ")" ;
 	}
 
-// got notify:{ "calSuggested": false, "state": "blackcal" } Debugger2: 
-
 	if ("calSuggested" in parsedData) { // something changed, and a blackCal is needed
 	}
+
+	if ("wbTemperature" in parsedData) // set the white balance (color temperature)
+		document.getElementById("whiteBalance").firstChild.textContent = parsedData.wbTemperature += "K" ;
+
+
+
 
 
 }
@@ -1246,7 +1388,7 @@ const evtSource = new EventSource("/control/subscribe");
 evtSource.onmessage = function(event) {
 	document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
 }
-evtSource.addEventListener("notify", function(event) { document.getElementById("debugger").innerHTML = "got notify:" + event.data; pageUpdate(event.data);}, false);
+evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
 evtSource.addEventListener("complete", function(event) { document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
 
 
@@ -1259,7 +1401,7 @@ findFrameRates() ; // get the frame rates when this page loads
 var PollCounter = 1 ;
 function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
 
-	if (PollCounter % 15 == 0) { // every 15-ish seconds
+	if (PollCounter % 30 == 0) { // every 15-ish seconds
 		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
 	}
 
@@ -1269,20 +1411,7 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 }
 
 
-var intervalID = setInterval(pollOnlyUpdates, 1000) ; // change the battery level to indicate level
-
-
-
-function typehRes() {
-}
-function typevRes() {
-}
-function typehOff() {
-}
-function typevOff() {
-}
-function typeFps() {
-}
+var intervalID = setInterval(pollOnlyUpdates, 500) ; // poll the camera for things that are not reported
 
 
 
