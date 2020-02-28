@@ -3,586 +3,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8"/>
 <title>Chronos</title>
 
+
 <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800&display=swap" rel="stylesheet"> 
 
+<link rel="styleSheet" href="css/sizeAndSpacing.css">
+<link id="themeSelection" rel="styleSheet" href="css/defaultTheme.css">
 
 <style>
-
-body{
-	background-color: black;
-	font-size: 150%;
-/*	font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif; */
-	font-family: 'Montserrat', "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-	color: white;
-	min-width: 165px;
-	z-index: 0;
-}
-a { color:white; text-decoration:none; }
-
-
-.header {
-	display: inline-block;
-	white-space: nowrap;
-	overflow: hidden;
-	max-width: 100%;
-}
-
-.titleImage {
-	display: inline-block;
-	margin: 25px 25px 0 20px; /* spacing is: N-E-S-W */
-}
-.titleImage img {
-	width: 400px;
-	height: auto;
-	display: inline-block;
-}
-
-.title {
-	font-weight: 600;
-	font-size: 350%;
-}
-.subTitle {
-	display: inline-block; 
-	font-size: 80%;
-	overflow: hidden;
-	white-space: nowrap;
-}
-
-.colourHolder {
-	/* Kron light blue */
-	color: #3D87CB; /* pantone 2143 */
-
-	/* Kron mid blue */
-	color: #0067B9; /* pantone 2144 */
-
-	/* Kron blue */
-	color: #004EA8; /* pantone 2145 */
-
-	/* Kron gray */
-	color: #9C9687; /* pantone 402 */
-}
-
-
-.videoDisplay{
-	box-sizing: border-box;
-/*	width: 100%; */
-	max-width: 800px;
-	height: 450px;
-	border-radius: 10px;
-	border: 3px solid #0067B9; /* pantone 2144 */
-	background-color: black;
-
-	text-align: center;
-}
-
-img{
-	text-align: center;
-	border-radius: 6px;
-}
-
-
-.heading-bar {
-	margin: 20px 0px;
-	width: 100%;
-	min-width: 200px;
-	background-color: #333;
-	overflow: auto;
-	border-radius: 10px;
-	border: none;
-	overflow: hide;
-	white-space: nowrap ;
-}
-
-.Text-bar {
-	margin: 20px 0px;
-	width: 100%;
-	min-width: 200px;
-	background-color: #333;
-	overflow: auto;
-	border-radius: 10px;
-	border: none;
-}
-.Text-bar a, .heading-bar a {
-	float: left;
-	text-align: center;
-	width: 120px;
-	height: 100%;
-	padding: 8px 0;
-	transition: all 0.3s ease;
-	border-radius: 10px;
-
-/*	display: flex;
-	justify-content: center;
-	flex-direction: column; */
-}
-.Text-bar a:hover, .heading-bar a:hover {
-	background-color: #777; /* inactive hover color */
-	cursor: pointer;
-}
-.Text-bar .active, .heading-bar .active{
-	background-color: white;
-	color: black;
-/*	font-weight:bold; */
-}
-.Text-bar .active:hover, .heading-bar .active-hover {
-	background-color: #aaa; /* active hover color */
-}
-
-.heading-bar a {
-	float: left;
-	text-align: center;
-	width: auto;
-	height: 100%;
-	padding: 22px;
-	transition: all 0.3s ease;
-	border-radius: 10px;
-}
-.Text-bar .no-click, .heading-bar .no-click {
-	float: left;
-	display: inline-block;
-	text-align: center;
-	width: 120px;
-	height: 100%;
-	padding: 22px 4px;
-	transition: all 0.3s ease;
-	border-radius: 10px;
-}
-
-
-
-.hidden { display: none; }
-
-
-
-
-.mainContainer { /* this sets the width of the window */
-	display: block;
-	width: 100%;
-	overflow: auto;
-}
-
-
-.newContainer {
-	display: block;
-	vertical-align: top;
-}
-
-
-.leftContainer {
-	width: 100%;
-	max-width: 806px;
-	display: inline-block;
-}
-
-.rightContainer {
-	display: inline-block;
-	vertical-align: top;
-/*	border: 3px dotted green; */
-	max-width: 900px;
-	border-radius: 10px;
-	
-}
-.horizLayout {
-	display: inline-block;
-	vertical-align: top;
-	background: #333;
-	border-radius: 10px;
-	padding: 10px;
-	margin: 1.5px;
-	overflow: auto;
-	max-width: 100%;
-}
-.vertLayout {
-	display: block;
-	vertical-align: top;
-	overflow: auto;
-}
-
-
-
-
-
-.slider{
-	display: inline-block;
-	-webkit-appearance: none;
-	width: 250px;
-	height: 6px;
-	border-radius: 8px;
-/*	background: #333; */
-	background-image: linear-gradient(to right, black, white);
-	border: 3px solid black;
-	margin: 0px;
-}
-.slider::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	appearance: none;
-	width: 6px;
-	height: 25px;
-	background: #333;
-	border-radius: 10px;
-	border: 3px solid black;
-	cursor: pointer;
-}
-.slider::-moz-range-thumb {
-	width: 6px;
-	height: 25px;
-	background: #ddd;
-	border-radius: 10px;
-	border: 3px solid black;
-	cursor: pointer;
-}
-
-
-
-
-.selectContainerHolder {
-	display: inline-block;
-	background-color: white;
-	color: black;
-	padding: 6px 10px;
-	border-radius: 10px;
-	margin: 6px;
-}
-.selectContainerHolder:after { /* draw the drop-down triangle */
-	content: '';
-	display: inline-block;
-	height: 0;
-	width: 0;
-	border: 10px solid transparent;
-	border-top: 10px solid black;
-	margin: -5px 0 -7px 7px;
-}
-
-.selectContainer {
-	position: absolute;
-	min-width: 10px;
-	height: 0;
-	margin-left: -10px;
-}
-
-.selectContainer a {
-	position: relative;
-	top: 0;
-	left: 0;
-	right: 0;
-	display: none;
-	padding: 6px 10px;
-	color: black;
-	transition: all 0.3s ease;
-	z-index: 55;
-	background-color: white;
-}
-.selectContainer a:first-child { border-radius: 0 10px 0 0; }
-.selectContainer a:last-child { border-radius: 0 0 10px 10px; }
-.selectContainer a:hover {
-	background-color: #aaa; /* Add a hover color */
-	cursor: pointer;
-	border-radius: 10px;
-	z-index: 99;
-}
-
-.selectContainerHolder:hover a{ display: block; }
-
-
-
-.menuContainer {
-	position: absolute;
-	right: 8px;
-	display: none;
-	height: 72px;
-	width: 0;
-}
-.menuContainer a {
-	position: relative;
-	display: block;
-	text-align: right;
-	top: 100%;
-	right: 280px;
-	height: auto;
-	width: 250px;
-	padding: 10px 15px;
-	background: white;
-	border-radius: 0;
-	color: black;
-}
-.menuContainer a:first-child { border-radius: 10px 0 0 0; }
-.menuContainer a:last-child { border-radius: 0 0 10px 10px; }
-.menuContainer a:hover {
-	border-radius: 10px;
-	background-color: #ddd;
-}
-
- /* show the menu */
-#menu.active + .menuContainer, #menu:hover + .menuContainer, .menuContainer:hover { display: block; }
-
-
-
-
-/******** Icons ********/
-
-
-.battery {
-	display: inline-block;
-	margin: -5px 6px ;
-	border: 2px solid white;
-	width: 11px;
-	height: 20px;
-	padding: 2px;
-	border-radius: 4px;
-	position: relative;
-}
-.battery:before {
-	content: '';
-	height: 1px;
-	width: 6px;
-	display: block;
-	position: absolute;
-	top: -5px;
-	left: 3px;
-	border: 2px solid white;
-	background-color: white;
-	border-radius: 3px 3px 0 0;
-}
-
-#battery-level {
-	background-color: black;
-	height: 98%;
-	width: 100%;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	border-radius: 2px;
-}
-
-#chargeIcon {
-	width: 0;
-	height: 0;
-	border-top: 15px solid black;
-	border-right: 10px solid transparent;
-	display: block;
-	position: absolute;
-	bottom: 0;
-	right: 0;
-}
-#chargeIcon:after {
-	content: '';
-	width: 0;
-	height: 0;
-	border-bottom: 15px solid black;
-	border-left: 10px solid transparent;
-	position: absolute;
-	top: -25px;
-	left: -5px;
-}
-
-
-.recordCircle {
-	display: inline-block;
-	margin-right: 6px;
-	margin-bottom: -2px;
-	height: 20px;
-	width: 20px;
-	background-color: #a00;
-	border-radius: 20px;
-}
-.recordSquare {
-	display: inline-block;
-	margin-right: 6px;
-	margin-bottom: -2px;
-	height: 20px;
-	width: 20px;
-	background-color: black;
-}
-
-
-
-.menuIcon {
-	display: inline-block;
-	margin: 0;
-	margin-bottom: 8px;
-	height: 3px;
-	width: 25px;
-	background-color: white;
-	transition: all 0.3s ease;
-	border-radius: 2px;
-}
-.menuIcon:before {
-	content: '';
-	display: block;
-	height: 3px;
-	width: 25px;
-	background-color: white;
-	transition: all 0.1s ease;
-	border-radius: 2px;
-	position: relative;
-	top: -9px;
-}
-.menuIcon:after {
-	content: '';
-	display: block;
-	height: 3px;
-	width: 25px;
-	background-color: white;
-	transition: all 0.5s ease;
-	border-radius: 2px;
-	position: relative;
-	bottom: -6px;
-}
-
-.active .menuIcon { background-color: black; }
-.active .menuIcon:before { background-color: black; }
-.active .menuIcon:after { background-color: black; }
-
-
-
-.homeIcon {
-	display: inline-block;
-	vertical-align: middle;
-	position: relative;
-	margin-right: 6px;
-	margin-bottom: 0;
-	height: 15px;
-	width: 20px;
-	background-color: white;
-	transition: all 0.3s ease;
-	border-radius: 5px 5px 2px 2px;
-}
-.homeIcon:after {
-	content: '';
-	height: 0;
-	width: 0;
-	transition: all 0.3s ease;
-	border-left: 16px solid transparent;
-	border-right: 16px solid transparent;
-	border-bottom: 16px solid white;
-	position: relative;
-	top: -40px;
-	left: -6px;
-}
-.active .homeIcon { background-color: #333; }
-.active .homeIcon:after { border-bottom: 16px solid #333; }
-
-.playIcon {
-	display: inline-block;
-	margin: 0;
-	margin-bottom: -2px;
-/*	margin-right: 8px; */
-	height: 0;
-	width: 0;
-	border-top: 12px solid transparent;
-	border-bottom: 12px solid transparent;
-	border-left: 20px solid white;
-	transition: all 0.3s ease;
-	border-radius: 2px;
-}
-.active .playIcon { border-left-color: #333; }
-
-
-
-.saveIcon {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 0;
-	margin-bottom: 4px;
-	height: 20px;
-	width: 18px;
-	background-color: white;
-	border-radius: 2px;
-}
-.saveIcon:after {
-	content: '';
-	width: 0;
-	height: 0;
-	border-top: 12px solid #333;
-	border-right: 12px solid transparent;
-	position: relative;
-	top: 10px;
-	left: -6px;
-}
-.active .saveIcon { background-color: #333; }
-.active .saveIcon:after { border-top-color: white; }
-a:hover .saveIcon:after { border-top-color: #777; }
-.active a:hover .saveicon:after { border-top-color: #aaa; }
-
-
-
-
-.settingsIcon {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 6px;
-	margin-bottom: 0;
-	height: 20px;
-	width: 6px;
-	background-color: white;
-	border-radius: 2px;
-	position: relative;
-}
-.settingsIcon:before {
-	content: '';
-	display: block;
-	position: absolute;
-	width: 15px;
-	height: 15px;
-	background-color: white;
-	top: -4px;
-	left: -4.5px;
-	border-radius: 10px;
-}
-.settingsIcon:after {
-	content: '';
-	display: block;
-	position: absolute;
-	width: 7px;
-	height: 10px;
-	background-color: #333;
-	border-radius: 0 0 5px 5px;
-	position: absolute;
-	top: -4.5px;
-	left: -0.5px;
-}
-a:hover .settingsIcon:after { background-color: #777; }
-
-
-.helpIcon {
-	display: inline-block;
-	margin-right: 0;
-	margin-bottom: 0px;
-	height: 20px;
-	width: 30px;
-	border-radius: 20px;
-	background-color: white;
-	color: #333;
-	font-weight: 900;
-	margin-top: -5px;
-	padding-bottom: 10px;
-}
-
-
 
 
 /******** Specific to this page ********/
 
 #record		{ width: 170px; padding: 22px 0; }
-#record.active {
-	background-color: #a00;
-	color: white;
-}
-#record.active:hover { background-color: #800; }
-#record.disabled { background-color: #1a1a1a; }
 
-#menu		{ float: right; }
-#menu.active { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 
 #blackCal	  { width: 140px; }
 
 #zebraStripes { width: 110px; }
-#zebraStripes.active{ background-color: #1e6c94; color: white;}
-#zebraStripes.active:hover{ background-color: #13455f; }
 
 #focusPeaking { width: 120px; }
-#focusPeaking:hover{ background-color: #13455f; }
-#focusPeaking.active:hover { background-color: #1e6c94; }
 
 
 #analogGainInner { width: 160px; }
@@ -634,65 +73,11 @@ a:hover .settingsIcon:after { background-color: #777; }
 
 
 
-
-
-input[type="number"]{
-	-webkit-appearance: textfield;
-	-moz-appearance: textfield;
-	appearance: textfield;
-	
-	text-align: center;
-	width: 100px;
-	padding: 6px 0;
-	border-radius: 10px;
-	background-color: black;
-	border: none;
-	color: white;
-	font-size:100%;
-	font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-	outline: none;
-	box-shadow: none;
-}
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none;
-}
-
-input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
-
-
-.button {
-	display: inline-block;
-	background-color: white;
-	color: black;
-	text-align: center;
-	padding: 6px 10px;
-	border-radius: 10px;
-	margin: 6px;
-	transition: all 0.3s ease;
-}
-.button:hover {
-	background-color: #aaa; /* active hover color */
-	cursor: pointer;
-}
-
-
-
-#sensorBackground {
-	display: block ;
-	height: 102.4px ;
-	width: 128.0px ;
-	background-color: orange;
-}
-
-#sensorWindow {
-	display: block;
-	background-color: magenta;
-}
-
 #applyButton { float: right; }
 
 
+
+#resolutionBox { clear: left; }
 
 </style>
 </head>
@@ -700,15 +85,16 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 <body>
 
-<!-- <div class="mainContainer"> -->
 	<div class="header">
 		<div class="titleImage">
-			<img src="Chronos High Speed logo.png">
+			<img id="logoImage" src="Chronos High Speed logo.png">
 		</div>
 
 		<!-- <b class="title">&nbsp;CHRONOS</b> -->
 		<div class="subTitle">by <a href="https://www.krontech.ca" target="_blank">Kron Technologies</a></div>
 	</div>
+
+ <div class="mainContainer"> 
 
 	
 	<div class="heading-bar">
@@ -768,7 +154,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 		<div class="rightContainer">
 
-			<div class="horizLayout">
+			<div id="exposureBox" class="horizLayout">
 				<b> Exposure (Shutter) </b>
 				<input class="slider" type="range" id="shutter">
 				<br>
@@ -779,7 +165,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 				<input type="number" id="exposureTime" step="0.01"> µs
 			</div>
 
-			<div class="horizLayout">
+			<div id="analogGainBox" class="horizLayout">
 				<b> Analog Gain </b>
 
 				<div id="analogGain" class="selectContainerHolder">SELECT<div id="analogGainInner" class="selectContainer">
@@ -791,19 +177,21 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 				</div></div>
 			</div>
 
-			<div class="horizLayout">
+			<div id="resolutionBox" class="horizLayout">
 				<b> Resolution </b> &ensp;
 				<div class="selectContainerHolder">Presets<div id="resolution" class="selectContainer">
 					<a> Unset (are you sure that you're connected with javascript enabled?) </a>
 				</div></div>
 				<br>
 				<input type="number" id="hRes" onChange="updatePreviewWindow()"> x <input type="number" id="vRes" onChange="updatePreviewWindow()">
-				<br> <br>
+				<br>
+				<div id="sensorBackground"><div class="coverageText">Sensor Coverage</div><div id="sensorWindow"></div></div>
+				<br>
 				<b> Offset </b>
 				<br>
 				<input type="number" id="hOff" onChange="updatePreviewWindow()"> x <input type="number" id="vOff"  onChange="updatePreviewWindow()">
-				<div id="sensorBackground" style="display:inline-block"><div id="sensorWindow"></div></div>
-				<br><br>
+				<br>
+				<br>
 				<b> Frame Rate </b>
 				<br>
 				<input type="number" id="fps" >
@@ -811,8 +199,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 				<a id="applyButton" class="button" onclick="applyResolution()"> Apply </a>
 			</div>
 
-
-			<div class="horizLayout">
+			<div id="whiteBalanceBox" class="horizLayout">
 				<b> White Balance </b> <div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
 					<a onclick="dropDownSelect(this)"> 8000K </a> <!-- Cloudy Sky -->
 					<a onclick="dropDownSelect(this)"> 6500K </a> <!-- Noon Daylight -->
@@ -823,8 +210,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 				</div></div>
 			</div>
 
-
-			<div class="horizLayout">
+			<div id="saveAsBox" class="horizLayout">
 				<b> Save As </b> location: [ location ] &emsp; name: [ name ] <br>
 			</div>
 
@@ -839,6 +225,11 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 		<a id="tester1" onclick="tester1func()"> tester1 </a>
 		<a id="tester2" onclick="tester2func()"> tester2 </a>
 		<a id="tester3" onclick="tester3func()"> tester3 </a>
+		<div class="no-click"></div>
+		<a onclick='theme("default")'> Default Theme </a>
+		<a onclick='theme("monochrome")'> Mono Theme </a>
+		<a onclick='theme("darker")'> Darker Theme </a>
+		<a onclick='theme("lighter")'> Lighter Theme </a>
 	</div>
 
 	<br>
@@ -852,6 +243,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 	<div class="swatch" style="background-color: black;">black</div> <!-- black -->
 	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div> <!-- black -->
+	<div class="swatch" style="background-color: #222;">#222</div>
 	<div class="swatch" style="background-color: #333;">#333</div> <!--#*screen* background color-->
 	<div class="swatch" style="background-color: #606060;">#606060</div>
 	<div class="swatch" style="background-color: rgb(96,96,96);">rgb(96,96,96)</div> <!--#widget active background color (pressed button)-->
@@ -882,8 +274,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 
 
-
-<!-- </div> -->
+ </div> 
 
 <br>
 <br>
@@ -896,6 +287,15 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 <script>
 
+
+//var VideoOutlineStyle = "3px solid #0067B9" ; /* pantone 2144 */
+var VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
+
+function theme(selection) { // set a new stylesheet to use (not protected against the theme not existing
+	document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
+
+	VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
+}
 
 var exposureValue = document.getElementById("shutter").value ;
 var exposureMin = 1000 ;
@@ -987,24 +387,20 @@ function usePresetResolution(element) {
 
 function updatePreviewWindow() { // show a preview of the sensor usage window
 	var window = document.getElementById("sensorWindow") ;
-
-	window.style.width = (document.getElementById("hRes").value / 10) + "px" ;
-	window.style.marginLeft = (document.getElementById("hOff").value / 10) + "px" ;
-
-	window.style.height = (document.getElementById("vRes").value / 10) + "px";
-	window.style.marginTop = (document.getElementById("vOff").value / 10) + "px" ;
+	window.style.width = (document.getElementById("hRes").value / 5) + "px" ;
+	window.style.marginLeft = (document.getElementById("hOff").value / 5 - 3) + "px" ;
+	window.style.height = (document.getElementById("vRes").value / 5) + "px";
+	window.style.marginTop = (document.getElementById("vOff").value / 5 - 3) + "px" ;
 }
 
 
-
-
 function tester1func() {
-
+	styleSheet = document.getElementById("styleSheet") ;
+	styleSheet.href = "/css/monochromeTheme.css" ;
 }
 
 
 function tester2func() {
-
 }
 
 
@@ -1078,35 +474,16 @@ var img = document.getElementById("imageDisplay") ;
 var videoWindow = document.getElementById("videoDisplay");
 
 img.onload = function scaleToFit(){
-	videoWindow.style.height = "600px" ;
+	videoWindow.style.height = "650px" ;
 
 	var scale = Math.min(videoWindow.clientWidth / img.width, videoWindow.clientHeight / img.height) ;
 	var x = (videoWindow.clientWidth / 2) - (img.width / 2) * scale;
 	var y = (videoWindow.clientHeight / 2) - (img.height / 2) * scale;
-//	vidContext.drawImage(img, x, y, img.width * scale, img.height * scale) ;
 	img.height = img.height * scale ;
-//	img.width = img.width * scale ;
-//	img.style.margin-top = y ;
-
-//	if (img.height < 450)
-//		videoWindow.height = "450" ;
-//	if (img.heght > 500px)
 	if (img.height < videoWindow.clientHeight) { // image height is less than window height
-//		videoWindow.clientHeight = img.height;
 		videoWindow.style.height = (img.height + 6).toString() + "px";
 	}
-
-//	space = document.getElementById("spacer") ;
-//	space.style.height = y.toString() + "px" ;
 }
-
-//function scaleToFit(){
-//	vidContext.clearRect(0,0, videoWindow.width, videoWindow.height) ;
-//	var scale = Math.min(videoWindow.width / img.width, videoWindow.height / img.height) ;
-//	var x = (videoWindow.width / 2) - (img.width / 2) * scale;
-//	var y = (videoWindow.height / 2) - (img.height / 2) * scale;
-//	vidContext.drawImage(img, x, y, img.width * scale, img.height * scale) ;
-//}
 
 
 
@@ -1163,7 +540,6 @@ function stateSelecter(element, state) { // this is like toggler above, but does
 }
 
 
-
 function menuKeeper() {
 	document.getElementById("menu").classList.remove("inactive");
 	document.getElementById("menu").classList.add("active");
@@ -1179,13 +555,13 @@ function batteryPercent(level, charging) { // set the percentage (level) of the 
 
 
 		if (charging) {
-			indicator.style.height = "100%" ;
-			indicator.style.backgroundColor = "white" ;
-			indicator.innerHTML = '<div id="chargeIcon" class="hidden"></div>' ;
-			indicator.style.color = "black" ;
+			indicator.style.height = "100%" ; // just make the level full when charging
+			indicator.style.backgroundColor = "white" ; // white background while charging
+			indicator.innerHTML = '<div id="chargeIcon" class="hidden"></div>' ; // add the charging indicator
 		}
 		else {
 			indicator.style.height = level.toString() + "%" ;
+			indicator.innerHTML = '' ; // clear the charging icon
 
 			if (level <= 20)
 				indicator.style.backgroundColor = "#a00" ; // red (low)
@@ -1208,7 +584,7 @@ function pageUpdate(rawData){
 	document.getElementById("debugger").innerHTML += "<br><br>got notify:" + rawData;
 
 	if (parsedData.state == "idle") { // idle (ready to record)
-		videoWindow.style.border = "3px solid #0067B9" ; /* pantone 2144 */ // set the idle outline colour
+		videoWindow.style.border = VideoOutlineStyle ; // set the idle outline colour
 		recButton = document.getElementById("record") ; // get the record button
 		recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 0) ; // turn off the record button
@@ -1262,6 +638,8 @@ function pageUpdate(rawData){
 
 		if ("vOffset" in parsedData.resolution)
 			document.getElementById("vOff").value = parsedData.resolution.vOffset ; // show the vertical offset
+
+		updatePreviewWindow() ; // update the preview window thingy
 	}
 
 	if ("sensorHIncrement" in parsedData) // set the horizontal resolution increment
@@ -1305,7 +683,7 @@ function pageUpdate(rawData){
 	}
 
 	if ("exposurePeriod" in parsedData) {
-		document.getElementById("exposureTime").value = parseFloat(parsedData.exposurePeriod / 1000).toFixed(2) ;
+		document.getElementById("exposureTime").value = parseFloat(parsedData.exposurePeriod / 1000).toFixed(1) ;
 //		document.getElementById("shutter").value = parsedData.exposurePeriod ; // this is for using a linear slider
 
 		exposureValue = parsedData.exposurePeriod ; // set the exposure value (used for some other calculations)
@@ -1405,7 +783,10 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
 	}
 
-	img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
+	if (PollCounter % 2 == 0) { // every 1 second
+//		img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
+		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
+	}
 
 	PollCounter++ ;
 }
