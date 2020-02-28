@@ -1,0 +1,232 @@
+/* this file contains the colors for the 'default' theme */
+
+body{
+	background-color: black;
+	color: white;
+}
+a { color: white; }
+
+
+
+ /* border for the video display */
+.videoDisplay {
+	border-color: #333;
+	background-color: black;
+}
+
+
+.heading-bar, .Text-bar, .horizLayout, .settingsIcon:after {
+	background: #333;
+}
+
+ /* inactive hover color */
+.Text-bar a:hover, .heading-bar a:hover, a:hover .settingsIcon:after, a:hover {
+	background-color: #777;
+}
+
+ /* active color */
+.Text-bar .active, .heading-bar .active{
+	background-color: white;
+	color: black;
+}
+
+ /* active hover color */
+.Text-bar .active:hover, .heading-bar .active:hover {
+	background-color: #777; /* pantone 2145 */
+}
+
+
+.slider { border-color: black; }
+.slider::-webkit-slider-thumb, .slider::-moz-range-thumb {
+	background: #ddd;
+	border-color: black;
+}
+
+ /* drop-down button colors */
+.selectContainerHolder {
+	background-color: white;
+	color: black;
+}
+
+ /* the drop-down triangle color */
+.selectContainerHolder:after {
+	border-top-color: black;
+}
+
+ /* drop-down list colors */
+.selectContainer a {
+	color: black;
+	background-color: white;
+}
+
+ /* drop-down list hover color */
+.selectContainer a:hover {
+	background-color: #aaa;
+}
+
+ /* menu drop-down colors */
+.menuContainer a {
+	background-color: white;
+	color: black;
+}
+
+ /* menu drop-down item list background color */
+.menuContainer a:hover {
+	background-color: #ddd;
+}
+
+input[type="number"]{
+	background-color: black;
+	color: white;
+}
+
+ /* when a number is invalid, use this color drop-shadow (outline) */
+input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
+
+
+
+ /* button in a settings panel */
+.button {
+	background-color: white;
+	color: black;
+}
+
+.button:hover {
+	background-color: #aaa; /* active hover color */
+}
+
+
+
+
+
+
+/****** Page specifics *******/
+
+#record.active {
+	background-color: #a00;
+	color: white;
+}
+#record.active:hover { background-color: #800; }
+#record.disabled { background-color: #1a1a1a; }
+
+
+#sensorBackground {
+	background-color: #1a1a1a;
+	border-color: #1a1a1a;
+}
+
+#sensorWindow {
+	background-color: #777;
+	border-color: #aaa;
+}
+
+
+
+
+
+
+
+
+
+/******** Icons ********/
+
+
+.battery {
+	border-color: white;
+}
+.battery:before {
+	border-color: white;
+	background-color: white;
+}
+
+#chargeIcon, #chargeIcon:after {
+	border-top-color: black; /* lightning icon triangle color */
+}
+
+
+.recordCircle { /* circle to indicate record button */
+	background-color: #a00;
+}
+.recordSquare { /* square to indicate record button */
+	background-color: black;
+}
+
+
+ /* menu Icon inactive color */
+.menuIcon, .menuIcon:before, .menuIcon:after {
+	background-color: white; /* menu icon center bar */
+}
+
+ /* menu Icon active color */
+.active .menuIcon, .active .menuIcon:before, .active .menuIcon:after{
+	background-color: black;
+}
+
+
+ /* Icon colors (inactive) */
+.homeIcon, .saveIcon, .settingsIcon, .settingsIcon:before, .helpIcon {
+	background-color: white;
+}
+.playIcon {	border-left-color: white; }
+.homeIcon:after { border-bottom-color: white; }
+
+
+ /* Icon masking color (inactive) */
+.active .playIcon { border-left-color: #333; }
+.saveIcon:after { border-top-color: #333; }
+
+ /* Icon masking color (hover) */
+a:hover .saveIcon:after { border-top-color: #777; }
+
+
+ /* Icon colors (active) */
+.active .saveIcon:after { border-top-color: #333; }
+.active .homeIcon { background-color: #333; }
+.active .homeIcon:after { border-bottom-color: #333; }
+
+ /* Icon masking colors (active) */
+.active .saveIcon { background-color: #333; }
+
+ /* Icon masking colors (active, hover) */
+.active a:hover .saveicon:after { border-top-color: #aaa; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /* reference for the Kron & Chronos colours */
+.colourHolder {
+	/* Kron light blue */
+	color: #3D87CB; /* pantone 2143 */
+
+	/* Kron mid blue */
+	color: #0067B9; /* pantone 2144 */
+
+	/* Kron blue */
+	color: #004EA8; /* pantone 2145 */
+
+	/* Kron gray */
+	color: #9C9687; /* pantone 402 */
+}
+
+
+
+
+
+
+
+
