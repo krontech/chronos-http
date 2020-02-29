@@ -40,8 +40,12 @@ a { color: white; }
 
 
 .slider { border-color: black; }
-.slider::-webkit-slider-thumb, .slider::-moz-range-thumb {
-	background: #ddd;
+input[type=range]::-webkit-slider-thumb, .slider::-webkit-slider-thumb {
+	background-color: #ddd;
+	border-color: black;
+}
+.slider::-moz-range-thumb {
+	background-color: #ddd;
 	border-color: black;
 }
 

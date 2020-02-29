@@ -40,8 +40,12 @@ a { color: white; }
 
 
 .slider { border-color: black; }
-.slider::-webkit-slider-thumb, .slider::-moz-range-thumb {
-	background: #0067B9; /* pantone 2144 */
+input[type=range]::-webkit-slider-thumb, .slider::-webkit-slider-thumb {
+	background-color: #0067B9; /* pantone 2144 */
+	border-color: black;
+}
+.slider::-moz-range-thumb {
+	background-color: #0067B9; /* pantone 2144 */
 	border-color: black;
 }
 
@@ -83,6 +87,7 @@ a { color: white; }
 input[type="number"]{
 	background-color: black;
 	color: white;
+/*	box-shadow: 0 0 3px 3px inset #777; */
 }
 
  /* when a number is invalid, use this color drop-shadow (outline) */

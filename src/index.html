@@ -211,7 +211,18 @@
 			</div>
 
 			<div id="saveAsBox" class="horizLayout">
-				<b> Save As </b> location: [ location ] &emsp; name: [ name ] <br>
+				<b> Save Video </b> &emsp;
+				<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
+					<a onclick="dropDownSelect(this)"> No Storage Connected </a>
+				</div></div>
+				<br>
+				Size: <span id="storageSize"></span>
+				<br>
+				Used: <span id="storageUsed"></span>
+				<br>
+				Available: <span id="storageAvailable"></span>
+				<br>
+				name: [ name ]
 			</div>
 
 		</div>
@@ -229,7 +240,8 @@
 		<a onclick='theme("default")'> Default Theme </a>
 		<a onclick='theme("monochrome")'> Mono Theme </a>
 		<a onclick='theme("darker")'> Darker Theme </a>
-		<a onclick='theme("lighter")'> Lighter Theme </a>
+		<a onclick='theme("lighter")'> High Contrast </a>
+		<a onclick='theme("monoDark")'> Mono Dark
 	</div>
 
 	<br>
@@ -286,6 +298,51 @@
 </body>
 
 <script>
+
+var StorageInfo ;
+
+var StorageNames = {	"sda1": "USB",
+					"mmcblk1p1": "SD Card"
+				 }
+
+function tester1func() {
+	var dealWith = function (returnString) {
+		document.getElementById("debugger").innerHTML = returnString ;
+
+		var parsedData = JSON.parse(returnString) ;
+
+
+	}
+	dataGetter('get', 'externalStorage', dealWith) ; // get the storage drives
+}
+
+
+
+function tester2func() {
+}
+
+
+
+function tester3func() {
+
+}
+
+function useStorageLocation(key) {
+	if (key in StorageInfo) {
+		var temp = "" ;		 
+		if (key in StorageNames)
+			temp += StorageNames[key] ; // write a more readable name
+		temp += "   (" + key + ")" ; // write the system name/location
+
+		document.getElementById("storageLocation").firstChild.textContent = temp ; // write the selected storage location to the 'storage location' drop-down
+
+		document.getElementById("storageSize").innerHTML = (StorageInfo[key].size / 1000000).toFixed(1) + " GB" ;
+		document.getElementById("storageAvailable").innerHTML = (StorageInfo[key].available / 1000000).toFixed(1) + " GB" ;
+		document.getElementById("storageUsed").innerHTML = (StorageInfo[key].used / 1000000).toFixed(1) + " GB" ;
+	}
+}
+
+
 
 
 //var VideoOutlineStyle = "3px solid #0067B9" ; /* pantone 2144 */
@@ -394,20 +451,6 @@ function updatePreviewWindow() { // show a preview of the sensor usage window
 }
 
 
-function tester1func() {
-	styleSheet = document.getElementById("styleSheet") ;
-	styleSheet.href = "/css/monochromeTheme.css" ;
-}
-
-
-function tester2func() {
-}
-
-
-
-function tester3func() {
-
-}
 
 
 var resolutionPresets = [	[1280, 1024, 0],
@@ -491,7 +534,7 @@ img.onload = function scaleToFit(){
 var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
-var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ dataSender("startRecording", ""); } ],
+var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ dataSender("startRecording", "{}"); } ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "none" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataSender("set", '{"focusPeakingLevel": 0}') ;}, function(){ dataSender("set", '{"focusPeakingLevel": 0.2}') ;} ],
@@ -715,8 +758,34 @@ function pageUpdate(rawData){
 	if ("wbTemperature" in parsedData) // set the white balance (color temperature)
 		document.getElementById("whiteBalance").firstChild.textContent = parsedData.wbTemperature += "K" ;
 
+	if ("externalStorage" in parsedData) { // get and build a list of external storage devices on the camera
+		StorageInfo = parsedData.externalStorage ; // set up or change the "StorageInfo" variable
+		StorageInfo.size = -1 ; // start the size at -1 because it will count the "size" key in the next step
+
+		for (key in StorageInfo)
+			StorageInfo.size++ ; // count the number of keys in the object
 
 
+		var list = document.getElementById("storageLocationInner") ; // get the storage location drop-down list element
+
+		if (StorageInfo.size > 0) { // are there devices connected?
+			list.innerHTML = "" ; // clear the list before (re)populating the list
+			for (key in StorageInfo) { // build the list of storage locations
+				if (key != "size") {
+					var temp = '<a onclick=\'useStorageLocation("' + key + '")\'>' ; // start the line
+					if (key in StorageNames)
+						temp += StorageNames[key] ; // add a more readable name
+					temp += '&ensp;(' + key + ')</a>' ; // finish the line
+
+					list.innerHTML += temp ; // add the line to the list
+				}
+			}
+		}
+		else { // no devices connected
+			document.getElementById("storageLocation").firstChild.textContent = "Location" ; // set the drop-down to say 'Location'
+			list.innerHTML = '<a>No Storage Connected</a>' ; // just have the drop-down say that nothing's connected
+		}
+	}
 
 
 }
