@@ -195,6 +195,7 @@ img{
 	padding: 6px 10px;
 	border-radius: 10px;
 	margin: 6px;
+	cursor: pointer;
 }
 .selectContainerHolder:after { /* draw the drop-down triangle */
 	content: '';
@@ -265,7 +266,7 @@ input[type="number"]{
 	
 	text-align: center;
 	width: 83px;
-	padding: 2px 0 3px 0;
+	padding: 2.3px 0 5px 0;
 	border-radius: 10px;
 	border: none;
 	font-size:100%;
@@ -469,6 +470,7 @@ input[type=number]::-webkit-outer-spin-button {
 	width: 18px;
 	background-color: white;
 	border-radius: 2px;
+	transition: all 0.3s ease;
 }
 .saveIcon:after {
 	content: '';
@@ -479,6 +481,7 @@ input[type=number]::-webkit-outer-spin-button {
 	position: relative;
 	top: 10px;
 	left: -6px;
+	transition: all 0.3s ease;
 }
 .active .saveIcon { background-color: #333; }
 .active .saveIcon:after { border-top-color: white; }
@@ -498,6 +501,7 @@ a:hover .saveIcon:after { border-top-color: #777; }
 	background-color: white;
 	border-radius: 2px;
 	position: relative;
+	transition: all 0.3s ease;
 }
 .settingsIcon:before {
 	content: '';
@@ -509,6 +513,7 @@ a:hover .saveIcon:after { border-top-color: #777; }
 	top: -4px;
 	left: -4.5px;
 	border-radius: 10px;
+	transition: all 0.3s ease;
 }
 .settingsIcon:after {
 	content: '';
@@ -521,6 +526,7 @@ a:hover .saveIcon:after { border-top-color: #777; }
 	position: absolute;
 	top: -4.5px;
 	left: -0.5px;
+	transition: all 0.3s ease;
 }
 a:hover .settingsIcon:after { background-color: #777; }
 

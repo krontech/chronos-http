@@ -214,6 +214,7 @@
 				<b> Save Video </b> &emsp;
 				<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
 					<a onclick="dropDownSelect(this)"> No Storage Connected </a>
+					<a onclick="dropDownSelect(this)"> Refresh </a>
 				</div></div>
 				<br>
 				Size: <span id="storageSize"></span>
@@ -301,7 +302,7 @@
 
 var StorageInfo ;
 
-var StorageNames = {	"sda1": "USB",
+var StorageNames = {	"sda1": "USB / SATA",
 					"mmcblk1p1": "SD Card"
 				 }
 
@@ -313,7 +314,7 @@ function tester1func() {
 
 
 	}
-	dataGetter('get', 'externalStorage', dealWith) ; // get the storage drives
+	dataGetter('get', 'externalStorage', pageUpdate) ; // get the storage drives
 }
 
 
@@ -339,6 +340,11 @@ function useStorageLocation(key) {
 		document.getElementById("storageSize").innerHTML = (StorageInfo[key].size / 1000000).toFixed(1) + " GB" ;
 		document.getElementById("storageAvailable").innerHTML = (StorageInfo[key].available / 1000000).toFixed(1) + " GB" ;
 		document.getElementById("storageUsed").innerHTML = (StorageInfo[key].used / 1000000).toFixed(1) + " GB" ;
+	}
+	else {
+		document.getElementById("storageSize").innerHTML = "" ;
+		document.getElementById("storageAvailable").innerHTML = "" ;
+		document.getElementById("storageUsed").innerHTML = "" ;
 	}
 }
 
@@ -391,7 +397,9 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "5600K":			function(){ dataSender("set", '{"wbTemperature": 5600}') ;},
 						  "5250K":			function(){ dataSender("set", '{"wbTemperature": 5250}') ;},
 						  "4600K":			function(){ dataSender("set", '{"wbTemperature": 4600}') ;},
-						  "3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}') ;}
+						  "3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}') ;},
+
+						  "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate) ;}
 						}
 
 const dbFromMult = { 1:0, 2:6, 4:12, 8:18, 16:24 } // provide a multiple, get back the dB value
@@ -512,20 +520,32 @@ var baseAddress = window.location.pathname.slice(1, -11); // directory path of t
 //var img = new Image() ;
 var img = document.getElementById("imageDisplay") ;
 
+//img.addEventListener('load', scaleToFit) ;
+
+var imgDisplay = document.getElementById("imageDisplay") ;
+
+
 //img.src = "https://media.giphy.com/media/nkt8sNb0adCwM/giphy.gif" ;
 
 var videoWindow = document.getElementById("videoDisplay");
 
 img.onload = function scaleToFit(){
+//function scaleToFit(){
 	videoWindow.style.height = "650px" ;
 
 	var scale = Math.min(videoWindow.clientWidth / img.width, videoWindow.clientHeight / img.height) ;
 	var x = (videoWindow.clientWidth / 2) - (img.width / 2) * scale;
 	var y = (videoWindow.clientHeight / 2) - (img.height / 2) * scale;
+//	imgDisplay.height = img.height * scale ;
+//	if (imgDisplay.height < videoWindow.clientHeight) { // image height is less than window height
+//		videoWindow.style.height = (imgDisplay.height + 6).toString() + "px";
+//	}
+//	imgDisplay.src = img.src ; // display the image
 	img.height = img.height * scale ;
 	if (img.height < videoWindow.clientHeight) { // image height is less than window height
 		videoWindow.style.height = (img.height + 6).toString() + "px";
 	}
+//	imgDisplay.src = img.src ; // display the image
 }
 
 
@@ -664,9 +684,9 @@ function pageUpdate(rawData){
 		stateSelecter(document.getElementById("focusPeaking"), 1) ; // focus peaking
 
 
-	if (parsedData.zebraLvl == 0) // zebra off
+	if (parsedData.zebraLevel == 0) // zebra off
 		stateSelecter(document.getElementById("zebraStripes"), 0) ; // no zebra stripes
-	else if (parsedData.zebraLvl > 0) // zebra on
+	else if (parsedData.zebraLevel > 0) // zebra on
 		stateSelecter(document.getElementById("zebraStripes"), 1) ; // zebra stripes
 
 	if ("resolution" in parsedData) { // get some of the data from the resolution section
@@ -713,14 +733,14 @@ function pageUpdate(rawData){
 
 	if ("exposureMin" in parsedData) {
 		document.getElementById("shutter").min = parsedData.exposureMin ;
-		document.getElementById("exposureTime").min = parsedData.exposureMin / 1000 ;
+		document.getElementById("exposureTime").min = (parsedData.exposureMin / 1000).toFixed(1) ;
 
 		exposureMin = parsedData.exposureMin ; // set the minimum (save for other calculations)
 	}
 
 	if ("exposureMax" in parsedData) {
 		document.getElementById("shutter").max = parsedData.exposureMax ;
-		document.getElementById("exposureTime").max = parsedData.exposureMax / 1000 ;
+		document.getElementById("exposureTime").max = (parsedData.exposureMax / 1000).toFixed(1) ;
 
 		exposureMax = parsedData.exposureMax ; // set the maximum (save for other calculations)
 	}
@@ -784,7 +804,12 @@ function pageUpdate(rawData){
 		else { // no devices connected
 			document.getElementById("storageLocation").firstChild.textContent = "Location" ; // set the drop-down to say 'Location'
 			list.innerHTML = '<a>No Storage Connected</a>' ; // just have the drop-down say that nothing's connected
+
+			document.getElementById("storageSize").innerHTML = "" ; // clear the 'Size' parameter
+			document.getElementById("storageAvailable").innerHTML = "" ; // clear the 'Available' parameter
+			document.getElementById("storageUsed").innerHTML = "" ; // clear the 'Used' parameter
 		}
+		list.innerHTML += '<a onclick="dropDownSelect(this)">Refresh</a>' ; // add a 'refresh' option to the list
 	}
 
 
@@ -792,13 +817,13 @@ function pageUpdate(rawData){
 
 
 function dataRequester(method, parameter, callMeMaybe) {
-	var requestSender = new XMLHttpRequest() ;
-	requestSender.open("POST", "/control/" + method) ;
-	requestSender.setRequestHeader("Content-Type", "application/json") ;
+	var requestSender = new XMLHttpRequest() ; // set up a new request
+	requestSender.open("POST", "/control/" + method) ; // use "post", and use the /control/ method
+	requestSender.setRequestHeader("Content-Type", "application/json") ; // use json format
 
 	requestSender.onreadystatechange = function(){ // do something with the response
-		if (this.readyState == 4 && this.status == 200){
-			callMeMaybe(requestSender.responseText) ;
+		if (this.readyState == 4 && this.status == 200){ // wait for successful response
+			callMeMaybe(requestSender.responseText) ; // call the callback function with the response text
 		}
 	}
 
@@ -855,6 +880,10 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 	if (PollCounter % 2 == 0) { // every 1 second
 //		img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
 		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
+	}
+
+	if (PollCounter % 120 == 0) { // every 60-ish seconds
+		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
 	}
 
 	PollCounter++ ;

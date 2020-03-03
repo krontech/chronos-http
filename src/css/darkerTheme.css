@@ -183,11 +183,11 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 
  /* Icon masking color (inactive) */
-.active .playIcon { border-left-color: #333; }
-.saveIcon:after { border-top-color: #333; }
+.active .playIcon { border-left-color: #222; }
+.saveIcon:after { border-top-color: #222; }
 
  /* Icon masking color (hover) */
-a:hover .saveIcon:after { border-top-color: #777; }
+a:hover .saveIcon:after { border-top-color: #333; }
 
 
  /* Icon colors (active) */
