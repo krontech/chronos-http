@@ -74,7 +74,7 @@
 
 
 #applyButton { float: right; }
-
+#saveVideoButton { float: right; }
 
 
 #resolutionBox { clear: left; }
@@ -166,14 +166,14 @@
 			</div>
 
 			<div id="analogGainBox" class="horizLayout">
-				<b> Analog Gain </b>
-
+				<b> Analog Gain </b> &ensp;
 				<div id="analogGain" class="selectContainerHolder">SELECT<div id="analogGainInner" class="selectContainer">
 					<a onclick="dropDownSelect(this)"> 0dB (x1) </a>
 					<a onclick="dropDownSelect(this)"> 6dB (x2) </a>
 					<a onclick="dropDownSelect(this)"> 12dB (x4) </a>
 					<a onclick="dropDownSelect(this)"> 18dB (x8) </a>
 					<a onclick="dropDownSelect(this)"> 24dB (x16) </a>
+					<a onclick="dropDownSelect(this)"> Custom </a>
 				</div></div>
 			</div>
 
@@ -200,7 +200,8 @@
 			</div>
 
 			<div id="whiteBalanceBox" class="horizLayout">
-				<b> White Balance </b> <div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
+				<b> White Balance </b> &ensp;
+				<div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
 					<a onclick="dropDownSelect(this)"> 8000K </a> <!-- Cloudy Sky -->
 					<a onclick="dropDownSelect(this)"> 6500K </a> <!-- Noon Daylight -->
 					<a onclick="dropDownSelect(this)"> 5600K </a> <!-- Avg Daylight -->
@@ -211,10 +212,12 @@
 			</div>
 
 			<div id="saveAsBox" class="horizLayout">
-				<b> Save Video </b> &emsp;
+				<b> Save Video </b>
+<!--				&emsp; -->
+				<br>
 				<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
 					<a onclick="dropDownSelect(this)"> No Storage Connected </a>
-					<a onclick="dropDownSelect(this)"> Refresh </a>
+					<a onclick="dropDownSelect(this)">Refresh</a>
 				</div></div>
 				<br>
 				Size: <span id="storageSize"></span>
@@ -222,8 +225,15 @@
 				Used: <span id="storageUsed"></span>
 				<br>
 				Available: <span id="storageAvailable"></span>
-				<br>
-				name: [ name ]
+				<br><br>
+				Name: <input type="text" id="fileName">
+				<br><br>
+				<div id="saveFormat" class="selectContainerHolder">File Format<div id="saveFormatInner" class="selectContainer">
+					<a onclick="dropDownSelect(this)">H.264 (mp4)</a>
+					<a onclick="dropDownSelect(this)">CinemaDNG (raw)</a>
+					<a onclick="dropDownSelect(this)">TIFF (images)</a>
+				</div></div>
+				<a id="saveVideoButton" class="button" onclick="tester1func()"> Save </a>
 			</div>
 
 		</div>
@@ -302,19 +312,12 @@
 
 var StorageInfo ;
 
-var StorageNames = {	"sda1": "USB / SATA",
-					"mmcblk1p1": "SD Card"
+var StorageNames = { "sda1": "USB / SATA",
+					 "mmcblk1p1": "SD Card"
 				 }
 
 function tester1func() {
-	var dealWith = function (returnString) {
-		document.getElementById("debugger").innerHTML = returnString ;
-
-		var parsedData = JSON.parse(returnString) ;
-
-
-	}
-	dataGetter('get', 'externalStorage', pageUpdate) ; // get the storage drives
+	dataSender ("startFilesave", '{"device": "mmcblk1p1", "format": "h264", "filename": "Nicholas_Test"}') ;
 }
 
 
@@ -392,15 +395,20 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "18dB (x8)":		function(){ dataSender("set",'{"currentGain": 8}'); },
 						  "24dB (x16)":		function(){ dataSender("set",'{"currentGain": 16}'); },
 
-						  "8000K":			function(){ dataSender("set", '{"wbTemperature": 8000}') ;},
-						  "6500K":			function(){ dataSender("set", '{"wbTemperature": 6500}') ;},
-						  "5600K":			function(){ dataSender("set", '{"wbTemperature": 5600}') ;},
-						  "5250K":			function(){ dataSender("set", '{"wbTemperature": 5250}') ;},
-						  "4600K":			function(){ dataSender("set", '{"wbTemperature": 4600}') ;},
-						  "3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}') ;},
+						  "8000K":			function(){ dataSender("set", '{"wbTemperature": 8000}'); },
+						  "6500K":			function(){ dataSender("set", '{"wbTemperature": 6500}'); },
+						  "5600K":			function(){ dataSender("set", '{"wbTemperature": 5600}'); },
+						  "5250K":			function(){ dataSender("set", '{"wbTemperature": 5250}'); },
+						  "4600K":			function(){ dataSender("set", '{"wbTemperature": 4600}'); },
+						  "3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}'); },
 
-						  "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate) ;}
+						  "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate) ;},
+
+						  "H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
+						  "CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
+						  "TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; }
 						}
+
 
 const dbFromMult = { 1:0, 2:6, 4:12, 8:18, 16:24 } // provide a multiple, get back the dB value
 
