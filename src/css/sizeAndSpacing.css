@@ -280,6 +280,27 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 
+
+input[type="text"]{
+	-webkit-appearance: textfield;
+	-moz-appearance: textfield;
+	appearance: textfield;
+	
+	text-align: left;
+	width: 190px;
+	padding: 2.3px 0 5px 8px;
+	border-radius: 10px;
+	border: none;
+	font-size:100%;
+	font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	outline: none;
+	box-shadow: none;
+}
+
+.instruction {
+	font-size: 70% ;
+}
+
 .button {
 	display: inline-block;
 	text-align: center;
@@ -582,6 +603,7 @@ a:hover .settingsIcon:after { background-color: #777; }
 .coverageText {
 	position: absolute;
 	padding: 2px 24px;
+	text-align: center;
 }
 
 

@@ -1,23 +1,38 @@
 /* this file contains the colors for the 'default' theme */
 
 body{
-	background-color: black;
+	background-color: white;
 	color: black;
 }
 a { color: black; }
 
+.mainContainer { background-color: white; }
 
-.heading-bar, .Text-bar, .horizLayout, .settingsIcon:after {
+.header{
+	background-color: black;
+	padding-bottom: 20px;
+	width: 100%;
+	border-radius: 10px;
+}
+
+.heading-bar, .Text-bar, .horizLayout, .progressBar {
 	background: white;
+/*	box-shadow: 0 0 3px 3px inset #3D87CB; /* pantone 2143 */
+	box-shadow: 0 0 3px 3px inset #777; /* pantone 2143 */
+}
+
+.heading-bar {
+	margin-top: 0;
 }
 
  /* inactive hover color */
-.Text-bar a:hover, .heading-bar a:hover, a:hover .settingsIcon:after, a:hover {
-	background-color: #aaa;
+.Text-bar a:hover, .heading-bar a:hover, a:hover {
+	background-color: white;
+	box-shadow: 0 0 4px 4px inset #0067B9; /* pantone 2144 */
 }
 
  /* active color */
-.Text-bar .active, .heading-bar .active{
+.Text-bar .active, .heading-bar .active {
 /*	background-color: white; */
 	background-color: #3D87CB; /* pantone 2143 */
 	background-color: #0067B9; /* pantone 2144 */
@@ -29,6 +44,8 @@ a { color: black; }
 .Text-bar .active:hover, .heading-bar .active:hover {
 	background-color: #004EA8; /* pantone 2145 */
 }
+
+.progressBarFill { background-color: #3D87CB; /* pantone 2143 */ }
 
 
  /* border for the video display */
@@ -95,7 +112,11 @@ input[type="number"]{
  /* when a number is invalid, use this color drop-shadow (outline) */
 input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
-
+input[type="text"]{
+	background-color: white;
+	color: black;
+	box-shadow: 0 0 3px 3px inset #aaa;
+}
 
  /* button in a settings panel */
 .button {
@@ -106,6 +127,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
  /* button hover color */
 .button:hover {
 	background-color: #3D87CB; /* pantone 2143 */
+	box-shadow: none;
 }
 
 
@@ -124,8 +146,8 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 
 #sensorBackground {
-	background-color: #1a1a1a;
-	border-color: #1a1a1a;
+	background-color: #777;
+	border-color: #777;
 	color: white;
 }
 
@@ -144,6 +166,10 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
 /******** Icons ********/
 
+
+.settingsIcon:after, a:hover .settingsIcon:after {
+	background-color: white;
+}
 
 .battery {
 	border-color: black;
@@ -191,7 +217,7 @@ input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 .saveIcon:after { border-top-color: white; }
 
  /* Icon masking color (hover) */
-a:hover .saveIcon:after { border-top-color: #aaa; }
+a:hover .saveIcon:after { border-top-color: white; }
 
 
  /* Icon colors (active) */

@@ -15,7 +15,7 @@ a { color: white; }
 }
 
 
-.heading-bar, .Text-bar, .horizLayout, .settingsIcon:after {
+.heading-bar, .Text-bar, .horizLayout, .settingsIcon:after, .progressBar {
 	background: #222;
 }
 
@@ -25,7 +25,7 @@ a { color: white; }
 }
 
  /* active color */
-.Text-bar .active, .heading-bar .active{
+.Text-bar .active, .heading-bar .active, .progressBarFill {
 /*	background-color: white; */
 	background-color: #3D87CB; /* pantone 2143 */
 	background-color: #0067B9; /* pantone 2144 */
@@ -39,7 +39,13 @@ a { color: white; }
 }
 
 
-.slider { border-color: black; }
+.slider{
+/*	background: #333; */
+	background-image: linear-gradient(to right, black, #0067B9 /* pantone 2144 */);
+	background-image: linear-gradient(to right, black, #3D87CB /* pantone 2143 */);
+	border-color: black;
+}
+
 input[type=range]::-webkit-slider-thumb, .slider::-webkit-slider-thumb {
 	background-color: #0067B9; /* pantone 2144 */
 	border-color: black;
@@ -93,7 +99,10 @@ input[type="number"]{
  /* when a number is invalid, use this color drop-shadow (outline) */
 input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
-
+input[type="text"]{
+	background-color: black;
+	color: white;
+}
 
  /* button in a settings panel */
 .button {

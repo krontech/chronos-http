@@ -15,7 +15,7 @@ a { color: white; }
 }
 
 
-.heading-bar, .Text-bar, .horizLayout, .settingsIcon:after {
+.heading-bar, .Text-bar, .horizLayout, .settingsIcon:after, .progressBar {
 	background: #333;
 }
 
@@ -25,13 +25,13 @@ a { color: white; }
 }
 
  /* active color */
-.Text-bar .active, .heading-bar .active{
+.Text-bar .active, .heading-bar .active {
 	background-color: white;
 	color: black;
 }
 
  /* active hover color */
-.Text-bar .active:hover, .heading-bar .active:hover {
+.Text-bar .active:hover, .heading-bar .active:hover, .progressBarFill {
 	background-color: #777; /* pantone 2145 */
 }
 
@@ -87,7 +87,10 @@ input[type="number"]{
  /* when a number is invalid, use this color drop-shadow (outline) */
 input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
-
+input[type="text"]{
+	background-color: black;
+	color: white;
+}
 
  /* button in a settings panel */
 .button {

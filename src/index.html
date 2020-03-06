@@ -70,14 +70,83 @@
 	#menu { width: 100%; }
 }
 
+.overlay {
+	position: relative ;
+	bottom: 51.5% ;
+	left: 45%;
+	background-color: black;
+	border-radius: 10px;
+	height: 1.5%;
+	width: 10%;
+}
+
+.overlay:after {
+	content: '';
+	position: absolute;
+	top: -350%;
+	left: 45%;
+	height: 800%;
+	width: 11%;
+	background-color: black;
+	border-radius: 10px;
+}
+
+
+
+.stateNotice {
+	content: "Saving Video";
+	position: absolute;
+	bottom: 200%;
+	font-size: 200%;
+	left: 10%;
+	right: 10%;
+	background-color: rgba(0,0,0, 0.4);
+	color: white;
+	padding: 6px;
+	border-radius: 10px;
+}
+
+.progressBar {
+	position: relative;
+	bottom: 15%;
+	left: 5%;
+	width: 90%;
+/*	height: 10%; */
+	padding: 10px;
+	border-radius: 10px;
+	z-index: 20;
+}
+
+.progressBarFill {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100% ;
+	width: 20%;
+	border-radius: 10px;
+	z-index: -5;
+}
 
 
 
 #applyButton { float: right; }
+#applyButton.disabled { /* when the apply button is disabled */
+	box-shadow: 0 0 3px 3px #a00;
+	background-color: #222;
+	text-decoration: line-through; /* cross out the apply button */
+}
+
 #saveVideoButton { float: right; }
+#saveVideoButton.disabled { /* when the save button is disabled */
+	box-shadow: 0 0 3px 3px #a00;
+	background-color: #222;
+	text-decoration: line-through; /* cross out the apply button */
+}
+#maxShutterButton { float: right; }
 
 
 #resolutionBox { clear: left; }
+
 
 </style>
 </head>
@@ -109,12 +178,9 @@
 			<a> About Camera </a>
 			<a> Camera Settings </a>
 			<a> Custom Scripts </a>
-			<a> Factory Utilites </a>
-			<a> Interface Options </a>
-			<a> Record Mode </a>
+			<a> Record Settings </a>
 			<a> Review Saved Videos </a>
 			<a> Triggers & IO </a>
-			<a> Update Camera </a>
 			<a> Documentation </a>
 			<a> Nicholas was here </a>
 		</div>
@@ -128,6 +194,12 @@
 		<div id="videoDisplay" class="videoDisplay">
 			<div id="spacer"> </div>
 			<img id="imageDisplay" alt="Screenshot Display">
+			<div id="crossHairs" class="overlay hidden"></div>
+			<div id="saveProgress" class="progressBar hidden">
+				<div id="videoStateOverlay" class="stateNotice">Saving Video</div>
+				<div id="saveProgressFill" class="progressBarFill"></div>
+				Progress
+			</div>
 		</div>
 
 		<div class="Text-bar">
@@ -159,10 +231,11 @@
 				<input class="slider" type="range" id="shutter">
 				<br>
 				<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.1"> &deg;
-				&emsp;
+				&ensp;
 				<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.1"> %
-				&emsp;
+				&ensp;
 				<input type="number" id="exposureTime" step="0.01"> µs
+				<a id="maxShutterButton" class="button" onclick="maxShutter()"> MAX </a>
 			</div>
 
 			<div id="analogGainBox" class="horizLayout">
@@ -173,7 +246,6 @@
 					<a onclick="dropDownSelect(this)"> 12dB (x4) </a>
 					<a onclick="dropDownSelect(this)"> 18dB (x8) </a>
 					<a onclick="dropDownSelect(this)"> 24dB (x16) </a>
-					<a onclick="dropDownSelect(this)"> Custom </a>
 				</div></div>
 			</div>
 
@@ -185,17 +257,19 @@
 				<br>
 				<input type="number" id="hRes" onChange="updatePreviewWindow()"> x <input type="number" id="vRes" onChange="updatePreviewWindow()">
 				<br>
-				<div id="sensorBackground"><div class="coverageText">Sensor Coverage</div><div id="sensorWindow"></div></div>
+				<div id="sensorBackground"><div id="sensorCoverageText" class="coverageText">Sensor Coverage</div><div id="sensorWindow"></div></div>
 				<br>
 				<b> Offset </b>
 				<br>
-				<input type="number" id="hOff" onChange="updatePreviewWindow()"> x <input type="number" id="vOff"  onChange="updatePreviewWindow()">
+				<input type="number" id="hOff" onChange="updatePreviewWindow()" min="0" max="1088"> x <input type="number" id="vOff"  onChange="updatePreviewWindow()" min="0" max="928">
+				&ensp;
+				<a id="centerWindow" class="button" onclick="centerWindow()"> Center </a>
 				<br>
 				<br>
 				<b> Frame Rate </b>
 				<br>
 				<input type="number" id="fps" >
-				<a id="maxButton" class="button" onclick="getMaxFrameRate()"> MAX </a>
+				<a id="maxFRButton" class="button" onclick="getMaxFrameRate()"> MAX </a>
 				<a id="applyButton" class="button" onclick="applyResolution()"> Apply </a>
 			</div>
 
@@ -208,7 +282,10 @@
 					<a onclick="dropDownSelect(this)"> 5250K </a> <!-- Flash -->
 					<a onclick="dropDownSelect(this)"> 4600K </a> <!-- Flourescent -->
 					<a onclick="dropDownSelect(this)"> 3200K </a> <!-- Tungsten -->
+<!--					<a onclick="dropDownSelect(this)"> Custom </a> -->
 				</div></div>
+				<br>
+				<a id="whiteBalanceButton" class="button" onclick="setCustomWhiteBalance()">Set Custom</a>
 			</div>
 
 			<div id="saveAsBox" class="horizLayout">
@@ -226,14 +303,17 @@
 				<br>
 				Available: <span id="storageAvailable"></span>
 				<br><br>
-				Name: <input type="text" id="fileName">
+				<input type="text" id="fileName" placeholder="File Name">
+				<br>
+				<span class="instruction">Leave empty to use autoname</span>
 				<br><br>
 				<div id="saveFormat" class="selectContainerHolder">File Format<div id="saveFormatInner" class="selectContainer">
 					<a onclick="dropDownSelect(this)">H.264 (mp4)</a>
 					<a onclick="dropDownSelect(this)">CinemaDNG (raw)</a>
 					<a onclick="dropDownSelect(this)">TIFF (images)</a>
+					<a onclidk="dropDownSelect(this)">TIFF RAW (images)</a>
 				</div></div>
-				<a id="saveVideoButton" class="button" onclick="tester1func()"> Save </a>
+				<a id="saveVideoButton" class="button disabled" onclick="saveWholeVideo()"> Save </a>
 			</div>
 
 		</div>
@@ -251,8 +331,8 @@
 		<a onclick='theme("default")'> Default Theme </a>
 		<a onclick='theme("monochrome")'> Mono Theme </a>
 		<a onclick='theme("darker")'> Darker Theme </a>
-		<a onclick='theme("lighter")'> High Contrast </a>
-		<a onclick='theme("monoDark")'> Mono Dark
+		<a onclick='theme("lighter")'> Lighter Theme </a>
+		<a onclick='theme("monoDark")'> Mono Dark </a>
 	</div>
 
 	<br>
@@ -316,19 +396,72 @@ var StorageNames = { "sda1": "USB / SATA",
 					 "mmcblk1p1": "SD Card"
 				 }
 
-function tester1func() {
-	dataSender ("startFilesave", '{"device": "mmcblk1p1", "format": "h264", "filename": "Nicholas_Test"}') ;
-}
+var StorageLocation = "" ;
 
+function tester1func() {
+}
 
 
 function tester2func() {
+
+}
+
+
+function tester3func() {
+	
 }
 
 
 
-function tester3func() {
 
+function saveWholeVideo() {
+	var fileName = document.getElementById("fileName").value ;
+
+	if ( (StorageLocation != "") && (lastKnownFrameEnd > 1) ) { // storage location set and some frames recorded
+		var request = '{"device": "' + StorageLocation + '", "format": '
+		switch (document.getElementById("saveFormat").firstChild.textContent) {
+			case "CinemaDNG (raw)":
+				request += '"dng"' ; // use cinemaDNG files
+				break ;
+
+			case "TIFF (images)":
+				request += '"tiff"' ; // use tiff images
+				break ;
+
+			case "TIFF RAW (images)":
+				request += '"tiffRaw"' ; // use tiff RAW images
+				break ;
+
+			case "H.264 (mp4)":
+			default:
+				request += '"h264"' ; // use h.264 format (mp4)
+				break ;
+		
+		}
+
+		if (fileName != "") // a file name was given
+			request += ', "filename": "' + fileName + '"' ;
+
+		request += '}' ; // finish off the request
+
+		document.getElementById("debugger2").innerHTML = " ----- Here is the request: " + request ;
+
+		dataSender ("startFilesave", request) ; // actually save the file
+	}
+}
+
+
+
+function setCustomWhiteBalance() {
+	dataSender("startAutoWhiteBalance", "{}") ;
+}
+
+// whiteBalanceButton or whiteBalanceBox
+document.getElementById("whiteBalanceButton").onmouseover = function () {
+	document.getElementById("crossHairs").classList.remove("hidden")
+}
+document.getElementById("whiteBalanceButton").onmouseout = function () {
+	document.getElementById("crossHairs").classList.add("hidden")
 }
 
 function useStorageLocation(key) {
@@ -343,11 +476,19 @@ function useStorageLocation(key) {
 		document.getElementById("storageSize").innerHTML = (StorageInfo[key].size / 1000000).toFixed(1) + " GB" ;
 		document.getElementById("storageAvailable").innerHTML = (StorageInfo[key].available / 1000000).toFixed(1) + " GB" ;
 		document.getElementById("storageUsed").innerHTML = (StorageInfo[key].used / 1000000).toFixed(1) + " GB" ;
+
+		StorageLocation = key ; // save the storage location
+
+		document.getElementById("saveVideoButton").classList.remove("disabled") ; // enable the save button
 	}
 	else {
 		document.getElementById("storageSize").innerHTML = "" ;
 		document.getElementById("storageAvailable").innerHTML = "" ;
 		document.getElementById("storageUsed").innerHTML = "" ;
+
+		StorageLocation = "" ; // save the storage location
+
+		document.getElementById("saveVideoButton").classList.add("disabled") ; // disable the save button
 	}
 }
 
@@ -388,6 +529,9 @@ document.getElementById("exposureTime").onchange = function() { // send the expo
 	dataSender ("set", '{"exposurePeriod":' + parseInt(this.value * 1000) + '}') ;
 }
 
+function maxShutter() {
+	dataSender ("set", '{"exposurePercent": 100}') ;
+}
 
 var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGain": 1}'); },
 						  "6dB (x2)":		function(){ dataSender("set",'{"currentGain": 2}'); },
@@ -401,12 +545,14 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "5250K":			function(){ dataSender("set", '{"wbTemperature": 5250}'); },
 						  "4600K":			function(){ dataSender("set", '{"wbTemperature": 4600}'); },
 						  "3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}'); },
+						  "Custom":			function(){ document.getElementById("whiteBalance").firstChild.textContent = "Custom"; },
 
-						  "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate) ;},
+						  "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate); },
 
 						  "H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
 						  "CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
-						  "TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; }
+						  "TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
+						  "TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; }
 						}
 
 
@@ -421,14 +567,26 @@ function dropDownSelect (element) {
 
 
 function applyResolution() {
-	var parameters = '{"resolution": {"hRes": ' + document.getElementById("hRes").value ;
-	parameters += ', "vRes": ' + document.getElementById("vRes").value ;
-	parameters += ', "hOffset": ' + document.getElementById("hOff").value ;
-	parameters += ', "vOffset": ' + document.getElementById("vOff").value ;
-	parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ) ;
-	parameters += '}}' ;
 
-	dataSender("set", parameters) ; // request these settings
+	var hRes = document.getElementById("hRes") ;
+	var vRes = document.getElementById("vRes") ;
+	var hOff = document.getElementById("hOff") ;
+	var vOff = document.getElementById("vOff") ;
+
+	if ( (parseInt(hRes.value) <= parseInt(hRes.max)) && (parseInt(hRes.value) >= parseInt(hRes.min))
+	  && (parseInt(hOff.value) <= parseInt(hOff.max)) && (parseInt(hOff.value) >= parseInt(hOff.min))
+	  && (parseInt(vRes.value) <= parseInt(vRes.max)) && (parseInt(vRes.value) >= parseInt(vRes.min))
+	  && (parseInt(vOff.value) <= parseInt(vOff.max)) && (parseInt(vOff.value) >= parseInt(vOff.min)) ) {
+
+		var parameters = '{"resolution": {"hRes": ' + document.getElementById("hRes").value ;
+		parameters += ', "vRes": ' + document.getElementById("vRes").value ;
+		parameters += ', "hOffset": ' + document.getElementById("hOff").value ;
+		parameters += ', "vOffset": ' + document.getElementById("vOff").value ;
+		parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ) ;
+		parameters += '}}' ;
+
+		dataSender("set", parameters) ; // request these settings
+	}
 }
 
 function getMaxFrameRate() {
@@ -457,13 +615,48 @@ function usePresetResolution(element) {
 	updatePreviewWindow() ; // update the sensor preview window
 }
 
+function centerWindow() { // center the sensor preview window
+	// calculate horizontal offset (to center the window on the sensor)
+	document.getElementById("hOff").value = Math.floor((1280 - parseInt(document.getElementById("hRes").value)) / 2) ;
+
+	// calculate vertical offset (to center the window on the sensor)
+	document.getElementById("vOff").value = Math.floor((1024 - parseInt(document.getElementById("vRes").value)) / 2) ;
+
+	updatePreviewWindow() ; // update the sensor preview window
+}
 
 function updatePreviewWindow() { // show a preview of the sensor usage window
-	var window = document.getElementById("sensorWindow") ;
-	window.style.width = (document.getElementById("hRes").value / 5) + "px" ;
-	window.style.marginLeft = (document.getElementById("hOff").value / 5 - 3) + "px" ;
-	window.style.height = (document.getElementById("vRes").value / 5) + "px";
-	window.style.marginTop = (document.getElementById("vOff").value / 5 - 3) + "px" ;
+
+	var hRes = document.getElementById("hRes") ;
+	var vRes = document.getElementById("vRes") ;
+	var hOff = document.getElementById("hOff") ;
+	var vOff = document.getElementById("vOff") ;
+
+	hOff.max = parseInt(hRes.max) - parseInt(hRes.value) ; // set the maximum horizontal offset
+	vOff.max = parseInt(vRes.max) - parseInt(vRes.value) ; // set the maximum vertical offset
+
+	if ( (parseInt(hRes.value) == parseInt(hRes.max)) && (parseInt(vRes.value) == parseInt(vRes.max)) )
+		document.getElementById("sensorCoverageText").innerText = "Sensor Coverage\n[Full]" ;
+	else
+		document.getElementById("sensorCoverageText").innerText = "Sensor Coverage" ;
+
+	if ( (parseInt(hRes.value) <= parseInt(hRes.max)) && (parseInt(hRes.value) >= parseInt(hRes.min))
+	  && (parseInt(hOff.value) <= parseInt(hOff.max)) && (parseInt(hOff.value) >= parseInt(hOff.min))
+	  && (parseInt(vRes.value) <= parseInt(vRes.max)) && (parseInt(vRes.value) >= parseInt(vRes.min))
+	  && (parseInt(vOff.value) <= parseInt(vOff.max)) && (parseInt(vOff.value) >= parseInt(vOff.min)) ) {
+
+		document.getElementById("applyButton").classList.remove("disabled") ;
+
+		var window = document.getElementById("sensorWindow") ;
+		window.style.width = (hRes.value / 5) + "px" ;
+		if ( (parseInt(hOff.value) >= parseInt(hOff.min)) && (parseInt(hOff.value) <= parseInt(hOff.max)) )
+			window.style.marginLeft = (parseFloat(hOff.value) / 5 - 3) + "px" ;
+		window.style.height = (parseFloat(vRes.value) / 5) + "px";
+		if ( (parseInt(vOff.value) >= parseInt(vOff.min)) && (parseInt(vOff.value) <= parseInt(vOff.max)) )
+			window.style.marginTop = (parseFloat(vOff.value) / 5 - 3) + "px" ;
+	}
+	else
+		document.getElementById("applyButton").classList.add("disabled") ;
 }
 
 
@@ -519,7 +712,6 @@ window.onclick = function(event) { // check where a click was: if it was outside
 	&& (document.getElementById("menu").matches(".active")) ) {
 		toggler(document.getElementById("menu")) ; // toggle off the button (and close the menu)
 	}
-
 }
 
 var baseAddress = window.location.pathname.slice(1, -11); // directory path of this page (before this page)
@@ -647,12 +839,15 @@ function batteryPercent(level, charging) { // set the percentage (level) of the 
 
 var lastKnownBatteryLevel = 0 ;
 var lastKnownExternalPower = false ;
+var lastKnownVideoState = "live" ;
+var lastKnownFrameEnd = 1 ;
+var lastKnownCurrentFrame = 0 ;
 
 
 function pageUpdate(rawData){
 	var parsedData = JSON.parse(rawData) ;
 
-	document.getElementById("debugger").innerHTML += "<br><br>got notify:" + rawData;
+	document.getElementById("debugger").innerHTML += "<br><br>got info:" + rawData;
 
 	if (parsedData.state == "idle") { // idle (ready to record)
 		videoWindow.style.border = VideoOutlineStyle ; // set the idle outline colour
@@ -697,22 +892,6 @@ function pageUpdate(rawData){
 	else if (parsedData.zebraLevel > 0) // zebra on
 		stateSelecter(document.getElementById("zebraStripes"), 1) ; // zebra stripes
 
-	if ("resolution" in parsedData) { // get some of the data from the resolution section
-		if ("hRes" in parsedData.resolution)
-			document.getElementById("hRes").value = parsedData.resolution.hRes ; // show the horizontal resolution
-
-		if ("vRes" in parsedData.resolution)
-			document.getElementById("vRes").value = parsedData.resolution.vRes ; // show the vertical resolution
-
-		if ("hOffset" in parsedData.resolution)
-			document.getElementById("hOff").value = parsedData.resolution.hOffset ; // show the horizontal offset
-
-		if ("vOffset" in parsedData.resolution)
-			document.getElementById("vOff").value = parsedData.resolution.vOffset ; // show the vertical offset
-
-		updatePreviewWindow() ; // update the preview window thingy
-	}
-
 	if ("sensorHIncrement" in parsedData) // set the horizontal resolution increment
 		document.getElementById("hRes").step = parsedData.sensorHIncrement ;
 
@@ -730,6 +909,30 @@ function pageUpdate(rawData){
 
 	if ("sensorVMax" in parsedData) // set the maximum vertical resolution
 		document.getElementById("vRes").max = parsedData.sensorVMax ;
+
+	if ("resolution" in parsedData) { // get some of the data from the resolution section
+
+		var hResElement = document.getElementById("hRes") ;
+		var vResElement = document.getElementById("vRes") ;
+
+		if ("hRes" in parsedData.resolution)
+			hResElement.value = parsedData.resolution.hRes ; // show the horizontal resolution
+
+		if ("vRes" in parsedData.resolution)
+			vResElement.value = parsedData.resolution.vRes ; // show the vertical resolution
+
+		if ("hOffset" in parsedData.resolution) {
+			document.getElementById("hOff").value = parsedData.resolution.hOffset ; // show the horizontal offset
+			document.getElementById("hOff").max = parseInt(hResElement.max) - parseInt(hResElement.value) ; // set the maximum horizontal offset
+		}
+
+		if ("vOffset" in parsedData.resolution) {
+			document.getElementById("vOff").value = parsedData.resolution.vOffset ; // show the vertical offset
+			document.getElementById("vOff").max = parseInt(vResElement.max) - parseInt(vResElement.value) ; // set the maximum vertical offset
+		}
+
+		updatePreviewWindow() ; // update the preview window thingy
+	}
 
 
 	if ("frameRate" in parsedData) // show the frame rate of the camera
@@ -755,7 +958,6 @@ function pageUpdate(rawData){
 
 	if ("exposurePeriod" in parsedData) {
 		document.getElementById("exposureTime").value = parseFloat(parsedData.exposurePeriod / 1000).toFixed(1) ;
-//		document.getElementById("shutter").value = parsedData.exposurePeriod ; // this is for using a linear slider
 
 		exposureValue = parsedData.exposurePeriod ; // set the exposure value (used for some other calculations)
 
@@ -783,8 +985,12 @@ function pageUpdate(rawData){
 	if ("calSuggested" in parsedData) { // something changed, and a blackCal is needed
 	}
 
-	if ("wbTemperature" in parsedData) // set the white balance (color temperature)
-		document.getElementById("whiteBalance").firstChild.textContent = parsedData.wbTemperature += "K" ;
+	if ("wbTemperature" in parsedData) { // set the white balance (color temperature)
+		if (parsedData.wbTemperature > 0)
+			document.getElementById("whiteBalance").firstChild.textContent = parsedData.wbTemperature += "K" ;
+		else
+			document.getElementById("whiteBalance").firstChild.textContent = "Custom" ;
+	}
 
 	if ("externalStorage" in parsedData) { // get and build a list of external storage devices on the camera
 		StorageInfo = parsedData.externalStorage ; // set up or change the "StorageInfo" variable
@@ -816,10 +1022,65 @@ function pageUpdate(rawData){
 			document.getElementById("storageSize").innerHTML = "" ; // clear the 'Size' parameter
 			document.getElementById("storageAvailable").innerHTML = "" ; // clear the 'Available' parameter
 			document.getElementById("storageUsed").innerHTML = "" ; // clear the 'Used' parameter
+
+			document.getElementById("saveVideoButton").classList.add("disabled") ;
 		}
 		list.innerHTML += '<a onclick="dropDownSelect(this)">Refresh</a>' ; // add a 'refresh' option to the list
 	}
 
+	if ("videoState" in parsedData) { // got the current videoState
+		lastKnownVideoState = parsedData.videoState ; // set the last known video state
+		switch (parsedData.videoState) {
+			case "live":
+				document.getElementById("saveProgress").classList.add("hidden")
+				document.getElementById("videoStateOverlay").innerHTML = "Live Display" ;
+				recButton.classList.remove("disabled") ; // take away the 'disabled' class
+				break ;
+
+			case "play":
+				document.getElementById("saveProgress").classList.remove("hidden")
+				document.getElementById("videoStateOverlay").innerHTML = "Playing Video" ;
+				document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
+				document.getElementById("saveProgress").lastChild.textContent = "Playback Position" ;
+				recButton.classList.add("disabled") ; // disable the record button
+				break ;
+
+			case "filesave":
+				document.getElementById("saveProgressFill").style.width = 0 ;
+				document.getElementById("saveProgress").classList.remove("hidden") ; // show the progress bar
+				document.getElementById("videoStateOverlay").innerHTML = "Saving Video" ;
+				recButton.classList.add("disabled") ; // disable the record button
+
+				dataGetter ("get", "playbackStart", pageUpdate) ; // get the starting frame
+				dataGetter ("get", "playbackLength", pageUpdate) ; // get the length
+				break ;
+		}
+	}
+
+	if ("playbackStart" in parsedData)
+		lastKnownStartFrame = parsedData.playbackStart ; // set the last known playback starting point
+
+	if ("totalFrames" in parsedData)
+		lastKnownFrameEnd = parsedData.totalFrames ; // set the last known end frame to the total frames recorded
+	else if ("playbackLength" in parsedData)
+		lastKnownFrameEnd = parsedData.playbackLength ; // set the last known playback length
+
+	if ("playbackPosition" in parsedData) { // get the playback frame
+		if (lastKnownVideoState == "filesave") {
+			// display a progress bar here
+			var progress = parsedData.playbackPosition / lastKnownFrameEnd * 100 ;
+			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
+				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.playbackPosition + " of: " + lastKnownFrameEnd ;
+				document.getElementById("saveProgressFill").style.width = progress + "%" ;
+			}
+
+			
+		}
+		else if (lastKnownVideoState == "play") {
+			document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
+		}
+		lastKnownCurrentFrame = parsedData.playbackPosition ;
+	}
 
 }
 
@@ -856,7 +1117,6 @@ function dataGetter(method, parameter, callMeMaybe){
 		if (this.readyState == 4 && this.status == 200){
 			callMeMaybe(requestSender.responseText) ; // call this function to deal with the input and update the page
 			 // callback function, passing in the string we got back
-
 		}
 	}
 
@@ -888,6 +1148,9 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 	if (PollCounter % 2 == 0) { // every 1 second
 //		img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
 		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
+
+		if ( (lastKnownVideoState == "filesave") || (lastKnownVideoState == "play") )
+			dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
 	}
 
 	if (PollCounter % 120 == 0) { // every 60-ish seconds
