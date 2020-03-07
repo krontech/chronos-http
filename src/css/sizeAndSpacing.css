@@ -12,6 +12,7 @@ a { text-decoration:none; }
 	white-space: nowrap;
 	overflow: hidden;
 	max-width: 100%;
+	padding-bottom: 17px;
 }
 
 .titleImage {
@@ -39,11 +40,12 @@ a { text-decoration:none; }
 .videoDisplay {
 	box-sizing: border-box;
 /*	width: 100%; */
-	max-width: 800px;
+	max-width: 806px;
 	height: 450px;
 	border-radius: 10px;
 	border: 3px solid transparent;
 	text-align: center;
+	margin: 0;
 }
 
 img{
@@ -53,7 +55,7 @@ img{
 
 
 .heading-bar {
-	margin: 20px 0px;
+	margin: 3px 0px;
 	width: 100%;
 	min-width: 200px;
 	overflow: auto;
@@ -64,7 +66,7 @@ img{
 }
 
 .Text-bar {
-	margin: 20px 0px;
+	margin: 6px 0px;
 	width: 100%;
 	min-width: 200px;
 	overflow: auto;
@@ -117,22 +119,18 @@ img{
 }
 
 
-.newContainer {
-	display: block;
-	vertical-align: top;
-}
-
 
 .leftContainer {
 	float: left;
 	width: 100%;
 	max-width: 806px;
+	margin: 3px 3px 0 0;
 }
 
 .rightContainer {
 	float: left;
 	vertical-align: top;
-	max-width: 900px;
+	max-width: 920px;
 	border-radius: 10px;
 	
 }
@@ -141,7 +139,7 @@ img{
 	vertical-align: top;
 	border-radius: 10px;
 	padding: 10px;
-	margin: 1.5px;
+	margin: 2px;
 	overflow: auto;
 	max-width: 100%;
 }

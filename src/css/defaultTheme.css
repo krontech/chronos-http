@@ -1,10 +1,21 @@
 /* this file contains the colors for the 'default' theme */
 
+
+:root {
+	--KronBlueLight: #3D87CB; /* pantone 2143 */
+	--KronBlueMid: #0067B9; /* pantone 2144 */
+	--KronBlueDark: #004EA8; /* pantone 2145 */
+	--KronGray: #9C9687; /* pantone 402 */
+}
+
+
+
 body{
 	background-color: black;
 	color: white;
 }
 a { color: white; }
+
 
 
 

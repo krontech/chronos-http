@@ -36,6 +36,40 @@
 }
 
 
+/*@media screen and (max-width: 3000px) {
+	.rightContainer { box-shadow: 0 0 3px 3px inset white; }
+} */
+
+
+@media screen and (min-width: 1756px) {
+	#analogGainBox { min-height: 82px }
+}
+
+
+@media screen and (max-width: 1757px) { /* change formatting when screen size is narrower than this */
+	.rightContainer { max-width: 750px; }
+}
+
+
+@media screen and (max-width: 1585px) { /* change formatting when screen size is narrower than this */
+	.rightContainer { max-width: 535px; }
+}
+
+
+@media screen and (max-width: 1375px) { /* change formatting when screen size is narrower than this */
+	.rightContainer { max-width: 303px; }
+}
+
+@media screen and (max-width: 1140px) { /* change formatting when screen size is narrower than this */
+	.rightContainer, .leftContainer, .videoDisplay { max-width: 100%; }
+	.leftContainer { margin: 0; }
+	.Text-bar { margin: 4px 0 2px 0; }
+}
+
+
+@media screen and (max-width: 1140px) and (min-width: 918px) {
+	#analogGainBox { min-height: 82px }
+}
 
 @media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
 	#main { display: none; } /* hide the main button */
@@ -43,29 +77,34 @@
 
 }
 
-@media screen and (max-width: 925px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 940px) { /* change formatting when screen size is narrower than this */
 	#help { display: none; } /* hide the help button */
 	/* show the help button in the menu drop-down ? */
+
+	body { margin: 0; }
 }
 
-@media screen and (max-width: 700px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 705px) { /* change formatting when screen size is narrower than this */
 	#storage { display: none; } /* hide the storage button */
 	/* show the storage button in the menu drop-down ? */
 
 	.subTitle { display: none; }
 }
 
-@media screen and (max-width: 535px) { /* change formatting when screen size is narrower than this */
-	#playSave { display: none; } /* hide the playSave button */
+@media screen and (max-width: 542px) { /* change formatting when screen size is narrower than this */
+	#settings { display: none; } /* hide the playSave button */
 	/* show the playSave button in the menu drop-down ? */
+
+	#saveProgress { bottom: 25%; left: 2%}
+	#videoStateOverlay { bottom: 110%}
 }
 
 @media screen and (max-width: 455px) { /* change formatting when screen size is narrower than this */
 	.titleImage img { width: 100%; height: auto; }
 }
 
-@media screen and (max-width: 330px) { /* change formatting when screen size is narrower than this */
-	#settings { display: none; } /* hide the settings button */
+@media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
+	#playSave { display: none; } /* hide the settings button */
 	/* show the settings button in the menu drop-down ? */
 	#menu { width: 100%; }
 }
@@ -112,7 +151,7 @@
 	left: 5%;
 	width: 90%;
 /*	height: 10%; */
-	padding: 10px;
+	padding: 10px 0;
 	border-radius: 10px;
 	z-index: 20;
 }
@@ -188,7 +227,6 @@
 	</div>
 
 
-	<div class="newContainer">
 	<div class="leftContainer">
 
 		<div id="videoDisplay" class="videoDisplay">
@@ -224,99 +262,98 @@
 
 	</div>
 
-		<div class="rightContainer">
+	<div class="rightContainer">
 
-			<div id="exposureBox" class="horizLayout">
-				<b> Exposure (Shutter) </b>
-				<input class="slider" type="range" id="shutter">
-				<br>
-				<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.1"> &deg;
-				&ensp;
-				<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.1"> %
-				&ensp;
-				<input type="number" id="exposureTime" step="0.01"> µs
-				<a id="maxShutterButton" class="button" onclick="maxShutter()"> MAX </a>
-			</div>
-
-			<div id="analogGainBox" class="horizLayout">
-				<b> Analog Gain </b> &ensp;
-				<div id="analogGain" class="selectContainerHolder">SELECT<div id="analogGainInner" class="selectContainer">
-					<a onclick="dropDownSelect(this)"> 0dB (x1) </a>
-					<a onclick="dropDownSelect(this)"> 6dB (x2) </a>
-					<a onclick="dropDownSelect(this)"> 12dB (x4) </a>
-					<a onclick="dropDownSelect(this)"> 18dB (x8) </a>
-					<a onclick="dropDownSelect(this)"> 24dB (x16) </a>
-				</div></div>
-			</div>
-
-			<div id="resolutionBox" class="horizLayout">
-				<b> Resolution </b> &ensp;
-				<div class="selectContainerHolder">Presets<div id="resolution" class="selectContainer">
-					<a> Unset (are you sure that you're connected with javascript enabled?) </a>
-				</div></div>
-				<br>
-				<input type="number" id="hRes" onChange="updatePreviewWindow()"> x <input type="number" id="vRes" onChange="updatePreviewWindow()">
-				<br>
-				<div id="sensorBackground"><div id="sensorCoverageText" class="coverageText">Sensor Coverage</div><div id="sensorWindow"></div></div>
-				<br>
-				<b> Offset </b>
-				<br>
-				<input type="number" id="hOff" onChange="updatePreviewWindow()" min="0" max="1088"> x <input type="number" id="vOff"  onChange="updatePreviewWindow()" min="0" max="928">
-				&ensp;
-				<a id="centerWindow" class="button" onclick="centerWindow()"> Center </a>
-				<br>
-				<br>
-				<b> Frame Rate </b>
-				<br>
-				<input type="number" id="fps" >
-				<a id="maxFRButton" class="button" onclick="getMaxFrameRate()"> MAX </a>
-				<a id="applyButton" class="button" onclick="applyResolution()"> Apply </a>
-			</div>
-
-			<div id="whiteBalanceBox" class="horizLayout">
-				<b> White Balance </b> &ensp;
-				<div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
-					<a onclick="dropDownSelect(this)"> 8000K </a> <!-- Cloudy Sky -->
-					<a onclick="dropDownSelect(this)"> 6500K </a> <!-- Noon Daylight -->
-					<a onclick="dropDownSelect(this)"> 5600K </a> <!-- Avg Daylight -->
-					<a onclick="dropDownSelect(this)"> 5250K </a> <!-- Flash -->
-					<a onclick="dropDownSelect(this)"> 4600K </a> <!-- Flourescent -->
-					<a onclick="dropDownSelect(this)"> 3200K </a> <!-- Tungsten -->
-<!--					<a onclick="dropDownSelect(this)"> Custom </a> -->
-				</div></div>
-				<br>
-				<a id="whiteBalanceButton" class="button" onclick="setCustomWhiteBalance()">Set Custom</a>
-			</div>
-
-			<div id="saveAsBox" class="horizLayout">
-				<b> Save Video </b>
-<!--				&emsp; -->
-				<br>
-				<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
-					<a onclick="dropDownSelect(this)"> No Storage Connected </a>
-					<a onclick="dropDownSelect(this)">Refresh</a>
-				</div></div>
-				<br>
-				Size: <span id="storageSize"></span>
-				<br>
-				Used: <span id="storageUsed"></span>
-				<br>
-				Available: <span id="storageAvailable"></span>
-				<br><br>
-				<input type="text" id="fileName" placeholder="File Name">
-				<br>
-				<span class="instruction">Leave empty to use autoname</span>
-				<br><br>
-				<div id="saveFormat" class="selectContainerHolder">File Format<div id="saveFormatInner" class="selectContainer">
-					<a onclick="dropDownSelect(this)">H.264 (mp4)</a>
-					<a onclick="dropDownSelect(this)">CinemaDNG (raw)</a>
-					<a onclick="dropDownSelect(this)">TIFF (images)</a>
-					<a onclidk="dropDownSelect(this)">TIFF RAW (images)</a>
-				</div></div>
-				<a id="saveVideoButton" class="button disabled" onclick="saveWholeVideo()"> Save </a>
-			</div>
-
+		<div id="exposureBox" class="horizLayout">
+			<b> Exposure (Shutter) </b>
+			<input class="slider" type="range" id="shutter">
+			<br>
+			<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.1"> &deg;
+			&ensp;
+			<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.1"> %
+			&ensp;
+			<input type="number" id="exposureTime" step="0.01"> µs
+			<a id="maxShutterButton" class="button" onclick="maxShutter()"> MAX </a>
 		</div>
+
+		<div id="analogGainBox" class="horizLayout">
+			<b> Analog Gain </b> &ensp;
+			<div id="analogGain" class="selectContainerHolder">SELECT<div id="analogGainInner" class="selectContainer">
+				<a onclick="dropDownSelect(this)"> 0dB (x1) </a>
+				<a onclick="dropDownSelect(this)"> 6dB (x2) </a>
+				<a onclick="dropDownSelect(this)"> 12dB (x4) </a>
+				<a onclick="dropDownSelect(this)"> 18dB (x8) </a>
+				<a onclick="dropDownSelect(this)"> 24dB (x16) </a>
+			</div></div>
+		</div>
+
+		<div id="resolutionBox" class="horizLayout">
+			<b> Resolution </b> &ensp;
+			<div class="selectContainerHolder">Presets<div id="resolution" class="selectContainer">
+				<a> Unset (are you sure that you're connected with javascript enabled?) </a>
+			</div></div>
+			<br>
+			<input type="number" id="hRes" onChange="updatePreviewWindow()"> x <input type="number" id="vRes" onChange="updatePreviewWindow()">
+			<br>
+			<div id="sensorBackground"><div id="sensorCoverageText" class="coverageText">Sensor Coverage</div><div id="sensorWindow"></div></div>
+			<br>
+			<b> Offset </b>
+			<br>
+			<input type="number" id="hOff" onChange="updatePreviewWindow()" min="0" max="1088"> x <input type="number" id="vOff"  onChange="updatePreviewWindow()" min="0" max="928">
+			&ensp;
+			<a id="centerWindow" class="button" onclick="centerWindow()"> Center </a>
+			<br>
+			<br>
+			<b> Frame Rate </b>
+			<br>
+			<input type="number" id="fps" >
+			<a id="maxFRButton" class="button" onclick="getMaxFrameRate()"> MAX </a>
+			<a id="applyButton" class="button" onclick="applyResolution()"> Apply </a>
+		</div>
+
+		<div id="whiteBalanceBox" class="horizLayout">
+			<b> White Balance </b> &ensp;
+			<div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
+				<a onclick="dropDownSelect(this)"> 8000K </a> <!-- Cloudy Sky -->
+				<a onclick="dropDownSelect(this)"> 6500K </a> <!-- Noon Daylight -->
+				<a onclick="dropDownSelect(this)"> 5600K </a> <!-- Avg Daylight -->
+				<a onclick="dropDownSelect(this)"> 5250K </a> <!-- Flash -->
+				<a onclick="dropDownSelect(this)"> 4600K </a> <!-- Flourescent -->
+				<a onclick="dropDownSelect(this)"> 3200K </a> <!-- Tungsten -->
+<!--				<a onclick="dropDownSelect(this)"> Custom </a> -->
+			</div></div>
+			<br>
+			<a id="whiteBalanceButton" class="button" onclick="setCustomWhiteBalance()">Set Custom</a>
+		</div>
+
+		<div id="saveAsBox" class="horizLayout">
+			<b> Save Video </b>
+<!--			&emsp; -->
+			<br>
+			<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
+				<a onclick="dropDownSelect(this)"> No Storage Connected </a>
+				<a onclick="dropDownSelect(this)">Refresh</a>
+			</div></div>
+			<br>
+			Size: <span id="storageSize"></span>
+			<br>
+			Used: <span id="storageUsed"></span>
+			<br>
+			Available: <span id="storageAvailable"></span>
+			<br><br>
+			<input type="text" id="fileName" placeholder="File Name">
+			<br>
+			<span class="instruction">Leave empty to use autoname</span>
+			<br><br>
+			<div id="saveFormat" class="selectContainerHolder">File Format<div id="saveFormatInner" class="selectContainer">
+				<a onclick="dropDownSelect(this)">H.264 (mp4)</a>
+				<a onclick="dropDownSelect(this)">CinemaDNG (raw)</a>
+				<a onclick="dropDownSelect(this)">TIFF (images)</a>
+				<a onclidk="dropDownSelect(this)">TIFF RAW (images)</a>
+			</div></div>
+			<a id="saveVideoButton" class="button disabled" onclick="saveWholeVideo()"> Save </a>
+		</div>
+
 	</div>
 
 
@@ -337,9 +374,9 @@
 
 	<br>
 
-	<span id="debugger">Debugger: </span>
+	<span id="debugger">  </span>
 
-	<span id="debugger2">Debugger2: </span>
+	<span id="debugger2">  </span>
 
 	<br>
 	<br>
@@ -377,7 +414,7 @@
 
 
 
- </div> 
+ </div>
 
 <br>
 <br>
@@ -390,6 +427,29 @@
 
 <script>
 
+
+var DebugOnOff = false ;
+
+function tester1func() {
+	DebugOnOff = true ;
+
+}
+
+
+function tester2func() {
+	DebugOnOff = false ;
+
+}
+
+
+function tester3func() {
+	var menuList = document.getElementById("menuList") ;
+
+	menuList.style.display = "" ;
+}
+
+
+
 var StorageInfo ;
 
 var StorageNames = { "sda1": "USB / SATA",
@@ -397,21 +457,6 @@ var StorageNames = { "sda1": "USB / SATA",
 				 }
 
 var StorageLocation = "" ;
-
-function tester1func() {
-}
-
-
-function tester2func() {
-
-}
-
-
-function tester3func() {
-	
-}
-
-
 
 
 function saveWholeVideo() {
@@ -444,7 +489,8 @@ function saveWholeVideo() {
 
 		request += '}' ; // finish off the request
 
-		document.getElementById("debugger2").innerHTML = " ----- Here is the request: " + request ;
+		if (DebugOnOff)
+			document.getElementById("debugger2").innerHTML = " ----- Here is the request: " + request ;
 
 		dataSender ("startFilesave", request) ; // actually save the file
 	}
@@ -562,7 +608,8 @@ function dropDownSelect (element) {
 	if (element.innerText in dropDownFunctions) // if the key-value exists
 		dropDownFunctions[element.innerText]() ; // run the function
 
-	document.getElementById("debugger2").innerHTML = "drop down item clicked" ;
+	if (DebugOnOff)
+		document.getElementById("debugger2").innerHTML = "drop down item clicked" ;
 }
 
 
@@ -755,7 +802,7 @@ var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div 
 					}
 
 var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ dataSender("startRecording", "{}"); } ],
-						"menu":			[ function(){ document.getElementById("menuList").style.display = "none" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
+						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataSender("set", '{"focusPeakingLevel": 0}') ;}, function(){ dataSender("set", '{"focusPeakingLevel": 0.2}') ;} ],
 						"zebraStripes":	[ function(){ dataSender("set", '{"zebraLevel": 0}') ;}, function(){ dataSender("set", '{"zebraLevel": 0.01}') ;} ]
@@ -847,7 +894,8 @@ var lastKnownCurrentFrame = 0 ;
 function pageUpdate(rawData){
 	var parsedData = JSON.parse(rawData) ;
 
-	document.getElementById("debugger").innerHTML += "<br><br>got info:" + rawData;
+	if (DebugOnOff)
+		document.getElementById("debugger").innerHTML += "<br><br>got info:" + rawData;
 
 	if (parsedData.state == "idle") { // idle (ready to record)
 		videoWindow.style.border = VideoOutlineStyle ; // set the idle outline colour
@@ -1126,10 +1174,11 @@ function dataGetter(method, parameter, callMeMaybe){
 const evtSource = new EventSource("/control/subscribe");
 
 evtSource.onmessage = function(event) {
-	document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
+	if (DebugOnOff)
+		document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
 }
 evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
-evtSource.addEventListener("complete", function(event) { document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
+evtSource.addEventListener("complete", function(event) { pageUpdate(event.data) ; if (DebugOnOff) document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
 
 
 dataGetter("p", "", pageUpdate) ; // get all the data on startup
