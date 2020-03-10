@@ -11,6 +11,7 @@
 
     <title>Chronos API Documentation</title>
 
+    <!-- Fixup to scroll passed the floating navbar -->
     <style>
       div.container {
         padding-top: 75px;
@@ -18,7 +19,7 @@
       @media only screen and (min-width : 992px) {
         .container { max-width: 1200px; }
       }
-      </style>
+    </style>
   </head>
 
   <body>
@@ -32,8 +33,11 @@
           <li class="nav-item">
             <a class="nav-link" href="#section-overview">Overview</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#section-methods">Methods</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbar-methods-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Methods</a>
+            <div class="dropdown-menu" id="navbar-methods" aria-labelledby="navbar-methods-dropdown">
+              <!-- Populated by Javascript -->
+            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#section-events">Events</a>
@@ -217,7 +221,7 @@ data:}
           <tr class="row">
             <th class="col-2">Name</th>
             <th class="col-1">Type</th>
-            <th class="col-1">Flags</th>
+            <th class="col-1 text-right">Flags</th>
             <th class="col-5">Description</th>
             <th class="col-3">Value</th>
           </tr>
@@ -309,15 +313,34 @@ data:}
         tcell.setAttribute("class", "col-1 text-nowrap");
 
         let fcell = row.insertCell(2);
-        fcell.setAttribute("class", "col-1");
+        fcell.setAttribute("class", "col-1  text-right");
         fcell.innerHTML = "<code>" + (data.get ? "r" : "-") + (data.set ? "w" : "-") + (data.notifies ? "n" : "-") + "</code>";
 
         let dcell = row.insertCell(3);
         if (data.hasOwnProperty('doc')) {
-          dcell.innerHTML = escapeDocstring(data.doc);
+          let paragraph = document.createElement("p");
+          paragraph.innerHTML = escapeDocstring(data.doc);
+          dcell.appendChild(paragraph);
         }
         dcell.setAttribute("class", "col-5");
 
+        /* If a detailed descrition was provided, render it as multiple paragraphs. */
+        if (data.hasOwnProperty("description")) {
+          let desc = data.description.split("\n");
+          for (let i = 0; i < desc.length; i++) {
+            let paragraph = document.createElement("p");
+            paragraph.innerHTML = escapeDocstring(desc[i]);
+            dcell.appendChild(paragraph);
+          }
+        }
+
+        /* If detailed argument values are described, list them. */
+        if (data.hasOwnProperty("args")) {
+          dcell.appendChild(buildArgTable(data.args, "Values"));
+        }
+        else if (data.hasOwnProperty("returns")) {
+          dcell.appendChild(buildArgTable(data.returns, "Values"));
+        }
         /* If the description includes enumerations, list them. */
         if (data.hasOwnProperty("enum")) {
           let list = document.createElement("ul");
@@ -357,7 +380,6 @@ data:}
       function buildCall(section, name, data) {
         let header = document.createElement("h2");
         header.innerText = name;
-        header.setAttribute("id", name);
         section.appendChild(header);
 
         /* Create a brief description of the API method */
@@ -371,7 +393,7 @@ data:}
           let desc = data.description.split("\n");
           for (let i = 0; i < desc.length; i++) {
             let paragraph = document.createElement("p");
-            paragraph.innerText = escapeDocstring(desc[i]);
+            paragraph.innerHTML = escapeDocstring(desc[i]);
             section.appendChild(paragraph);
           }
         }
@@ -402,13 +424,26 @@ data:}
           paragraph.innerHTML += "with a <code>method</code> equal to <code>" + name + "</code>.";
           section.appendChild(paragraph);
         }
-        
+
+        /* Add navbar links to the method description */
+        let navbar = document.getElementById("navbar-methods");
+        let link = document.createElement("a");
+        link.setAttribute("class", "dropdown-item");
+        link.setAttribute("href", "#" + name);
+        link.innerText = name;
+        navbar.appendChild(link);
       }
 
       function buildAPICalls(result) {
         let section = document.getElementById("section-methods");
         keys = Object.keys(result).sort();
-        keys.forEach(function(name) { buildCall(section, name, result[name])});
+        keys.forEach(function(name) {
+          let div = document.createElement("div");
+          div.setAttribute("class", "container");
+          div.setAttribute("id", name);
+          section.appendChild(div);
+          buildCall(div, name, result[name])
+        });
       }
 
       /* Build the list of parameters and callable methods */
