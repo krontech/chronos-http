@@ -163,91 +163,27 @@
 }
 
 
+input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline from the sliders */
 
 
 
-.timelineHolder {
-	margin: -24px 0 20px 0;
-	display: block;
-	position: relative;
-}
-
-.timeline{
-	display: inline-block;
-	box-sizing: border-box;
-	-webkit-appearance: none;
-	width: 96%;
-	height: 12px;
-	border-radius: 8px;
-	background: white;
-/*	background-image: linear-gradient(to right, black, white);*/
-	border: 3px solid black;
-	margin: 0 2%;
-}
-.timeline::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	width: 11px;
-	height: 25px;
-	border-radius: 10px;
-	border: 3px solid transparent;
-	cursor: pointer;
-	margin-top: 0;
-}
-.timeline::-moz-range-thumb {
-	width: 6px;
-	height: 25px;
-	border-radius: 10px;
-	border: 3px solid black;
-	cursor: pointer;
-/*	background-color: #0067B9; /* pantone 2144 */
-	background-color: white;
-}
 
 
-
-.timelineMarker {
-	display: block;
-	-webkit-appearance: none;
-	width: 100%;
-	height: 0;
-/*	border-radius: 8px; */
-	background: orange;
-/*	background-image: linear-gradient(to right, black, white);*/
-	margin: 0;
-}
-.timelineMarker::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	width: 11px;
-	height: 1px;
-	border-radius: 10px;
-	border: 3px solid red;
-	cursor: pointer;
-	margin-top: -1px;
-}
-.timelineMarker::-moz-range-thumb {
-	width: 0;
-	height: 0;
-	border-radius: 0;
-	border: 20px solid transparent;
-	border-bottom-width: 10px;
-	cursor: pointer;
-/*	background-color: #0067B9; /* pantone 2144 */
-	background-color: transparent;
-	padding-top: 20px;
-}
-
-
-#startMarker::-moz-range-thumb { border-right: 0; border-top-color: green; }
-#endMarker::-moz-range-thumb { border-left: 0; border-top-color: red; }
+#startMarker::-moz-range-thumb { border-right: 0; border-top-color: green; border-left-width: 15px; }
+#endMarker::-moz-range-thumb { border-left: 0; border-top-color: #a00; border-right-width: 15px; }
 
 
 #startEndFill {
 	display: block;
 	height: 16px;
-	background-color: blue;
+	background-color: #0067B9; /* pantone 2144 */
 	width: 96%;
 	margin: -20px 2% -13px 2%;
 }
+
+
+#frameMarkStart, #frameMarkEnd { width: 100px; } /* set the width of these buttons */
+#frameStepB, #frameStepF { width: 135px; }
 
 </style>
 </head>
@@ -302,11 +238,11 @@
 			</div>
 		</div>
 
-		<div class="timelineHolder">
-			<input id="startMarker" class="timelineMarker" onchange="markerFill()" type="range" min="0" max="100" value="30">
-			<input id="endMarker" class="timelineMarker" onchange="markerFill()" type="range" min="0" max="100" value="60">
+		<div id="timelineHolder" class="timelineHolder">
+			<input id="startMarker" class="timelineMarker" onchange="sliderDragged(this)" type="range" min="0" max="100" value="15" step="1">
+			<input id="endMarker" class="timelineMarker" onchange="sliderDragged(this)" type="range" min="0" max="100" value="85" step="1">
 			<div id="startEndFill"></div>
-			<input id="timeLine" class="timeline" type="range">
+			<input id="timeLine" class="timeline" onchange="sliderDragged(this)" type="range" step="1">
 		</div>
 
 		<div class="Text-bar">
@@ -317,10 +253,10 @@
 				</div>
 				<span id="battery%">0%</span>
 			</div>
-			<a id="frameMarkStart" onclick="toggler(this)">Mark Start</a>
-			<a id="frameStepB" onclick="toggler(this)">Step Backward</a>
-			<a id="frameStepF" onclick="toggler(this)">Step Forward</a>
-			<a id="frameMarkEnd" onclick="toggler(this)">Mark End</a>
+			<a id="frameMarkStart" onclick="justRunSomething(this)">Mark Start</a>
+			<a id="frameStepB" onclick="justRunSomething(this)">Step Backward</a>
+			<a id="frameStepF" onclick="justRunSomething(this)">Step Forward</a>
+			<a id="frameMarkEnd" onclick="justRunSomething(this)">Mark End</a>
 		</div>
 
 	</div>
@@ -330,16 +266,19 @@
 	<div class="rightContainer">
 
 		<div id="timeLineBox" class="horizLayout">
-			<b> TimeLine </b> [------------------]
+			<b> Frames </b>
 			<br>
-			Frame: ( ### ) / ( ### )
+			Frame:
+			<input type="number" id="currentFrameNum" onChange="justRunSomething(this)" min="0"> / <span id="totalFramesNum">#</span>
 			<br>
-			[ Mark Start ] &ensp; [ Mark End ]
+			Starting Frame:
+			<input type="number" id="startFrameNum" onChange="justRunSomething(this)" min="0">
 			<br>
-			Starting Frame: ( ### )
+			Ending Frame:
+			<input type="number" id="endFrameNum" onChange="justRunSomething(this)" min="0">
 			<br>
-			Ending Frame: ( ### )
-			<br>
+			Length:
+			<input type="number" id="frameLengthNum" onChange="justRunSomething(this)" min="0">
 		</div>
 
 		<div id="playBack" class="horizLayout">
@@ -384,7 +323,7 @@
 				<a onclick="dropDownSelect(this)">TIFF (images)</a>
 				<a onclidk="dropDownSelect(this)">TIFF RAW (images)</a>
 			</div></div>
-			<a id="saveVideoButton" class="button disabled" onclick="saveWholeVideo()"> Save </a>
+			<a id="saveVideoButton" class="button disabled" onclick="saveVideo()"> Save </a>
 		</div>
 
 	</div>
@@ -462,15 +401,42 @@
 <script>
 
 
+var inputFunctions = {	"startMarker":		function(value){ dataSender("set", '{"playbackStart":' + value + '}') ; setPlayBackLength() ; markerFill() ; },
+						"endMarker":		function(value){ setPlayBackLength() ; markerFill() ; },
+						"timeLine":			function(value){ dataSender("set", '{"playbackPosition":' + value + '}') ; },
 
+						"frameMarkStart":	function(){ document.getElementById("startMarker").value = document.getElementById("timeLine").value ; sliderDragged(document.getElementById("startMarker")) ; },
+						"frameMarkEnd":		function(){ document.getElementById("endMarker").value = document.getElementById("timeLine").value ; sliderDragged(document.getElementById("endMarker")) ; },
+						"frameStepB":		function(){ document.getElementById("timeLine").stepDown() ; sliderDragged(document.getElementById("timeLine")) ; },
+						"frameStepF":		function(){ document.getElementById("timeLine").stepUp() ; sliderDragged(document.getElementById("timeLine")) ; },
+					 }
+
+function justRunSomething(element) {
+	if (element.id in inputFunctions) // if the key-value exists
+		inputFunctions[element.id](element.value) // run the function (with the value given)
+}
+
+function sliderDragged(element) {
+	if (element.id in inputFunctions) // if the key-value exists
+		inputFunctions[element.id](element.value) // run the function (with the value given)
+}
+
+function setPlayBackLength() {
+	var length = parseInt(document.getElementById("endMarker").value) - parseInt(document.getElementById("startMarker").value) ;
+	dataSender ("set", '{"playbackLength": ' + length + '}') ; // set the length
+}
 
 function markerFill() {
-	var start = parseInt(document.getElementById("startMarker").value) ;
-	var end = parseInt(document.getElementById("endMarker").value) ;
+	var start = document.getElementById("startMarker") ;
+	var end = document.getElementById("endMarker") ;
+
+	start = parseFloat(start.value / start.max * 100) ;
+
+	end = parseFloat(end.value / end.max * 100) ;
 
 	if (start > end) {
 		start = end ; // force to always have start <= end
-		document.getElementById("startMarker").value = end;
+		document.getElementById("startMarker").value = document.getElementById("endMarker").value;
 	}
 
 	var fillBar = document.getElementById("startEndFill") ;
@@ -479,9 +445,9 @@ function markerFill() {
 	fillBar.style.width = parseFloat( (end - start) * 0.96 ) + "%" ;
 }
 
-markerFill(); // run on page load
+//markerFill(); // run on page load
 
-var DebugOnOff = false ;
+var DebugOnOff = true ;
 
 function tester1func() {
 	DebugOnOff = true ;
@@ -510,10 +476,10 @@ var StorageNames = { "sda1": "USB / SATA",
 var StorageLocation = "" ;
 
 
-function saveWholeVideo() {
+function saveVideo() {
 	var fileName = document.getElementById("fileName").value ;
 
-	if ( (StorageLocation != "") && (lastKnownFrameEnd > 1) ) { // storage location set and some frames recorded
+	if ( (StorageLocation != "") && (lastKnownFrameLength > 1) ) { // storage location set and some frames recorded
 		var request = '{"device": "' + StorageLocation + '", "format": '
 		switch (document.getElementById("saveFormat").firstChild.textContent) {
 			case "CinemaDNG (raw)":
@@ -535,6 +501,12 @@ function saveWholeVideo() {
 		
 		}
 
+//		request += ', "start": ' + document.getElementById("startMarker").value ;
+//		request += ', "length": ' + (parseInt(document.getElementById("endMarker").value) - parseInt(document.getElementById("startMarker").value)) ;
+
+		request += ', "start": ' + lastKnownStartFrame ;
+		request += ', "length": ' + parseInt(lastKnownFrameEnd - lastKnownStartFrame) ;
+
 		if (fileName != "") // a file name was given
 			request += ', "filename": "' + fileName + '"' ;
 
@@ -544,6 +516,9 @@ function saveWholeVideo() {
 			document.getElementById("debugger2").innerHTML = " ----- Here is the request: " + request ;
 
 		dataSender ("startFilesave", request) ; // actually save the file
+	}
+	else { // could not save file
+		document.getElementById("debugger2").innerHTML = " ---- Could not save video ---- " ;
 	}
 }
 
@@ -733,6 +708,7 @@ var lastKnownVideoState = "live" ;
 var lastKnownFrameEnd = 1 ;
 var lastKnownCurrentFrame = 0 ;
 var lastKnownStartFrame = 0 ;
+var lastKnownFrameLength = 1 ;
 
 
 function pageUpdate(rawData){
@@ -808,40 +784,63 @@ function pageUpdate(rawData){
 		lastKnownVideoState = parsedData.videoState ; // set the last known video state
 		switch (parsedData.videoState) {
 			case "live":
-				document.getElementById("saveProgress").classList.add("hidden")
+				document.getElementById("saveProgress").classList.remove("hidden") ;
 				document.getElementById("videoStateOverlay").innerHTML = "Live Display" ;
+				document.getElementById("saveProgressFill").style.width = 0 ;
+				document.getElementById("saveProgress").lastChild.textContent = "Recording or ready to record" ;
+				document.getElementById("timelineHolder").classList.add("hidden") ;
 				break ;
 
 			case "play":
-				document.getElementById("saveProgress").classList.remove("hidden")
+				document.getElementById("saveProgress").classList.add("hidden") ;
+				document.getElementById("timelineHolder").classList.remove("hidden") ;
 				document.getElementById("videoStateOverlay").innerHTML = "Playing Video" ;
-				document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
-				document.getElementById("saveProgress").lastChild.textContent = "Playback Position" ;
 				break ;
 
 			case "filesave":
 				document.getElementById("saveProgressFill").style.width = 0 ;
 				document.getElementById("saveProgress").classList.remove("hidden") ; // show the progress bar
 				document.getElementById("videoStateOverlay").innerHTML = "Saving Video" ;
-
-				dataGetter ("get", "playbackStart", pageUpdate) ; // get the starting frame
-				dataGetter ("get", "playbackLength", pageUpdate) ; // get the length
+				document.getElementById("timelineHolder").classList.remove("hidden") ;
 				break ;
 		}
 	}
 
-	if ("playbackStart" in parsedData)
-		lastKnownStartFrame = parsedData.playbackStart ; // set the last known playback starting point
+	if ("totalFrames" in parsedData) {
+		lastKnownFrameLength = parsedData.totalFrames ; // set the last known end frame to the total frames recorded
+		document.getElementById("startMarker").max = parsedData.totalFrames ;
+		document.getElementById("endMarker").max = parsedData.totalFrames ;
+		document.getElementById("timeLine").max = parsedData.totalFrames ;
+		markerFill() ; // update the highlighted area above the timeline
 
-	if ("totalFrames" in parsedData)
-		lastKnownFrameEnd = parsedData.totalFrames ; // set the last known end frame to the total frames recorded
-	else if ("playbackLength" in parsedData)
-		lastKnownFrameEnd = parsedData.playbackLength ; // set the last known playback length
+		document.getElementById("totalFramesNum").innerHTML = parsedData.totalFrames ; // update the total frame number display
+		document.getElementById("currentFrameNum").max = parsedData.totalFrames ;
+		document.getElementById("startFrameNum").max = parsedData.totalFrames ;
+		document.getElementById("endFrameNum").max = parsedData.totalFrames ;
+		document.getElementById("frameLengthNum").max = parsedData.totalFrames ;
+	}
+
+	if ("playbackStart" in parsedData) {
+		lastKnownStartFrame = parsedData.playbackStart ; // set the last known playback starting point
+		document.getElementById("startMarker").value = parsedData.playbackStart ; // set the slider position
+
+		document.getElementById("startFrameNum").value = parsedData.playbackStart ;
+	}
+
+	if ("playbackLength" in parsedData) {
+		lastKnownFrameEnd = parseInt(parsedData.playbackLength + parseInt(document.getElementById("startMarker").value)) ; // set the last known playback length
+		document.getElementById("endMarker").value = parseInt(parsedData.playbackLength) + parseInt(document.getElementById("startMarker").value) ;
+		markerFill() ; // update the highlighted area above the timeline
+
+		document.getElementById("frameLengthNum").value = parsedData.playbackLength ;
+
+		document.getElementById("endFrameNum").value = document.getElementById("endMarker").value ;
+	}
 
 	if ("playbackPosition" in parsedData) { // get the playback frame
 		if (lastKnownVideoState == "filesave") {
 			// display a progress bar here
-			var progress = parsedData.playbackPosition / lastKnownFrameEnd * 100 ;
+			var progress = parseFloat(parsedData.playbackPosition - lastKnownStartFrame) / parseFloat(lastKnownFrameEnd - lastKnownStartFrame) * 100 ;
 			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
 				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.playbackPosition + " of: " + lastKnownFrameEnd ;
 				document.getElementById("saveProgressFill").style.width = progress + "%" ;
@@ -850,7 +849,9 @@ function pageUpdate(rawData){
 			
 		}
 		else if (lastKnownVideoState == "play") {
-			document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
+			document.getElementById("timeLine").value = parsedData.playbackPosition ;
+
+			document.getElementById("currentFrameNum").value = parsedData.playbackPosition ;
 		}
 		lastKnownCurrentFrame = parsedData.playbackPosition ;
 	}
@@ -914,7 +915,7 @@ dataGetter("p", "", pageUpdate) ; // get all the data on startup
 var PollCounter = 1 ;
 function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
 
-	if (PollCounter % 30 == 0) { // every 15-ish seconds
+	if (PollCounter % 30 == 0) { // every 15 seconds
 		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
 	}
 
@@ -922,12 +923,17 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 //		img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
 		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
 
-		if ( (lastKnownVideoState == "filesave") || (lastKnownVideoState == "play") )
+		if (lastKnownVideoState == "filesave")
 			dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
 	}
 
-	if (PollCounter % 120 == 0) { // every 60-ish seconds
+	if (PollCounter % 120 == 0) { // every 60 seconds
 		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
+	}
+
+	if (PollCounter % 10 == 0) { // every 5 seconds
+		if (lastKnownVideoState == "play")
+			dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
 	}
 
 	PollCounter++ ;
