@@ -197,7 +197,6 @@ input[type="text"]{
 
 
  /* Icon masking color (inactive) */
-.active .playIcon { border-left-color: #333; }
 .saveIcon:after { border-top-color: #333; }
 
  /* Icon masking color (hover) */
@@ -208,6 +207,7 @@ a:hover .saveIcon:after { border-top-color: #777; }
 .active .saveIcon:after { border-top-color: white; }
 .active .homeIcon { background-color: white; }
 .active .homeIcon:after { border-bottom-color: white; }
+.active .playIcon { border-left-color: white; }
 
  /* Icon masking colors (active) */
 .active .saveIcon { background-color: #333; }
