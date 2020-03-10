@@ -167,8 +167,9 @@
 
 
 .timelineHolder {
-	margin: -40px 0 20px 0;
+	margin: -24px 0 20px 0;
 	display: block;
+	position: relative;
 }
 
 .timeline{
@@ -204,6 +205,49 @@
 
 
 
+.timelineMarker {
+	display: block;
+	-webkit-appearance: none;
+	width: 100%;
+	height: 0;
+/*	border-radius: 8px; */
+	background: orange;
+/*	background-image: linear-gradient(to right, black, white);*/
+	margin: 0;
+}
+.timelineMarker::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 11px;
+	height: 1px;
+	border-radius: 10px;
+	border: 3px solid red;
+	cursor: pointer;
+	margin-top: -1px;
+}
+.timelineMarker::-moz-range-thumb {
+	width: 0;
+	height: 0;
+	border-radius: 0;
+	border: 20px solid transparent;
+	border-bottom-width: 10px;
+	cursor: pointer;
+/*	background-color: #0067B9; /* pantone 2144 */
+	background-color: transparent;
+	padding-top: 20px;
+}
+
+
+#startMarker::-moz-range-thumb { border-right: 0; border-top-color: green; }
+#endMarker::-moz-range-thumb { border-left: 0; border-top-color: red; }
+
+
+#startEndFill {
+	display: block;
+	height: 16px;
+	background-color: blue;
+	width: 96%;
+	margin: -20px 2% -13px 2%;
+}
 
 </style>
 </head>
@@ -259,7 +303,10 @@
 		</div>
 
 		<div class="timelineHolder">
-			<input class="timeline" type="range" id="timeLine">
+			<input id="startMarker" class="timelineMarker" onchange="markerFill()" type="range" min="0" max="100" value="30">
+			<input id="endMarker" class="timelineMarker" onchange="markerFill()" type="range" min="0" max="100" value="60">
+			<div id="startEndFill"></div>
+			<input id="timeLine" class="timeline" type="range">
 		</div>
 
 		<div class="Text-bar">
@@ -270,8 +317,10 @@
 				</div>
 				<span id="battery%">0%</span>
 			</div>
-			<a id="frameStepF" onclick="toggler(this)">Step Forward</a>
+			<a id="frameMarkStart" onclick="toggler(this)">Mark Start</a>
 			<a id="frameStepB" onclick="toggler(this)">Step Backward</a>
+			<a id="frameStepF" onclick="toggler(this)">Step Forward</a>
+			<a id="frameMarkEnd" onclick="toggler(this)">Mark End</a>
 		</div>
 
 	</div>
@@ -412,6 +461,25 @@
 
 <script>
 
+
+
+
+function markerFill() {
+	var start = parseInt(document.getElementById("startMarker").value) ;
+	var end = parseInt(document.getElementById("endMarker").value) ;
+
+	if (start > end) {
+		start = end ; // force to always have start <= end
+		document.getElementById("startMarker").value = end;
+	}
+
+	var fillBar = document.getElementById("startEndFill") ;
+
+	fillBar.style.marginLeft = parseFloat(2 + start * 0.96) + "%" ;
+	fillBar.style.width = parseFloat( (end - start) * 0.96 ) + "%" ;
+}
+
+markerFill(); // run on page load
 
 var DebugOnOff = false ;
 
