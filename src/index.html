@@ -709,7 +709,12 @@ function updatePreviewWindow() { // show a preview of the sensor usage window
 
 
 
-var resolutionPresets = [	[1280, 1024, 0],
+var resolutionPresets = [	[1920, 1200, 0],
+							[1920, 1080, 0],
+							[1680, 1050, 0],
+							[1400, 1050, 0],
+
+							[1280, 1024, 0],
 							[1280, 720, 0],
 							[1280, 512, 0],
 							[1280, 360, 0],
@@ -735,10 +740,15 @@ var counter = 0 ;
 function findFrameRates() {
 	if (counter < resolutionPresets.length) {
 		var retrieval = function (stringBack) { // what to do with the data that comes back
+//			document.getElementById("debugger").innerHTML += "Find Frame Rates  got this: " + stringBack;
 			var jsonBack = JSON.parse(stringBack) ;
-			if ("minFramePeriod" in jsonBack)
+			if ("minFramePeriod" in jsonBack) {
 				resolutionPresets[counter][2] = jsonBack.minFramePeriod ;
-			counter++ ; // increase the counter for next time
+				counter++ ; // increase the counter for next time
+			}
+			else if ("error" in jsonBack) { // something went wrong with trying to use this resolution
+				resolutionPresets.splice(counter, 1) ;; // remove the resolution if it is unusable on this sensor
+			}
 			findFrameRates() ; // call again (with the next resolution)
 		}
 		dataRequester("getResolutionTimingLimits", '{"hRes":' + resolutionPresets[counter][0] + ',"vRes":' + resolutionPresets[counter][1] + '}', retrieval) ;
