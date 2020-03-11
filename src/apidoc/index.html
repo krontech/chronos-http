@@ -198,12 +198,12 @@ data:}
             <tr>
               <td>GET</td>
               <td><code>/control/p/{name}</code></td>
-              <td>Retrieve a single parameter by name</td>
+              <td>Retrieve a single parameter by name if the <code>r</code> flags is set.</td>
             </tr>
             <tr>
               <td>PUT</td>
               <td><code>/control/p/{name}</code></td>
-              <td>Set the value of a single parameter by name</td>
+              <td>Set the value of a single parameter by name if the <code>w</code> flag is set.</td>
             </tr>
             <tr>
               <td>POST</td>
@@ -214,7 +214,14 @@ data:}
         </table>
         </p>
 
-        <p>The Chronos API makes the following parameters accessible to the user:</p>
+        <p>Parameters will have one or more flags describing the ways in which they can be manipulated
+          using the REST API:
+          <ul>
+            <li><code>r</code> flag: The parameter's value can be retrieved using the HTTP GET verb.</li>
+            <li><code>w</code> flag: The parameter's value can be updated using the HTTP SET verb.</li>
+            <li><code>n</code> flag: Changes to the parameter's value will be reported using the <code>notify</code> event.</li>
+          </ul>
+        </p>
 
         <table class="table table-striped">
         <thead>
@@ -222,8 +229,7 @@ data:}
             <th class="col-2">Name</th>
             <th class="col-1">Type</th>
             <th class="col-1 text-right">Flags</th>
-            <th class="col-5">Description</th>
-            <th class="col-3">Value</th>
+            <th class="col-8">Description</th>
           </tr>
         </thead>
         <tbody id="parameters">
@@ -243,8 +249,33 @@ data:}
     <script>
       function updateValues(result) {
         for (let name in result) {
-          let e = document.getElementById("value-" + name);
-          e.innerText = JSON.stringify(result[name], null, 2);
+          let button = document.getElementById("value-button-" + name);
+          let datacell = document.getElementById("value-data-" + name);
+          let vtext = JSON.stringify(result[name], null, 2);
+
+          if (datacell) {
+            /* Complex values should be displayed in a collapsable card */
+            let card = document.createElement("div");
+            let pre = document.createElement("pre");
+            let code = document.createElement("code");
+            card.setAttribute("class", "card card-body");
+            code.setAttribute("class", "language-javascript");
+            pre.appendChild(code);
+            card.appendChild(pre);
+
+            datacell.innerHTML = "";
+            datacell.appendChild(card);
+
+            /* Fixup for Prism bug: https://github.com/PrismJS/prism/issues/1764  */
+            code.innerHTML = vtext.replace("<br>","\n");
+            /* Manually invoke Prism for syntax highlighting. */
+            Prism.highlightAllUnder(card);
+
+            button.innerText = name + " => ...";
+          }
+          else {
+            button.innerText = name + " => " + vtext;
+          }
         }
       }
 
@@ -322,7 +353,7 @@ data:}
           paragraph.innerHTML = escapeDocstring(data.doc);
           dcell.appendChild(paragraph);
         }
-        dcell.setAttribute("class", "col-5");
+        dcell.setAttribute("class", "col-8");
 
         /* If a detailed descrition was provided, render it as multiple paragraphs. */
         if (data.hasOwnProperty("description")) {
@@ -352,15 +383,27 @@ data:}
           dcell.appendChild(list);
         }
 
-        let vcell = row.insertCell(4);
-        let pre = document.createElement("pre");
-        let code = document.createElement("code");
-        code.setAttribute("class", "language-javascript");
-        code.id = "value-" + name;
-        pre.setAttribute("class", "pre-scrollable");
-        pre.appendChild(code);
-        vcell.appendChild(pre);
-        vcell.setAttribute("class", "col-3");
+        /* Create a button to display the parameter value */
+        let vpara = document.createElement("p");
+        let vbutton = document.createElement("button");
+        vbutton.setAttribute("class", "btn btn-secondary btn-sm");
+        vbutton.setAttribute("type", "button");
+        vbutton.id = "value-button-" + name;
+        vbutton.innerText = name + " => unknown";
+        vpara.appendChild(vbutton);
+        dcell.appendChild(vpara);
+
+        /* For complex types, create a collapseable card to hold the value */
+        if (data['type'].length > 1) {
+          vbutton.setAttribute("data-toggle", "collapse");
+          vbutton.setAttribute("aria-expanded", "false");
+          vbutton.setAttribute("data-target", "#value-data-" + name);
+
+          let collapse = document.createElement("div");
+          collapse.setAttribute("class", "collapse");
+          collapse.setAttribute("id", "value-data-" + name);
+          dcell.appendChild(collapse);
+        }
       }
 
       function buildAPIDocs(result) {
