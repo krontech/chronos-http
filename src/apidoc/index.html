@@ -396,6 +396,13 @@ data:}
         vpara.appendChild(vbutton);
         dcell.appendChild(vpara);
 
+        /* Refresh the value button when clicked. */
+        vbutton.onclick = function() {
+          fetch("/control/p/" + name, {
+            cache: "no-cache"
+          }).then((response) => response.json()).then((data) => { updateValues(data); })
+        }
+
         /* For complex types, create a collapseable card to hold the value */
         if (data['type'].length > 1) {
           vbutton.setAttribute("data-toggle", "collapse");
@@ -455,7 +462,7 @@ data:}
         /* If return datum exists, build a table to describe them */
         if (data.hasOwnProperty("returns")) {
           let paragraph = document.createElement("p");
-          paragraph.innerHTML = "The <code>" + name + "</code> method returns the a dictionary with the following members:";
+          paragraph.innerHTML = "The <code>" + name + "</code> method returns a dictionary with the following members:";
           section.appendChild(paragraph);
           section.appendChild(buildArgTable(data.returns, "Return Value"));
         }
