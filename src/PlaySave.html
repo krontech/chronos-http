@@ -185,6 +185,8 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 #frameMarkStart, #frameMarkEnd { width: 100px; } /* set the width of these buttons */
 #frameStepB, #frameStepF { width: 135px; }
 
+#playBackBox { max-width: 300px; }
+
 </style>
 </head>
 
@@ -269,7 +271,7 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 			<b> Frames </b>
 			<br>
 			Frame:
-			<input type="number" id="currentFrameNum" onChange="justRunSomething(this)" min="0"> / <span id="totalFramesNum">#</span>
+			<input type="number" id="currentFrameNum" onChange="justRunSomething(this)" min="0" value="1"> / <span id="totalFramesNum">#</span>
 			<br>
 			Starting Frame:
 			<input type="number" id="startFrameNum" onChange="justRunSomething(this)" min="0">
@@ -281,26 +283,33 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 			<input type="number" id="frameLengthNum" onChange="justRunSomething(this)" min="0">
 		</div>
 
-		<div id="playBack" class="horizLayout">
-			<b> Playback Rate </b>
-			( Rate )
-		</div>
-
-		<div id="videoSettings" class="horizLayout">
+		<div id="videoSettingsBox" class="horizLayout">
 			<b> Video Settings </b>
 			<br>
-			Bits per pixel: ( ### )
+			Bits per pixel:
+			<input type="number" id="bitsPerPixelNum" onChange="justRunSomething(this)" min="0.25" step="0.1" max="99.9">
 			<br>
-			Saved file framerate: ( ### ) fps
+			Saved file framerate:
+			<input type="number" id="saveFPSNum" onChange="justRunSomething(this)" min="1" max="60" step="1"> fps
 			<br>
-			Max Bitrate: ( ### ) Mbps
+			Max Bitrate:
+			<input type="number" id="maxBitrateNum" onChange="justRunSomething(this)" min="1" max="60" step="1"> Mbps
 			<br>
 			[ Text Overlay ]
+			<br>
+			<br>
 		</div>
 
-		<div id="saveAsBox" class="horizLayout">
-			<b> Save Video </b>
-<!--			&emsp; -->
+		<div id="playBackBox" class="horizLayout">
+			<b> Playback Rate </b>
+			&ensp;
+			<input type="number" id="playBackRateNum" onChange="justRunSomething(this)" min="10" max="1920" step="5">
+			<br>
+			<span class="instruction">Note that the video preview on this page only updates the display once per second</span>
+		</div>
+
+		<div id="storageDeviceBox" class="horizLayout">
+			<b> Storage Device </b>
 			<br>
 			<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> No Storage Connected </a>
@@ -312,6 +321,11 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 			Used: <span id="storageUsed"></span>
 			<br>
 			Available: <span id="storageAvailable"></span>
+		</div>
+
+
+		<div id="saveAsBox" class="horizLayout">
+			<b> Save Video </b>
 			<br><br>
 			<input type="text" id="fileName" placeholder="File Name">
 			<br>
@@ -324,6 +338,14 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 				<a onclidk="dropDownSelect(this)">TIFF RAW (images)</a>
 			</div></div>
 			<a id="saveVideoButton" class="button disabled" onclick="saveVideo()"> Save </a>
+		</div>
+
+		<div id="downloadBox" class="horizLayout">
+			<b> Download From Camera </b>
+			<br>
+			<div id="fileDownloadList" class="selectContainerHolder">Download File<div id="fileDownloadListInner" class="selectContainer">
+				<a onclick="dropDownSelect(this)"> Select a Storage Location </a>
+			</div></div>
 		</div>
 
 	</div>
@@ -401,6 +423,60 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 <script>
 
 
+function tester1func() {
+//	dataSender("startPlayback", '{"framerate": 0}') ;
+	dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ;
+}
+
+
+function tester2func() {
+	dataRequester("startLivedisplay", "{}", pageUpdate) ;
+
+}
+
+
+function tester3func() {
+}
+
+
+function getFileList() {
+	var requestSender = new XMLHttpRequest() ;
+	requestSender.open("GET", "/cgi-bin/listFiles?" + StorageLocation) ;
+	requestSender.setRequestHeader("Content-Type", "video/mp4") ;
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){
+			parsedList = JSON.parse(requestSender.responseText) ;
+
+			if ("totalFileCount" in parsedList) {
+//				document.getElementById("debugger2").innerHTML = "" ;
+				document.getElementById("fileDownloadListInner").innerHTML = "";
+				for (var i = 0 ; i < parsedList.totalFileCount; i++) {
+					var index = "file" + i ;
+					if ( index in parsedList ) {
+//						document.getElementById("debugger2").innerHTML += "found file: " + parsedList[index] + "<br>" ;
+						document.getElementById("fileDownloadListInner").innerHTML += '<a href="/cgi-bin/pleaseGiveMeAFile?' + StorageLocation + "/" + parsedList[index] + '">' + parsedList[index] + "</a>";
+					}
+				}
+			}
+			else
+				document.getElementById("fileDownloadListInner").innerHTML = "<a> No Files Found</a>";
+		}
+	}
+
+	if (StorageLocation != "") // only request if a storage location is set
+		requestSender.send() ;
+	else
+		document.getElementById("debugger").innerHTML = " >> No storage location selected " ;
+
+
+//	dataSender("startPlayback", '{"framerate": 60, "position": 200}') ;
+//	dataRequester("startPlayback", '{"framerate": 60, "position": 200}', pageUpdate) ;
+
+	
+}
+
+
 var inputFunctions = {	"startMarker":		function(value){ dataSender("set", '{"playbackStart":' + value + '}') ; setPlayBackLength() ; markerFill() ; },
 						"endMarker":		function(value){ setPlayBackLength() ; markerFill() ; },
 						"timeLine":			function(value){ dataSender("set", '{"playbackPosition":' + value + '}') ; },
@@ -449,21 +525,6 @@ function markerFill() {
 
 var DebugOnOff = true ;
 
-function tester1func() {
-	DebugOnOff = true ;
-
-}
-
-
-function tester2func() {
-	DebugOnOff = false ;
-
-}
-
-
-function tester3func() {
-
-}
 
 
 
@@ -540,6 +601,8 @@ function useStorageLocation(key) {
 		StorageLocation = key ; // save the storage location
 
 		document.getElementById("saveVideoButton").classList.remove("disabled") ; // enable the save button
+
+		getFileList() ; // populate the "download from camera" dropdown with files to download
 	}
 	else {
 		document.getElementById("storageSize").innerHTML = "" ;
@@ -618,7 +681,7 @@ img.onload = function scaleToFit(){
 var nameChange = 	{	"playButton": 	["<div class='playIcon'></div>&ensp;Play", "<div class='pauseIcon'></div>&ensp;Pause"]
 					}
 
-var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ dataSender("startRecording", "{}"); } ],
+var buttonFunctions = {	"playButton":	[ function(){ dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; }, function(){ dataRequester("startPlayback", '{"framerate": 60, "position": ' + document.getElementById("currentFrameNum").value + '}', pageUpdate) ;} ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataSender("set", '{"focusPeakingLevel": 0}') ;}, function(){ dataSender("set", '{"focusPeakingLevel": 0.2}') ;} ],
@@ -789,12 +852,29 @@ function pageUpdate(rawData){
 				document.getElementById("saveProgressFill").style.width = 0 ;
 				document.getElementById("saveProgress").lastChild.textContent = "Recording or ready to record" ;
 				document.getElementById("timelineHolder").classList.add("hidden") ;
+
+				stateSelecter(document.getElementById("playButton"), 0) ;
+				document.getElementById("playButton").classList.remove("disabled") ;
 				break ;
 
 			case "play":
 				document.getElementById("saveProgress").classList.add("hidden") ;
 				document.getElementById("timelineHolder").classList.remove("hidden") ;
 				document.getElementById("videoStateOverlay").innerHTML = "Playing Video" ;
+
+				if ("framerate" in parsedData) {
+					if (parsedData.framerate == 0)
+						stateSelecter(document.getElementById("playButton"), 0) ;
+					else
+						stateSelecter(document.getElementById("playButton"), 1) ;
+				}
+				else if ("playbackRate" in parsedData) {
+					if (parsedData.playbackRate == 0)
+						stateSelecter(document.getElementById("playButton"), 0) ;
+					else
+						stateSelecter(document.getElementById("playButton"), 1) ;
+				}
+				document.getElementById("playButton").classList.remove("disabled") ;
 				break ;
 
 			case "filesave":
@@ -802,7 +882,58 @@ function pageUpdate(rawData){
 				document.getElementById("saveProgress").classList.remove("hidden") ; // show the progress bar
 				document.getElementById("videoStateOverlay").innerHTML = "Saving Video" ;
 				document.getElementById("timelineHolder").classList.remove("hidden") ;
+
+				document.getElementById("playButton").classList.add("disabled") ;
+				stateSelecter(document.getElementById("playButton"), 0) ;
 				break ;
+		}
+	}
+	else if ("liverecord" in parsedData) { // response from a video state change
+		if ( ("filesave" in parsedData) && (parsedData.filesave == true) ) {
+			document.getElementById("saveProgressFill").style.width = 0 ;
+			document.getElementById("saveProgress").classList.remove("hidden") ; // show the progress bar
+			document.getElementById("videoStateOverlay").innerHTML = "Saving Video" ;
+			document.getElementById("timelineHolder").classList.remove("hidden") ;
+
+			document.getElementById("playButton").classList.add("disabled") ;
+			stateSelecter(document.getElementById("playButton"), 0) ;
+			lastKnownVideoState = "filesave" ;
+		}
+
+		if ( ("playback" in parsedData) && (parsedData.playback == true) ) {
+			document.getElementById("saveProgress").classList.add("hidden") ;
+			document.getElementById("timelineHolder").classList.remove("hidden") ;
+			document.getElementById("videoStateOverlay").innerHTML = "Playing Video" ;
+
+			if ("framerate" in parsedData) {
+				if (parsedData.framerate == 0)
+					stateSelecter(document.getElementById("playButton"), 0) ;
+				else
+					stateSelecter(document.getElementById("playButton"), 1) ;
+			}
+			document.getElementById("playButton").classList.remove("disabled") ;
+			lastKnownVideoState = "play" ;
+		}
+
+		if (parsedData.liverecord == true) {
+			document.getElementById("saveProgress").classList.remove("hidden") ;
+			document.getElementById("videoStateOverlay").innerHTML = "Live Display" ;
+			document.getElementById("saveProgressFill").style.width = 0 ;
+			document.getElementById("saveProgress").lastChild.textContent = "Recording or ready to record" ;
+			document.getElementById("timelineHolder").classList.add("hidden") ;
+
+			stateSelecter(document.getElementById("playButton"), 0) ;
+			document.getElementById("playButton").classList.remove("disabled") ;
+			lastKnownVideoState = "live" ;
+		}
+
+		if ("framerate" in parsedData) {
+		}
+
+		if ("totalSegments" in parsedData) {
+		}
+
+		if ("segment" in parsedData) {
 		}
 	}
 
@@ -845,15 +976,26 @@ function pageUpdate(rawData){
 				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.playbackPosition + " of: " + lastKnownFrameEnd ;
 				document.getElementById("saveProgressFill").style.width = progress + "%" ;
 			}
-
-			
 		}
 		else if (lastKnownVideoState == "play") {
 			document.getElementById("timeLine").value = parsedData.playbackPosition ;
-
 			document.getElementById("currentFrameNum").value = parsedData.playbackPosition ;
 		}
 		lastKnownCurrentFrame = parsedData.playbackPosition ;
+	}
+	else if ("position" in parsedData) {
+		if (lastKnownVideoState = "filesave") {
+			var progress = parseFloat(parsedData.position - lastKnownStartFrame) / parseFloat(lastKnownFrameEnd - lastKnownStartFrame) * 100 ;
+			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
+				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.position + " of: " + lastKnownFrameEnd ;
+				document.getElementById("saveProgressFill").style.width = progress + "%" ;
+			}
+		}
+		else if (lastKnownVideoState == "play") {
+			document.getElementById("timeLine").value = parsedData.position ;
+			document.getElementById("currentFrameNum").value = parsedData.position ;
+		}
+		lastKnownCurrentFrame = parsedData.position ;
 	}
 
 }

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+## give back a file that is asked for (if it is on one of the media devices)
+
+## Nicholas Faliszewski
+## March 2020
+
+echo "Content-Type: video/mp4"
+echo "Content-Disposition: attachment"
+echo ""
+
+if [ -z "$QUERY_STRING" ]
+then
+	if [ -z "$1" ]
+	then
+		echo "I got no input value"
+	else
+		cat /media/$1
+	fi
+else
+	cat /media/$QUERY_STRING
+fi
