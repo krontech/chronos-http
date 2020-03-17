@@ -2,21 +2,42 @@
 
 ## give back a file that is asked for (if it is on one of the media devices)
 
+## the desired format for the input is: ip/cgi-bin/pleaseGiveMeAFile?location=deviceName&fileName=fileName
+
 ## Nicholas Faliszewski
 ## March 2020
 
-echo "Content-Type: video/mp4"
-echo "Content-Disposition: attachment"
-echo ""
 
-if [ -z "$QUERY_STRING" ]
+backupIFS=$IFS
+IFS="=&"
+params=($QUERY_STRING)
+IFS=$backupIFS
+
+
+if [[ "${params[0]}" == "location" ]] && [[ "${params[2]}" == "fileName" ]]
 then
-	if [ -z "$1" ]
+	if [[ "${params[3]}" == *".mp4" ]]
 	then
-		echo "I got no input value"
+		echo "Content-Type: video/mp4"
+		fileSize=$(stat -c %s /media/${params[1]}/${params[3]})
+		echo "Content-Length: $fileSize"
+		echo "Content-Disposition: attachment; filename=${params[3]}"
+		echo "Cache-Control: no-cache"
+		echo ""
+
+		cat /media/${params[1]}/${params[3]} ## return the requested file
 	else
-		cat /media/$1
+		echo "Content-Type: text/plain"
+		echo ""
+
+		echo "I don't recognize that file type"
+		echo "I saw a request for: ${params[3]}"
 	fi
 else
-	cat /media/$QUERY_STRING
+	echo "Content-Type: text/plain"
+	echo ""
+
+	echo "unable to get that file; are you sure you requested it properly?"
+	echo "the correct format is: ip/cgi-bin/pleaseGiveMeAFile?location=deviceName&fileName=nameOfFile"
+	echo ""
 fi
