@@ -11,13 +11,43 @@
 
 <style>
 
+/******** Specific to this page ********/
 
-.swatch {
-	display: inline-block;
-	height: 100px;
-	width: 100px;
-	margin: 0 -4px;
-	font-size: 80%;
+#playButton	{ width: 170px; padding: 19.5px 0; }
+
+#saveVideoButton { float: right; }
+#saveVideoButton.disabled { /* when the save button is disabled */
+/*	box-shadow: 0 0 3px 3px #a00; */
+	background-color: #222;
+	text-decoration: line-through; /* cross out the apply button */
+}
+
+#startMarker::-moz-range-thumb { border-right: 0; border-top-color: green; border-left-width: 15px; }
+#endMarker::-moz-range-thumb { border-left: 0; border-top-color: #a00; border-right-width: 15px; }
+#startMarker::-webkit-slider-thumb { border-right: 0; border-top-color: green; border-left-width: 15px; margin-top: -30px; }
+#endMarker::-webkit-slider-thumb { border-left: 0; border-top-color: #a00; border-right-width: 15px; margin-top: -30px; }
+
+#startEndFill {
+	display: block;
+	height: 16px;
+	background-color: #0067B9; /* pantone 2144 */
+	width: 96%;
+	margin: -20px 2% -13px 2%;
+}
+
+
+#frameMarkStart, #frameMarkEnd { width: 100px; } /* set the width of these buttons */
+#frameStepB, #frameStepF { width: 135px; }
+
+#playBackBox { max-width: 283px; }
+
+
+
+#frameMarkStart {
+	box-shadow: -3px 3px 0 0 inset green;
+}
+#frameMarkEnd {
+	box-shadow: 3px 3px 0 0 inset #a00;
 }
 
 
@@ -71,7 +101,7 @@
 }
 
 @media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
-	#main { display: none; } /* hide the main button */
+	#playSave { display: none; } /* hide the main button */
 	/* show the main button in the menu drop-down ? */
 
 }
@@ -104,171 +134,12 @@
 }
 
 @media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
-	#playSave { display: none; } /* hide the settings button */
+	#main { display: none; } /* hide the settings button */
 	/* show the settings button in the menu drop-down ? */
 	#menu { width: 100%; }
 }
 
-.overlay {
-	position: relative ;
-	bottom: 51.5% ;
-	left: 45%;
-	background-color: black;
-	border-radius: 10px;
-	height: 1.5%;
-	width: 10%;
-}
 
-.overlay:after {
-	content: '';
-	position: absolute;
-	top: -350%;
-	left: 45%;
-	height: 800%;
-	width: 11%;
-	background-color: black;
-	border-radius: 10px;
-}
-
-
-
-.stateNotice {
-	content: "Saving Video";
-	position: absolute;
-	bottom: 217%;
-	font-size: 200%;
-	left: 10%;
-	right: 10%;
-	background-color: rgba(0,0,0, 0.4);
-	color: white;
-	padding: 6px;
-	border-radius: 10px;
-}
-
-.progressBar {
-	position: relative;
-	bottom: 13%;
-	left: 5%;
-	width: 90%;
-/*	height: 10%; */
-	padding: 10px 0;
-	border-radius: 10px;
-	z-index: 20;
-}
-
-.progressBarFill {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100% ;
-	width: 20%;
-	border-radius: 10px;
-	z-index: -5;
-}
-
-
-
-#playButton	{ width: 170px; padding: 19.5px 0; }
-
-#saveVideoButton { float: right; }
-#saveVideoButton.disabled { /* when the save button is disabled */
-/*	box-shadow: 0 0 3px 3px #a00; */
-	background-color: #222;
-	text-decoration: line-through; /* cross out the apply button */
-}
-
-
-input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline from the sliders */
-
-
-
-
-
-#startMarker::-moz-range-thumb { border-right: 0; border-top-color: green; border-left-width: 15px; }
-#endMarker::-moz-range-thumb { border-left: 0; border-top-color: #a00; border-right-width: 15px; }
-
-
-#startEndFill {
-	display: block;
-	height: 16px;
-	background-color: #0067B9; /* pantone 2144 */
-	width: 96%;
-	margin: -20px 2% -13px 2%;
-}
-
-
-#frameMarkStart, #frameMarkEnd { width: 100px; } /* set the width of these buttons */
-#frameStepB, #frameStepF { width: 135px; }
-
-#playBackBox { max-width: 283px; }
-
-.overlayButtons {
-	position: absolute;
-	bottom: 117%;
-	left: 0;
-	right: 0;
-	text-align: center;
-}
-
-.overlayButtons a {
-	display: inline-block;
-	margin: 0;
-	background-color: #0067B9; /* pantone 2144 */
-	padding: 6px 12px;
-	border-radius: 10px;
-}
-.overlayButtons a:hover {
-	cursor: pointer;
-	background-color: #3D87CB; /* pantone 2143 */
-}
-
-.overlayButtons a + a {
-	margin-left: 5%;
-}
-
-
-
-a.innerDropDown {
-	padding-left: 25px;
-}
-a.innerDropDown:before {
-	content: "";
-	height: 0;
-	width: 0;
-	border: 7px solid transparent;
-	border-left: 10px solid white;
-	position: absolute;
-	top: 14px;
-	left: 10px;
-	margin-right: 6px;
-	transition: all 0.2s ease;
-}
-a.innerDropDown.active {
-	background-color: #004EA8; /* pantone 2145 */
-}
-a.innerDropDown.active:hover {
-	background-color: #3D87CB; /* pantone 2143 */
-}
-a.innerDropDown.active:before {
-	border: 7px solid transparent;
-	border-top: 10px solid white;
-	top: 18px;
-	left: 7px;
-}
-.innerDropDownList {
-	display: none;
-}
-.innerDropDownList a {
-	padding-left: 20px;
-	background-color: #004EA8; /* pantone 2145 */
-}
-
-#frameMarkStart {
-	box-shadow: -3px 3px 0 0 inset green;
-}
-#frameMarkEnd {
-	box-shadow: 3px 3px 0 0 inset #a00;
-}
 
 </style>
 </head>
@@ -304,6 +175,7 @@ a.innerDropDown.active:before {
 			<a> Review Saved Videos </a>
 			<a> Triggers & IO </a>
 			<a> Documentation </a>
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
 			<a> Nicholas was here </a>
 		</div>
 
@@ -315,7 +187,6 @@ a.innerDropDown.active:before {
 		<div id="videoDisplay" class="videoDisplay">
 			<div id="spacer"> </div>
 			<img id="imageDisplay" alt="Screenshot Display">
-			<div id="crossHairs" class="overlay hidden"></div>
 			<div id="saveProgress" class="progressBar hidden">
 				<div id="videoStateOverlay" class="stateNotice">Saving Video</div>
 				<div id="overlayButtons" class="overlayButtons">
@@ -438,10 +309,11 @@ a.innerDropDown.active:before {
 
 	<br>
 
-	<div class="Text-bar">
+	<div id="debugBar" class="Text-bar hidden">
 		<a id="tester1" onclick="tester1func()"> tester1 </a>
 		<a id="tester2" onclick="tester2func()"> tester2 </a>
 		<a id="tester3" onclick="tester3func()"> tester3 </a>
+		<a id="debugToggle" onclick="toggler(this)"> Display Messages </a>
 		<div class="no-click"></div>
 		<a onclick='theme("default")'> Default Theme </a>
 		<a onclick='theme("monochrome")'> Mono Theme </a>
@@ -451,14 +323,13 @@ a.innerDropDown.active:before {
 		<a onclick='theme("newDefault")'> New Default </a>
 	</div>
 	<br>
-
 	<span id="debugger">  </span>
 
 	<span id="debugger2">  </span>
 
 	<br>
 	<br>
-
+<!--
 	<div class="swatch" style="background-color: black;">black</div>
 	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div>
 	<div class="swatch" style="background-color: #222;">#222</div>
@@ -490,7 +361,7 @@ a.innerDropDown.active:before {
 	<div class="swatch" style="background-color: #004EA8;">#004EA8</div>
 	<div class="swatch" style="background-color: #9C9687 ;">#9C9687 </div>
 
-
+-->
  </div>
 
 <br>
@@ -773,7 +644,9 @@ var dropDownFunctions = { "Refresh":		function(){ dataGetter("get", 'externalSto
 						  "H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
 						  "CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
 						  "TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
-						  "TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; }
+						  "TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; },
+
+						  "Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
 						}
 
 
@@ -823,7 +696,8 @@ var nameChange = 	{	"playButton": 	["<div class='playIcon'></div>&ensp;Play", "<
 
 var buttonFunctions = {	"playButton":	[ function(){ dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; }, function(){ dataRequester("startPlayback", '{"framerate": ' + document.getElementById("playBackRateNum").value + ', "position": ' + document.getElementById("currentFrameNum").value + '}', pageUpdate) ;} ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
-						"textOverlayButton":	[ function(){ dataSender("set", '{"overlayEnable": false}') ; }, function(){ dataSender("set", '{"overlayEnable": true}') ; } ]
+						"textOverlayButton":	[ function(){ dataSender("set", '{"overlayEnable": false}') ; }, function(){ dataSender("set", '{"overlayEnable": true}') ; } ],
+						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
 					  }
 
 

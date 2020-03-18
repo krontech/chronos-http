@@ -123,7 +123,7 @@ img{
 	border: 3px solid black;
 	margin: 0 2%;
 }
-.timeline::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb {
+.timeline::-webkit-slider-thumb, .timeline input[type=range]::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	width: 11px;
 	height: 25px;
@@ -154,13 +154,15 @@ img{
 /*	background-image: linear-gradient(to right, black, white);*/
 	margin: 0;
 }
-.timelineMarker::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb {
+.timelineMarker::-webkit-slider-thumb, .timeLineMarker input[type=range]::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	width: 11px;
-	height: 1px;
-	border-radius: 10px;
-	border: 3px solid #a00;
+	width: 0;
+	height: 0;
+	border-radius: 0;
+	border: 20px solid transparent;
+	border-bottom-width: 10px;
 	cursor: pointer;
+	background-color: transparent;
 	margin-top: -1px;
 }
 .timelineMarker::-moz-range-thumb {
@@ -234,7 +236,7 @@ img{
 	border: 3px solid black;
 	margin: 0px;
 }
-.slider::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb {
+.slider::-webkit-slider-thumb, .slider input[type=range]::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	width: 11px;
 	height: 25px;
@@ -251,6 +253,7 @@ img{
 	cursor: pointer;
 }
 
+input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline from the sliders */
 
 
 
@@ -323,11 +326,11 @@ img{
 	border-radius: 10px;
 }
 
-input[type="number"]{
+input[type=number]{
 	-webkit-appearance: textfield;
 	-moz-appearance: textfield;
 	appearance: textfield;
-	
+	line-height: 35px;
 	text-align: center;
 	width: 83px;
 	padding: 2.3px 0 5px 0;
@@ -347,11 +350,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 
-input[type="text"]{
+input[type=text]{
 	-webkit-appearance: textfield;
 	-moz-appearance: textfield;
 	appearance: textfield;
-	
+	line-height: 35px;
 	text-align: left;
 	width: 190px;
 	padding: 2.3px 0 5px 8px;
@@ -385,6 +388,91 @@ input[type="text"]{
 #menu.active + .menuContainer, #menu:hover + .menuContainer, .menuContainer:hover { display: block; }
 
 
+
+
+.stateNotice {
+	content: "Saving Video";
+	position: absolute;
+	bottom: 200%;
+	font-size: 200%;
+	left: 10%;
+	right: 10%;
+	background-color: rgba(0,0,0, 0.4);
+	color: white;
+	padding: 6px;
+	border-radius: 10px;
+}
+
+.progressBar {
+	position: relative;
+	bottom: 15%;
+	left: 5%;
+	width: 90%;
+/*	height: 10%; */
+	padding: 10px 0;
+	border-radius: 10px;
+	z-index: 20;
+}
+
+.progressBarFill {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100% ;
+	width: 20%;
+	border-radius: 10px;
+	z-index: -5;
+}
+
+
+.overlayButtons {
+	position: absolute;
+	bottom: 117%;
+	left: 0;
+	right: 0;
+	text-align: center;
+}
+
+.overlayButtons a {
+	display: inline-block;
+	margin: 0;
+	background-color: #0067B9; /* pantone 2144 */
+	padding: 6px 12px;
+	border-radius: 10px;
+}
+.overlayButtons a:hover {
+	cursor: pointer;
+	background-color: #3D87CB; /* pantone 2143 */
+}
+
+.overlayButtons a + a {
+	margin-left: 5%;
+}
+
+
+
+a.innerDropDown {
+	padding-left: 25px;
+}
+
+a.innerDropDown.active {
+	background-color: #004EA8; /* pantone 2145 */
+}
+a.innerDropDown.active:hover {
+	background-color: #3D87CB; /* pantone 2143 */
+}
+.innerDropDownList {
+	display: none;
+}
+.innerDropDownList a {
+	padding-left: 20px;
+	background-color: #004EA8; /* pantone 2145 */
+}
+
+
+input[type="range"] {
+    outline: none;
+}
 
 
 /******** Icons ********/
@@ -643,6 +731,48 @@ a:hover .settingsIcon:after { background-color: #777; }
 
 
 
+.overlay { /* cross for white-balance overlay */
+	position: relative ;
+	bottom: 51.5% ;
+	left: 45%;
+	background-color: black;
+	border-radius: 10px;
+	height: 1.5%;
+	width: 10%;
+}
+.overlay:after {
+	content: '';
+	position: absolute;
+	top: -350%;
+	left: 45%;
+	height: 800%;
+	width: 11%;
+	background-color: black;
+	border-radius: 10px;
+}
+
+
+a.innerDropDown:before { /* folder drop-down triangle inside drop-down */
+	content: "";
+	height: 0;
+	width: 0;
+	border: 7px solid transparent;
+	border-left: 10px solid white;
+	position: absolute;
+	top: 14px;
+	left: 10px;
+	margin-right: 6px;
+	transition: all 0.2s ease;
+}
+a.innerDropDown.active:before {
+	border: 7px solid transparent;
+	border-top: 10px solid white;
+	top: 18px;
+	left: 7px;
+}
+
+
+
 /****** Page specifics *******/
 
 #record.active {
@@ -687,3 +817,12 @@ a:hover .settingsIcon:after { background-color: #777; }
 
 .hidden { display: none; }
 
+
+
+.swatch {
+	display: inline-block;
+	height: 100px;
+	width: 100px;
+	margin: 0 -4px;
+	font-size: 80%;
+}

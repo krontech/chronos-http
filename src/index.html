@@ -27,13 +27,25 @@
 #analogGainInner { width: 160px; }
 #whiteBalanceInner { width: 135px; }
 
-.swatch {
-	display: inline-block;
-	height: 100px;
-	width: 100px;
-	margin: 0 -4px;
-	font-size: 80%;
+
+#applyButton { float: right; }
+#applyButton.disabled { /* when the apply button is disabled */
+	box-shadow: 0 0 3px 3px #a00;
+	color: white;
+	background-color: #222;
+	text-decoration: line-through; /* cross out the apply button */
 }
+
+#saveVideoButton { float: right; }
+#saveVideoButton.disabled { /* when the save button is disabled */
+/*	box-shadow: 0 0 3px 3px #a00; */
+	background-color: #222;
+	text-decoration: line-through; /* cross out the apply button */
+}
+#maxShutterButton { float: right; }
+
+
+#resolutionBox { clear: left; }
 
 
 /*@media screen and (max-width: 3000px) {
@@ -109,84 +121,6 @@
 	#menu { width: 100%; }
 }
 
-.overlay {
-	position: relative ;
-	bottom: 51.5% ;
-	left: 45%;
-	background-color: black;
-	border-radius: 10px;
-	height: 1.5%;
-	width: 10%;
-}
-
-.overlay:after {
-	content: '';
-	position: absolute;
-	top: -350%;
-	left: 45%;
-	height: 800%;
-	width: 11%;
-	background-color: black;
-	border-radius: 10px;
-}
-
-
-
-.stateNotice {
-	content: "Saving Video";
-	position: absolute;
-	bottom: 200%;
-	font-size: 200%;
-	left: 10%;
-	right: 10%;
-	background-color: rgba(0,0,0, 0.4);
-	color: white;
-	padding: 6px;
-	border-radius: 10px;
-}
-
-.progressBar {
-	position: relative;
-	bottom: 15%;
-	left: 5%;
-	width: 90%;
-/*	height: 10%; */
-	padding: 10px 0;
-	border-radius: 10px;
-	z-index: 20;
-}
-
-.progressBarFill {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100% ;
-	width: 20%;
-	border-radius: 10px;
-	z-index: -5;
-}
-
-
-
-#applyButton { float: right; }
-#applyButton.disabled { /* when the apply button is disabled */
-	box-shadow: 0 0 3px 3px #a00;
-	color: white;
-	background-color: #222;
-	text-decoration: line-through; /* cross out the apply button */
-}
-
-#saveVideoButton { float: right; }
-#saveVideoButton.disabled { /* when the save button is disabled */
-/*	box-shadow: 0 0 3px 3px #a00; */
-	background-color: #222;
-	text-decoration: line-through; /* cross out the apply button */
-}
-#maxShutterButton { float: right; }
-
-
-#resolutionBox { clear: left; }
-
 
 </style>
 </head>
@@ -222,6 +156,7 @@
 			<a> Review Saved Videos </a>
 			<a> Triggers & IO </a>
 			<a> Documentation </a>
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
 			<a> Nicholas was here </a>
 		</div>
 
@@ -236,6 +171,10 @@
 			<div id="crossHairs" class="overlay hidden"></div>
 			<div id="saveProgress" class="progressBar hidden">
 				<div id="videoStateOverlay" class="stateNotice">Saving Video</div>
+				<div id="overlayButtons" class="overlayButtons">
+					<a id="overlayNavigateButton" href="/PlaySave.html">Play/Save Screen</a>
+					<a id="overlayRecModeButton" onclick="dropDownSelect(this)">Record Mode</a>
+				</div>
 				<div id="saveProgressFill" class="progressBarFill"></div>
 				Progress
 			</div>
@@ -361,10 +300,11 @@
 
 	<br>
 
-	<div class="Text-bar">
+	<div id="debugBar" class="Text-bar hidden">
 		<a id="tester1" onclick="tester1func()"> tester1 </a>
 		<a id="tester2" onclick="tester2func()"> tester2 </a>
 		<a id="tester3" onclick="tester3func()"> tester3 </a>
+		<a id="debugToggle" onclick="toggler(this)"> Display Messages </a>
 		<div class="no-click"></div>
 		<a onclick='theme("default")'> Default Theme </a>
 		<a onclick='theme("monochrome")'> Mono Theme </a>
@@ -382,38 +322,38 @@
 
 	<br>
 	<br>
-
-	<div class="swatch" style="background-color: black;">black</div> <!-- black -->
-	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div> <!-- black -->
+<!--
+	<div class="swatch" style="background-color: black;">black</div>
+	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div>
 	<div class="swatch" style="background-color: #222;">#222</div>
-	<div class="swatch" style="background-color: #333;">#333</div> <!--#*screen* background color-->
+	<div class="swatch" style="background-color: #333;">#333</div>
 	<div class="swatch" style="background-color: #606060;">#606060</div>
-	<div class="swatch" style="background-color: rgb(96,96,96);">rgb(96,96,96)</div> <!--#widget active background color (pressed button)-->
-	<div class="swatch" style="background-color: #777;">#777</div> <!--#selected text background-->
-	<div class="swatch" style="background-color: #aaa;">#aaa</div> <!--#disabled/placeholder text-->
-	<div class="swatch" style="background-color: #ddd;">#ddd</div> <!--#selected text letters-->
-	<div class="swatch" style="background-color: white;">white</div> <!--#normal text, buttons, labels, etc.-->
+	<div class="swatch" style="background-color: rgb(96,96,96);">rgb(96,96,96)</div>
+	<div class="swatch" style="background-color: #777;">#777</div>
+	<div class="swatch" style="background-color: #aaa;">#aaa</div>
+	<div class="swatch" style="background-color: #ddd;">#ddd</div>
+	<div class="swatch" style="background-color: white;">white</div>
 
 	<div class="swatch" style="background-color: #1e6c94;">#1e6c94</div>
 	<div class="swatch" style="background-color: #13455f;">#13455f</div>
 
 	<div class="swatch" style="background-color: #2f9a9b;">#2f9a9b</div>
-	<div class="swatch" style="background-color: #1D6262;">#1D6262</div> <!-- Focus ring border -->
+	<div class="swatch" style="background-color: #1D6262;">#1D6262</div>
 	<div class="swatch" style="background-color: #1b4546;">#1b4546</div>
-	<div class="swatch" style="background-color: green;">green</div> <!-- green -->
+	<div class="swatch" style="background-color: green;">green</div>
 
-	<div class="swatch" style="background-color: red;">red</div> <!-- red -->
-	<div class="swatch" style="background-color: #c80000;">#c80000</div> <!--#error message text-->
-	<div class="swatch" style="background-color: #a00;">#a00</div> <!-- Nicholas's red -->
-	<div class="swatch" style="background-color: #800;">#800</div> <!-- darker red -->
-	<div class="swatch" style="background-color: yellow;">yellow</div> <!-- yellow -->
-	<div class="swatch" style="background-color: #e7ba00;">#e7ba00</div> <!-- Nicholas's yellow -->
+	<div class="swatch" style="background-color: red;">red</div>
+	<div class="swatch" style="background-color: #c80000;">#c80000</div>
+	<div class="swatch" style="background-color: #a00;">#a00</div>
+	<div class="swatch" style="background-color: #800;">#800</div>
+	<div class="swatch" style="background-color: yellow;">yellow</div>
+	<div class="swatch" style="background-color: #e7ba00;">#e7ba00</div>
 
-	<div class="swatch" style="background-color: #3D87CB;">#3D87CB</div> <!-- pantone 2143 -->
-	<div class="swatch" style="background-color: #0067B9;">#0067B9</div> <!-- pantone 2144 -->
-	<div class="swatch" style="background-color: #004EA8;">#004EA8</div> <!-- pantone 2145 -->
-	<div class="swatch" style="background-color: #9C9687 ;">#9C9687 </div> <!-- pantone 402 -->
-
+	<div class="swatch" style="background-color: #3D87CB;">#3D87CB</div>
+	<div class="swatch" style="background-color: #0067B9;">#0067B9</div>
+	<div class="swatch" style="background-color: #004EA8;">#004EA8</div>
+	<div class="swatch" style="background-color: #9C9687 ;">#9C9687 </div>
+-->
 
 
  </div>
@@ -433,13 +373,11 @@
 var DebugOnOff = false ;
 
 function tester1func() {
-	DebugOnOff = true ;
 
 }
 
 
 function tester2func() {
-	DebugOnOff = false ;
 
 }
 
@@ -540,8 +478,6 @@ function useStorageLocation(key) {
 
 
 
-
-//var VideoOutlineStyle = "3px solid #0067B9" ; /* pantone 2144 */
 var VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
 
 function theme(selection) { // set a new stylesheet to use (not protected against the theme not existing
@@ -598,7 +534,13 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
 						  "CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
 						  "TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
-						  "TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; }
+						  "TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; },
+
+						  "Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
+
+						  "Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
+						  "Cancel Save":	function() { dataSender("stopFilesave", "") ; },
+						  "Record Mode":	function() { dataRequester("startLivedisplay", "", pageUpdate) ; },
 						}
 
 
@@ -737,6 +679,7 @@ var resolutionPresets = [	[1920, 1200, 0],
 
 
 var counter = 0 ;
+
 function findFrameRates() {
 	if (counter < resolutionPresets.length) {
 		var retrieval = function (stringBack) { // what to do with the data that comes back
@@ -774,37 +717,21 @@ window.onclick = function(event) { // check where a click was: if it was outside
 var baseAddress = window.location.pathname.slice(1, -11); // directory path of this page (before this page)
 
 
-//var img = new Image() ;
 var img = document.getElementById("imageDisplay") ;
-
-//img.addEventListener('load', scaleToFit) ;
-
-var imgDisplay = document.getElementById("imageDisplay") ;
-
-
-//img.src = "https://media.giphy.com/media/nkt8sNb0adCwM/giphy.gif" ;
 
 var videoWindow = document.getElementById("videoDisplay");
 
 img.onload = function scaleToFit(){
-//function scaleToFit(){
 	videoWindow.style.height = "650px" ;
 
 	var scale = Math.min(videoWindow.clientWidth / img.width, videoWindow.clientHeight / img.height) ;
 	var x = (videoWindow.clientWidth / 2) - (img.width / 2) * scale;
 	var y = (videoWindow.clientHeight / 2) - (img.height / 2) * scale;
-//	imgDisplay.height = img.height * scale ;
-//	if (imgDisplay.height < videoWindow.clientHeight) { // image height is less than window height
-//		videoWindow.style.height = (imgDisplay.height + 6).toString() + "px";
-//	}
-//	imgDisplay.src = img.src ; // display the image
 	img.height = img.height * scale ;
 	if (img.height < videoWindow.clientHeight) { // image height is less than window height
 		videoWindow.style.height = (img.height + 6).toString() + "px";
 	}
-//	imgDisplay.src = img.src ; // display the image
 }
-
 
 
 					//	 key	 	 inactive		active
@@ -815,7 +742,9 @@ var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "")
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataSender("set", '{"focusPeakingLevel": 0}') ;}, function(){ dataSender("set", '{"focusPeakingLevel": 0.2}') ;} ],
-						"zebraStripes":	[ function(){ dataSender("set", '{"zebraLevel": 0}') ;}, function(){ dataSender("set", '{"zebraLevel": 0.01}') ;} ]
+						"zebraStripes":	[ function(){ dataSender("set", '{"zebraLevel": 0}') ;}, function(){ dataSender("set", '{"zebraLevel": 0.01}') ;} ],
+
+						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
 					  }
 
 
@@ -1019,7 +948,7 @@ function pageUpdate(rawData){
 
 		exposureValue = parsedData.exposurePeriod ; // set the exposure value (used for some other calculations)
 
-		 // slider is not linear; it is parabolic
+		 // slider is not linear; parabolic
 		document.getElementById("shutter").value = Math.sqrt(exposureValue / exposureMax) * exposureMax ;
 
 		 // calculate the exposure as a percent and report it
@@ -1101,6 +1030,9 @@ function pageUpdate(rawData){
 				document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
 				document.getElementById("saveProgress").lastChild.textContent = "Playback Position" ;
 				recButton.classList.add("disabled") ; // disable the record button
+
+				document.getElementById("overlayButtons").innerHTML = '<a id="overlayNavigateButton" href="/PlaySave.html">Play/Save Screen</a> <a id="overlayRecModeButton" onclick="dropDownSelect(this)">Record Mode</a>'
+
 				break ;
 
 			case "filesave":
@@ -1111,6 +1043,8 @@ function pageUpdate(rawData){
 
 				dataGetter ("get", "playbackStart", pageUpdate) ; // get the starting frame
 				dataGetter ("get", "playbackLength", pageUpdate) ; // get the length
+
+				document.getElementById("overlayButtons").innerHTML = '<a onclick="dropDownSelect(this)">Cancel Save</a>' ;
 				break ;
 		}
 	}
