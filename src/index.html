@@ -53,20 +53,21 @@
 } */
 
 
-@media screen and (min-width: 1756px) {
-	#analogGainBox { min-height: 82px }
+@media screen and (min-width: 1737px) {
+	.rightContainer { max-width: 880px; }
 }
 
+@media screen and (min-width: 1737px) {
+	#analogGainBox { min-height: 83px }
+}
 
-@media screen and (max-width: 1757px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 1737px) { /* change formatting when screen size is narrower than this */
 	.rightContainer { max-width: 750px; }
 }
 
-
-@media screen and (max-width: 1585px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 1586px) { /* change formatting when screen size is narrower than this */
 	.rightContainer { max-width: 535px; }
 }
-
 
 @media screen and (max-width: 1375px) { /* change formatting when screen size is narrower than this */
 	.rightContainer { max-width: 303px; }
@@ -78,9 +79,8 @@
 	.Text-bar { margin: 4px 0 2px 0; }
 }
 
-
-@media screen and (max-width: 1140px) and (min-width: 918px) {
-	#analogGainBox { min-height: 82px }
+@media screen and (max-width: 1140px) and (min-width: 884px) {
+	#analogGainBox { min-height: 83px }
 }
 
 @media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
@@ -101,6 +101,10 @@
 	/* show the storage button in the menu drop-down ? */
 
 	.subTitle { display: none; }
+}
+
+@media screen and (max-width: 743px) {
+	#saveAsBox { clear: left; }
 }
 
 @media screen and (max-width: 542px) { /* change formatting when screen size is narrower than this */
@@ -166,7 +170,6 @@
 	<div class="leftContainer">
 
 		<div id="videoDisplay" class="videoDisplay">
-			<div id="spacer"> </div>
 			<img id="imageDisplay" alt="Screenshot Display">
 			<div id="crossHairs" class="overlay hidden"></div>
 			<div id="saveProgress" class="progressBar hidden">
@@ -539,8 +542,8 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
 
 						  "Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
-						  "Cancel Save":	function() { dataSender("stopFilesave", "") ; },
-						  "Record Mode":	function() { dataRequester("startLivedisplay", "", pageUpdate) ; },
+						  "Cancel Save":	function() { dataSender("stopFilesave", "{}") ; },
+						  "Record Mode":	function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
 						}
 
 
@@ -549,9 +552,6 @@ const dbFromMult = { 1:0, 2:6, 4:12, 8:18, 16:24 } // provide a multiple, get ba
 function dropDownSelect (element) {
 	if (element.innerText in dropDownFunctions) // if the key-value exists
 		dropDownFunctions[element.innerText]() ; // run the function
-
-	if (DebugOnOff)
-		document.getElementById("debugger2").innerHTML = "drop down item clicked" ;
 }
 
 

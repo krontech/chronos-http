@@ -48,7 +48,7 @@ a { text-decoration:none; }
 	margin: 0;
 }
 
-img{
+img {
 	text-align: center;
 	border-radius: 6px;
 }
@@ -198,7 +198,6 @@ img{
 .rightContainer {
 	float: left;
 	vertical-align: top;
-	max-width: 920px;
 	border-radius: 10px;
 	
 }
@@ -210,9 +209,6 @@ img{
 	margin: 2px;
 	overflow: auto;
 	max-width: 100%;
-}
-.horizLayout b {
-	padding-bottom: 10px;
 }
 
 .vertLayout {
@@ -261,7 +257,7 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 	display: inline-block;
 	padding: 6px 10px;
 	border-radius: 10px;
-	margin: 6px;
+	margin: 10px 6px 6px 0;
 	cursor: pointer;
 }
 .selectContainerHolder:after { /* draw the drop-down triangle */
@@ -333,15 +329,14 @@ input[type=number]{
 	line-height: 35px;
 	text-align: center;
 	width: 83px;
-	padding: 2.3px 0 5px 0;
+	padding: 4px 0 3px 0;
 	border-radius: 10px;
 	border: none;
 	font-size:100%;
-	font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	outline: none;
 	box-shadow: none;
-	margin-bottom: 6px;
-	margin-left: 6px;
+	margin: 6px;
+	margin-right: 0;
 }
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
@@ -357,13 +352,13 @@ input[type=text]{
 	line-height: 35px;
 	text-align: left;
 	width: 190px;
-	padding: 2.3px 0 5px 8px;
+	padding: 4px 0 3px 8px;
 	border-radius: 10px;
 	border: none;
 	font-size:100%;
-	font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	outline: none;
 	box-shadow: none;
+	margin-top: 10px;
 }
 
 .instruction {
@@ -375,7 +370,7 @@ input[type=text]{
 	text-align: center;
 	padding: 6px 10px;
 	border-radius: 10px;
-	margin: 6px;
+	margin: 10px 6px 2px 6px;
 	transition: all 0.3s ease;
 }
 .button:hover {

@@ -51,6 +51,7 @@
 }
 
 
+
 /*@media screen and (max-width: 3000px) {
 	.rightContainer { box-shadow: 0 0 3px 3px inset white; }
 } */
@@ -68,11 +69,12 @@
 
 
 @media screen and (min-width: 1530px) {
-	#frameCountBox { min-height: 226px; }
+	#frameCountBox { padding-bottom: 8.5px; }
 }
 
 @media screen and (min-width: 1530px) and (max-width: 1830px) {
-	#playBackBox { min-height: 169px; }
+	#playBackBox { min-height: 173px; }
+	#saveAsBox { min-width: 283px; }
 }
 
 @media screen and (max-width: 1530px) { /* change formatting when screen size is narrower than this */
@@ -84,26 +86,29 @@
 	.rightContainer { max-width: 303px; }
 }
 
-@media screen and (max-width: 1140px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 1142px) { /* change formatting when screen size is narrower than this */
 	.rightContainer, .leftContainer, .videoDisplay { max-width: 100%; }
 	.leftContainer { margin: 0; }
 	.Text-bar { margin: 4px 0 2px 0; }
 }
 
 
-@media screen and (max-width: 1140px) and (min-width: 1007px) {
+@media screen and (max-width: 1142px) and (min-width: 1007px) {
 	#storageDeviceBox { clear: left; }
 }
 
 @media screen and (max-width: 1140px) and (min-width: 684px) {
-	#frameCountBox { min-height: 226px; }
-	#playBackBox { min-height: 169px; }
+	#frameCountBox { padding-bottom: 8.5px; }
+	#playBackBox { min-height: 173px; }
 }
 
 @media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
 	#playSave { display: none; } /* hide the main button */
 	/* show the main button in the menu drop-down ? */
+}
 
+@media screen and (max-width: 1006px) and (min-width: 684px) {
+	#saveAsBox { min-width: 283px; clear: left;}
 }
 
 @media screen and (max-width: 940px) { /* change formatting when screen size is narrower than this */
@@ -118,6 +123,11 @@
 	/* show the storage button in the menu drop-down ? */
 
 	.subTitle { display: none; }
+}
+
+@media screen and (max-width: 683px) {
+	#videoSettingsBox, #playBackBox, #storageDeviceBox,
+	#saveAsBox, #downloadBox { clear: left; }
 }
 
 @media screen and (max-width: 542px) { /* change formatting when screen size is narrower than this */
@@ -185,7 +195,6 @@
 	<div class="leftContainer">
 
 		<div id="videoDisplay" class="videoDisplay">
-			<div id="spacer"> </div>
 			<img id="imageDisplay" alt="Screenshot Display">
 			<div id="saveProgress" class="progressBar hidden">
 				<div id="videoStateOverlay" class="stateNotice">Saving Video</div>
@@ -258,10 +267,10 @@
 		</div>
 
 		<div id="playBackBox" class="horizLayout">
-			<b> Playback Rate </b>
-			<input type="number" id="playBackRateNum" onChange="justRunSomething(this)" min="0" max="1920" step="1" value="60">
+			<b> Play Speed </b>
+			<input type="number" id="playBackRateNum" onChange="justRunSomething(this)" min="0" max="1920" step="1" value="60"> fps
 			<br>
-			<span class="instruction">Note that the display on this page only updates once per second</span>
+			<span class="instruction">Note that the image displayed on this page only updates once per second</span>
 		</div>
 
 		<div id="storageDeviceBox" class="horizLayout">
@@ -282,7 +291,7 @@
 
 		<div id="saveAsBox" class="horizLayout">
 			<b> Save Video </b>
-			<br><br>
+			<br>
 			<input type="text" id="fileName" placeholder="File Name">
 			<br>
 			<span class="instruction">Leave empty to use autoname</span>
@@ -378,6 +387,24 @@
 var DebugOnOff = false ;
 
 
+function tester1func() {
+
+}
+
+
+function tester2func() {
+
+}
+
+
+function tester3func() {
+
+}
+
+
+var lastKnownResolution = [0, 0] ;
+
+
 function openNext(element) {
 	if (element.nextElementSibling.style.display != "block") {
 		element.nextElementSibling.style.display = "block" ;
@@ -388,25 +415,6 @@ function openNext(element) {
 		element.classList.remove("active")
 	}
 }
-
-
-
-var lastKnownResolution = [0, 0] ;
-
-function tester1func() {
-
-}
-
-
-function tester2func() {
-	dataRequester("startLivedisplay", "{}", pageUpdate) ;
-
-}
-
-
-function tester3func() {
-}
-
 
 function getFileList() {
 	var requestSender = new XMLHttpRequest() ;
@@ -455,12 +463,6 @@ function getFileList() {
 		requestSender.send() ;
 	else if (DebugOnOff)
 		document.getElementById("debugger").innerHTML = " >> No storage location selected " ;
-
-
-//	dataSender("startPlayback", '{"framerate": 60, "position": 200}') ;
-//	dataRequester("startPlayback", '{"framerate": 60, "position": 200}', pageUpdate) ;
-
-	
 }
 
 
@@ -480,7 +482,7 @@ var inputFunctions = {	"startMarker":		function(value){ dataRequester("set", '{"
 						"endFrameNum":		function(value){ document.getElementById("endMarker").value = value ; setPlayBackLength() ; markerFill() ; },
 						"frameLengthNum":	function(value){ dataRequester("set", '{"playbackLength": ' + value + '}', pageUpdate) ; },
 
-						"overlayStopSaveButton": function() { dataSender("stopFilesave", "") ; },
+						"overlayStopSaveButton": function() { dataSender("stopFilesave", "{}") ; },
 					 }
 
 function justRunSomething(element) {
@@ -626,9 +628,6 @@ function useStorageLocation(key) {
 }
 
 
-
-
-//var VideoOutlineStyle = "3px solid #0067B9" ; /* pantone 2144 */
 var VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
 
 function theme(selection) { // set a new stylesheet to use (not protected against the theme not existing
@@ -650,16 +649,10 @@ var dropDownFunctions = { "Refresh":		function(){ dataGetter("get", 'externalSto
 						}
 
 
-
 function dropDownSelect (element) {
 	if (element.innerText in dropDownFunctions) // if the key-value exists
 		dropDownFunctions[element.innerText]() ; // run the function
-
-	if (DebugOnOff)
-		document.getElementById("debugger2").innerHTML = "drop down item clicked" ;
 }
-
-
 
 
 window.onclick = function(event) { // check where a click was: if it was outside a menu, close that menu
@@ -704,7 +697,6 @@ var buttonFunctions = {	"playButton":	[ function(){ dataRequester("startPlayback
 function toggler(element) { // toggle the class (active/inactive), change the name, and run a function for a toggle button/switch
 	var leftRight = 0 ;
 
-//	if ( (element.className !== null) && (element.className == "active") ) { // changing to 'inactive' or no state set previously
 	if (element.classList.contains("active")) { // changing to 'inactive' or no state set previously
 		element.classList.remove("active") ; // remove the "active" styling
 		element.classList.add("inactive") ; // use the "inactive" styling
@@ -998,8 +990,12 @@ function pageUpdate(rawData){
 			}
 		}
 		else if (lastKnownVideoState == "play") {
-			document.getElementById("timeLine").value = parsedData.playbackPosition ;
-			document.getElementById("currentFrameNum").value = parsedData.playbackPosition ;
+			var timeLine = document.getElementById("timeLine") ;
+			if (timeLine != document.activeElement)
+				timeLine.value = parsedData.playbackPosition ; // don't update the timeline if I'm dragging it
+			var currentFrameNum = document.getElementById("currentFrameNum") ;
+			if (currentFrameNum != document.activeElement)
+				currentFrameNum.value = parsedData.playbackPosition ;
 		}
 		lastKnownCurrentFrame = parsedData.playbackPosition ;
 	}
@@ -1012,8 +1008,12 @@ function pageUpdate(rawData){
 			}
 		}
 		else if (lastKnownVideoState == "play") {
-			document.getElementById("timeLine").value = parsedData.position ;
-			document.getElementById("currentFrameNum").value = parsedData.position ;
+			var timeLine = document.getElementById("timeLine") ;
+			if (timeLine != document.activeElement)
+				timeLine.value = parsedData.position ;
+			var currentFrameNum = document.getElementById("currentFrameNum") ;
+			if (currentFrameNum != document.activeElement)
+				currentFrameNum.value = parsedData.position ;
 		}
 		lastKnownCurrentFrame = parsedData.position ;
 	}
@@ -1105,7 +1105,6 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 	}
 
 	if (PollCounter % 2 == 0) { // every 1 second
-//		img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
 		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
 
 		dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
