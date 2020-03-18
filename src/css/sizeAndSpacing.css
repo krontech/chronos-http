@@ -431,6 +431,7 @@ input[type=text]{
 .overlayButtons a {
 	display: inline-block;
 	margin: 0;
+	margin-bottom: -4px;
 	background-color: #0067B9; /* pantone 2144 */
 	padding: 6px 12px;
 	border-radius: 10px;
