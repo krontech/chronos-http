@@ -26,22 +26,31 @@
 } */
 
 
-@media screen and (min-width: 1756px) {
-	#analogGainBox { min-height: 82px }
+@media screen and (min-width: 1830px) {
+	.rightContainer { max-width: 990px; }
+	#storageDeviceBox { clear: left; min-height: 211px; }
 }
 
 
-@media screen and (max-width: 1757px) { /* change formatting when screen size is narrower than this */
-	.rightContainer { max-width: 750px; }
+@media screen and (max-width: 1830px) { /* change formatting when screen size is narrower than this */
+	.rightContainer { max-width: 690px; }
 }
 
 
-@media screen and (max-width: 1585px) { /* change formatting when screen size is narrower than this */
-	.rightContainer { max-width: 535px; }
+@media screen and (min-width: 1530px) {
+	#frameCountBox { min-height: 226px; }
+}
+
+@media screen and (min-width: 1530px) and (max-width: 1830px) {
+	#playBackBox { min-height: 169px; }
+}
+
+@media screen and (max-width: 1530px) { /* change formatting when screen size is narrower than this */
+	.rightContainer { max-width: 375px; }
 }
 
 
-@media screen and (max-width: 1375px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 1215px) { /* change formatting when screen size is narrower than this */
 	.rightContainer { max-width: 303px; }
 }
 
@@ -52,8 +61,13 @@
 }
 
 
-@media screen and (max-width: 1140px) and (min-width: 918px) {
-	#analogGainBox { min-height: 82px }
+@media screen and (max-width: 1140px) and (min-width: 1007px) {
+	#storageDeviceBox { clear: left; }
+}
+
+@media screen and (max-width: 1140px) and (min-width: 684px) {
+	#frameCountBox { min-height: 226px; }
+	#playBackBox { min-height: 169px; }
 }
 
 @media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
@@ -186,7 +200,7 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 #frameMarkStart, #frameMarkEnd { width: 100px; } /* set the width of these buttons */
 #frameStepB, #frameStepF { width: 135px; }
 
-#playBackBox { max-width: 300px; }
+#playBackBox { max-width: 283px; }
 
 .overlayButtons {
 	position: absolute;
@@ -210,6 +224,50 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 
 .overlayButtons a + a {
 	margin-left: 5%;
+}
+
+
+
+a.innerDropDown {
+	padding-left: 25px;
+}
+a.innerDropDown:before {
+	content: "";
+	height: 0;
+	width: 0;
+	border: 7px solid transparent;
+	border-left: 10px solid white;
+	position: absolute;
+	top: 14px;
+	left: 10px;
+	margin-right: 6px;
+	transition: all 0.2s ease;
+}
+a.innerDropDown.active {
+	background-color: #004EA8; /* pantone 2145 */
+}
+a.innerDropDown.active:hover {
+	background-color: #3D87CB; /* pantone 2143 */
+}
+a.innerDropDown.active:before {
+	border: 7px solid transparent;
+	border-top: 10px solid white;
+	top: 18px;
+	left: 7px;
+}
+.innerDropDownList {
+	display: none;
+}
+.innerDropDownList a {
+	padding-left: 20px;
+	background-color: #004EA8; /* pantone 2145 */
+}
+
+#frameMarkStart {
+	box-shadow: -3px 3px 0 0 inset green;
+}
+#frameMarkEnd {
+	box-shadow: 3px 3px 0 0 inset #a00;
 }
 
 </style>
@@ -296,7 +354,7 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 
 	<div class="rightContainer">
 
-		<div id="timeLineBox" class="horizLayout">
+		<div id="frameCountBox" class="horizLayout">
 			<b> Frames </b>
 			<br>
 			Frame:
@@ -326,16 +384,13 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 			<br>
 			Text Overlay:
 			<a id="textOverlayButton" class="button" onclick="toggler(this)"> Off </a>
-			<br>
-			<br>
 		</div>
 
 		<div id="playBackBox" class="horizLayout">
 			<b> Playback Rate </b>
-			&ensp;
-			<input type="number" id="playBackRateNum" onChange="justRunSomething(this)" min="0" max="1920" step="5" value="60">
+			<input type="number" id="playBackRateNum" onChange="justRunSomething(this)" min="0" max="1920" step="1" value="60">
 			<br>
-			<span class="instruction">Note that the video preview on this page only updates once per second</span>
+			<span class="instruction">Note that the display on this page only updates once per second</span>
 		</div>
 
 		<div id="storageDeviceBox" class="horizLayout">
@@ -374,12 +429,11 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 			<b> Download From Camera </b>
 			<br>
 			<div id="fileDownloadList" class="selectContainerHolder">Download File<div id="fileDownloadListInner" class="selectContainer">
-				<a onclick="dropDownSelect(this)"> Select a Storage Device </a>
+				<a onclick="dropDownSelect(this)"> No Storage Device Selected </a>
 			</div></div>
 		</div>
 
 	</div>
-
 
 
 	<br>
@@ -396,7 +450,6 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 		<a onclick='theme("monoDark")'> Mono Dark </a>
 		<a onclick='theme("newDefault")'> New Default </a>
 	</div>
-
 	<br>
 
 	<span id="debugger">  </span>
@@ -406,37 +459,36 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 	<br>
 	<br>
 
-	<div class="swatch" style="background-color: black;">black</div> <!-- black -->
-	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div> <!-- black -->
+	<div class="swatch" style="background-color: black;">black</div>
+	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div>
 	<div class="swatch" style="background-color: #222;">#222</div>
-	<div class="swatch" style="background-color: #333;">#333</div> <!--#*screen* background color-->
+	<div class="swatch" style="background-color: #333;">#333</div>
 	<div class="swatch" style="background-color: #606060;">#606060</div>
-	<div class="swatch" style="background-color: rgb(96,96,96);">rgb(96,96,96)</div> <!--#widget active background color (pressed button)-->
-	<div class="swatch" style="background-color: #777;">#777</div> <!--#selected text background-->
-	<div class="swatch" style="background-color: #aaa;">#aaa</div> <!--#disabled/placeholder text-->
-	<div class="swatch" style="background-color: #ddd;">#ddd</div> <!--#selected text letters-->
-	<div class="swatch" style="background-color: white;">white</div> <!--#normal text, buttons, labels, etc.-->
+	<div class="swatch" style="background-color: rgb(96,96,96);">rgb(96,96,96)</div>
+	<div class="swatch" style="background-color: #777;">#777</div>
+	<div class="swatch" style="background-color: #aaa;">#aaa</div>
+	<div class="swatch" style="background-color: #ddd;">#ddd</div>
+	<div class="swatch" style="background-color: white;">white</div>
 
 	<div class="swatch" style="background-color: #1e6c94;">#1e6c94</div>
 	<div class="swatch" style="background-color: #13455f;">#13455f</div>
 
 	<div class="swatch" style="background-color: #2f9a9b;">#2f9a9b</div>
-	<div class="swatch" style="background-color: #1D6262;">#1D6262</div> <!-- Focus ring border -->
+	<div class="swatch" style="background-color: #1D6262;">#1D6262</div>
 	<div class="swatch" style="background-color: #1b4546;">#1b4546</div>
-	<div class="swatch" style="background-color: green;">green</div> <!-- green -->
+	<div class="swatch" style="background-color: green;">green</div>
 
-	<div class="swatch" style="background-color: red;">red</div> <!-- red -->
-	<div class="swatch" style="background-color: #c80000;">#c80000</div> <!--#error message text-->
-	<div class="swatch" style="background-color: #a00;">#a00</div> <!-- Nicholas's red -->
-	<div class="swatch" style="background-color: #800;">#800</div> <!-- darker red -->
-	<div class="swatch" style="background-color: yellow;">yellow</div> <!-- yellow -->
-	<div class="swatch" style="background-color: #e7ba00;">#e7ba00</div> <!-- Nicholas's yellow -->
+	<div class="swatch" style="background-color: red;">red</div>
+	<div class="swatch" style="background-color: #c80000;">#c80000</div>
+	<div class="swatch" style="background-color: #a00;">#a00</div>
+	<div class="swatch" style="background-color: #800;">#800</div>
+	<div class="swatch" style="background-color: yellow;">yellow</div>
+	<div class="swatch" style="background-color: #e7ba00;">#e7ba00</div>
 
-	<div class="swatch" style="background-color: #3D87CB;">#3D87CB</div> <!-- pantone 2143 -->
-	<div class="swatch" style="background-color: #0067B9;">#0067B9</div> <!-- pantone 2144 -->
-	<div class="swatch" style="background-color: #004EA8;">#004EA8</div> <!-- pantone 2145 -->
-	<div class="swatch" style="background-color: #9C9687 ;">#9C9687 </div> <!-- pantone 402 -->
-
+	<div class="swatch" style="background-color: #3D87CB;">#3D87CB</div>
+	<div class="swatch" style="background-color: #0067B9;">#0067B9</div>
+	<div class="swatch" style="background-color: #004EA8;">#004EA8</div>
+	<div class="swatch" style="background-color: #9C9687 ;">#9C9687 </div>
 
 
  </div>
@@ -452,26 +504,26 @@ input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline 
 
 <script>
 
+var DebugOnOff = false ;
+
+
+function openNext(element) {
+	if (element.nextElementSibling.style.display != "block") {
+		element.nextElementSibling.style.display = "block" ;
+		element.classList.add("active")
+	}
+	else {
+		element.nextElementSibling.style.display = "none" ;
+		element.classList.remove("active")
+	}
+}
+
+
+
 var lastKnownResolution = [0, 0] ;
 
 function tester1func() {
-//	dataSender("startPlayback", '{"framerate": 0}') ;
-//	dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ;
-	var maxBitRate = document.getElementById("maxBitrateNum").value * 1000000 ;
-	var bitRate = document.getElementById("bitsPerPixelNum").value ;
 
-	if ( (lastKnownResolution[0] > 0) && (lastKnownResolution[1] > 0) ) {
-
-		bitRate *= lastKnownResolution[0] * lastKnownResolution[1] ;
-		bitRate *= document.getElementById("saveFPSNum").value ;
-
-		if (maxBitRate < bitRate)
-			bitRate = maxBitRate ;
-
-		document.getElementById("debugger2").innerHTML = " ->-> bitRate calculated to be: " + bitRate ;
-	}
-	else
-		document.getElementById("debugger2").innerHTML = "no resolution known" ;
 }
 
 
@@ -495,13 +547,29 @@ function getFileList() {
 			parsedList = JSON.parse(requestSender.responseText) ;
 
 			if ("totalFileCount" in parsedList) {
-//				document.getElementById("debugger2").innerHTML = "" ;
 				document.getElementById("fileDownloadListInner").innerHTML = "";
-				for (var i = 0 ; i < parsedList.totalFileCount; i++) {
+				for (var i = 0 ; i < parsedList.totalFileCount ; i++) {
 					var index = "file" + i ;
-					if ( index in parsedList ) {
-//						document.getElementById("debugger2").innerHTML += "found file: " + parsedList[index] + "<br>" ;
+					var folderIndex = "folder" + i ;
+					if (index in parsedList) {
 						document.getElementById("fileDownloadListInner").innerHTML += '<a href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation + "&fileName=" + parsedList[index] + '">' + parsedList[index] + "</a>";
+					}
+					else if ( (folderIndex in parsedList ) && ("folderName" in parsedList[folderIndex]) ) {
+						var folderElement = "" ;
+						folderElement += '<a onclick="openNext(this)" class="innerDropDown">' + parsedList[folderIndex].folderName + '</a>' ;
+						folderElement += '<div class="innerDropDownList">' ;
+						if ("totalFileCount" in parsedList[folderIndex]) {
+							for (var i2 = 0 ; i2 < parsedList[folderIndex].totalFileCount ; i2++ ) {
+								var index2 = "file" + i2 ;
+								if (index2 in parsedList[folderIndex]) {
+									folderElement += '<a href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation ;
+									folderElement += "&fileName=" + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '" >' ;
+									folderElement += parsedList[folderIndex][index2] + "</a>" ;
+								}
+							}
+						}
+						folderElement += '</div>' ;
+						document.getElementById("fileDownloadListInner").innerHTML += folderElement ;
 					}
 				}
 			}
@@ -514,7 +582,7 @@ function getFileList() {
 
 	if (StorageLocation != "") // only request if a storage location is set
 		requestSender.send() ;
-	else
+	else if (DebugOnOff)
 		document.getElementById("debugger").innerHTML = " >> No storage location selected " ;
 
 
@@ -525,9 +593,9 @@ function getFileList() {
 }
 
 
-var inputFunctions = {	"startMarker":		function(value){ dataSender("set", '{"playbackStart": ' + value + '}') ; setPlayBackLength() ; markerFill() ; },
+var inputFunctions = {	"startMarker":		function(value){ dataRequester("set", '{"playbackStart": ' + value + '}', pageUpdate) ; setPlayBackLength() ; markerFill() ; },
 						"endMarker":		function(value){ setPlayBackLength() ; markerFill() ; },
-						"timeLine":			function(value){ dataSender("set", '{"playbackPosition": ' + value + '}') ; },
+						"timeLine":			function(value){ dataRequester("set", '{"playbackPosition": ' + value + '}', pageUpdate) ; },
 
 						"frameMarkStart":	function(){ document.getElementById("startMarker").value = document.getElementById("timeLine").value ; sliderDragged(document.getElementById("startMarker")) ; },
 						"frameMarkEnd":		function(){ document.getElementById("endMarker").value = document.getElementById("timeLine").value ; sliderDragged(document.getElementById("endMarker")) ; },
@@ -577,10 +645,6 @@ function markerFill() {
 	fillBar.style.marginLeft = parseFloat(2 + start * 0.96) + "%" ;
 	fillBar.style.width = parseFloat( (end - start) * 0.96 ) + "%" ;
 }
-
-//markerFill(); // run on page load
-
-var DebugOnOff = true ;
 
 
 
@@ -653,7 +717,8 @@ function saveVideo() {
 		dataSender ("startFilesave", request) ; // actually save the file
 	}
 	else { // could not save file
-		document.getElementById("debugger2").innerHTML = " ---- Could not save video ---- " ;
+		if (DebugOnOff)
+			document.getElementById("debugger2").innerHTML = " ---- Could not save video ---- " ;
 	}
 }
 
@@ -1041,6 +1106,8 @@ function pageUpdate(rawData){
 
 		document.getElementById("frameLengthNum").value = parsedData.playbackLength ;
 
+		document.getElementById("frameLengthNum").max = document.getElementById("totalFramesNum").value - document.getElementById("startFrameNum").value ;
+
 		document.getElementById("endFrameNum").value = document.getElementById("endMarker").value ;
 	}
 
@@ -1050,8 +1117,10 @@ function pageUpdate(rawData){
 			var progress = parseFloat(parsedData.playbackPosition - lastKnownStartFrame) / parseFloat(lastKnownFrameEnd - lastKnownStartFrame) * 100 ;
 			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
 				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.playbackPosition + " of: " + lastKnownFrameEnd ;
-				if (progress <= 100)
+				if (progress < 100)
 					document.getElementById("saveProgressFill").style.width = progress + "%" ;
+				else
+					document.getElementById("saveProgressFill").style.width = "99.9%" ;
 			}
 		}
 		else if (lastKnownVideoState == "play") {
@@ -1061,7 +1130,7 @@ function pageUpdate(rawData){
 		lastKnownCurrentFrame = parsedData.playbackPosition ;
 	}
 	else if ("position" in parsedData) {
-		if (lastKnownVideoState = "filesave") {
+		if (lastKnownVideoState == "filesave") {
 			var progress = parseFloat(parsedData.position - lastKnownStartFrame) / parseFloat(lastKnownFrameEnd - lastKnownStartFrame) * 100 ;
 			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
 				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.position + " of: " + lastKnownFrameEnd ;
@@ -1165,18 +1234,13 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 //		img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
 		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
 
-		if (lastKnownVideoState == "filesave")
-			dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
+		dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
 	}
 
 	if (PollCounter % 120 == 0) { // every 60 seconds
 		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
 	}
 
-	if (PollCounter % 10 == 0) { // every 5 seconds
-		if (lastKnownVideoState == "play")
-			dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
-	}
 
 	PollCounter++ ;
 }

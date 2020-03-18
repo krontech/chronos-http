@@ -26,6 +26,25 @@ then
 		echo ""
 
 		cat /media/${params[1]}/${params[3]} ## return the requested file
+
+	elif [[ "${params[3]}" == *".dng" ]]
+	then
+		echo "Content-Type: image/dng"
+		fileSize=$(stat -c %s /media/${params[1]}/${params[3]})
+		echo "Content-Length: $fileSize"
+		echo "Content-Disposition: attachment; filename=${params[3]##*'/'}"
+		echo ""
+		cat /media/${params[1]}/${params[3]} ## return the requested file
+
+	elif [[ "${params[3]}" == *".tiff" ]]
+	then
+		echo "Content-Type: image/tiff"
+		fileSize=$(stat -c %s /media/${params[1]}/${params[3]})
+		echo "Content-Length: $fileSize"
+		echo "Content-Disposition: attachment; filename=${params[3]##*'/'}"
+		echo ""
+		cat /media/${params[1]}/${params[3]} ## return the requested file
+
 	else
 		echo "Content-Type: text/plain"
 		echo ""

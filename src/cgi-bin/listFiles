@@ -29,8 +29,9 @@ then
 		then
 			fileName=${fileName%'/'*} ## discard the slash at the end of the directory name
 			fileName=${fileName##*'/'} ## discard the path to the files (leave just the folder name)
-			echo "	\"$fileName\": {" ## print the foldername in json format
+			echo "	\"folder$number\": {"
 			insideNumber=0
+			echo "		\"folderName\": \"$fileName\"," ## print the foldername in json format
 			for insideFiles in /media/$input/$fileName/*{".dng",".tiff"}
 			do
 				insideFiles=${insideFiles##*'/'} ## discard the path to the files (leave just the filename)
