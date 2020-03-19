@@ -19,7 +19,7 @@
 #saveVideoButton.disabled { /* when the save button is disabled */
 /*	box-shadow: 0 0 3px 3px #a00; */
 	background-color: #222;
-	text-decoration: line-through; /* cross out the apply button */
+	text-decoration: line-through; /* cross out the save button */
 }
 
 #startMarker::-moz-range-thumb { border-right: 0; border-top-color: green; border-left-width: 15px; }
@@ -30,7 +30,6 @@
 #startEndFill {
 	display: block;
 	height: 16px;
-	background-color: #0067B9; /* pantone 2144 */
 	width: 96%;
 	margin: -20px 2% -13px 2%;
 }
@@ -55,6 +54,13 @@
 #frameMarkEnd:hover {
 	box-shadow: 3px 3px 0 0 inset #f22;
 }
+
+
+#refreshAllBox { max-width: 278px; }
+#refreshButton { float: right; }
+
+
+#imageDisplay { line-height: 430px; }
 
 
 /*@media screen and (max-width: 3000px) {
@@ -151,7 +157,7 @@
 @media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
 	#main { display: none; } /* hide the settings button */
 	/* show the settings button in the menu drop-down ? */
-	#menu { width: 100%; }
+	#menu { width: 90%; }
 }
 
 
@@ -160,7 +166,7 @@
 </head>
 
 
-<body>
+<body onclick="">
 
 	<div class="header">
 		<div class="titleImage">
@@ -281,7 +287,7 @@
 		<div id="storageDeviceBox" class="horizLayout">
 			<b> Storage Device </b>
 			<br>
-			<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
+			<div id="storageLocation" class="selectContainerHolder" onclick="">Location<div id="storageLocationInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> No Storage Connected </a>
 				<a onclick="dropDownSelect(this)">Refresh</a>
 			</div></div>
@@ -301,7 +307,7 @@
 			<br>
 			<span class="instruction">Leave empty to use autoname</span>
 			<br><br>
-			<div id="saveFormat" class="selectContainerHolder">File Format<div id="saveFormatInner" class="selectContainer">
+			<div id="saveFormat" class="selectContainerHolder" onclick="">File Format<div id="saveFormatInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)">H.264 (mp4)</a>
 				<a onclick="dropDownSelect(this)">CinemaDNG (raw)</a>
 				<a onclick="dropDownSelect(this)">TIFF (images)</a>
@@ -313,9 +319,17 @@
 		<div id="downloadBox" class="horizLayout">
 			<b> Download From Camera </b>
 			<br>
-			<div id="fileDownloadList" class="selectContainerHolder">Download File<div id="fileDownloadListInner" class="selectContainer">
+			<div id="fileDownloadList" class="selectContainerHolder" onclick="">Download File<div id="fileDownloadListInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> No Storage Device Selected </a>
 			</div></div>
+		</div>
+
+
+		<div id="refreshAllBox" class="horizLayout hidden">
+			<b> Refresh Parameters </b>
+			<br>
+			<a id="refreshButton" class="button" onclick="dropDownSelect(this)"> Refresh </a>
+			<span class="instruction">This browser does not get alerted to changes from the camera. Use this button to update this page to match the camera</span>
 		</div>
 
 	</div>
@@ -647,7 +661,14 @@ img.onload = function scaleToFit(){
 	}
 }
 
-
+document.getElementById("menu").onmouseover = function(){ document.getElementById("menuList").style.display = "block" ; }
+document.getElementById("menu").onmouseout = function() {
+	var otherMenu = document.getElementById("menuList") ;
+	setTimeout( function() {
+		if (!document.getElementById("menu").classList.contains("active"))
+			document.getElementById("menuList").style.display = "" ;
+	}, 50) ;
+}
 
 					//	 key	 	 inactive		active
 var nameChange = 	{	"playButton": 	["<div class='playIcon'></div>&ensp;Play", "<div class='pauseIcon'></div>&ensp;Pause"],
@@ -655,7 +676,7 @@ var nameChange = 	{	"playButton": 	["<div class='playIcon'></div>&ensp;Play", "<
 					}
 
 var buttonFunctions = {	"playButton":	[ function(){ dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; }, function(){ dataRequester("startPlayback", '{"framerate": ' + document.getElementById("playBackRateNum").value + ', "position": ' + document.getElementById("currentFrameNum").value + '}', pageUpdate) ;} ],
-						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
+						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"textOverlayButton":	[ function(){ dataSender("set", '{"overlayEnable": false}') ; }, function(){ dataSender("set", '{"overlayEnable": true}') ; } ],
 						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
 					  }
@@ -815,7 +836,6 @@ function pageUpdate(rawData){
 	}
 
 	if ("videoState" in parsedData) { // got the current videoState
-		lastKnownVideoState = parsedData.videoState ; // set the last known video state
 		switch (parsedData.videoState) {
 			case "live":
 				document.getElementById("saveProgress").classList.remove("hidden") ;
@@ -847,7 +867,8 @@ function pageUpdate(rawData){
 				break ;
 
 			case "filesave":
-				document.getElementById("saveProgressFill").style.width = 0 ;
+				if (lastKnownVideoState != "filesave")
+					document.getElementById("saveProgressFill").style.width = 0 ;
 				document.getElementById("saveProgress").classList.remove("hidden") ; // show the progress bar
 				document.getElementById("videoStateOverlay").innerHTML = "Saving Video" ;
 				document.getElementById("timelineHolder").classList.add("hidden") ;
@@ -858,6 +879,7 @@ function pageUpdate(rawData){
 				document.getElementById("overlayButtons").innerHTML = '<a id="overlayStopSaveButton" onclick="justRunSomething(this)">Cancel Save</a>'
 				break ;
 		}
+		lastKnownVideoState = parsedData.videoState ; // set the last known video state
 	}
 	else if ("liverecord" in parsedData) { // response from a video state change
 		if ( ("filesave" in parsedData) && (parsedData.filesave == true) ) {
@@ -1049,15 +1071,22 @@ function dataGetter(method, parameter, callMeMaybe){
 	requestSender.send(parameter) ;
 }
 
-const evtSource = new EventSource("/control/subscribe");
+var useServerSentEvents = true;
 
-evtSource.onmessage = function(event) {
-	if (DebugOnOff)
-		document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
+if (typeof(EventSource) != "undefined") {
+	const evtSource = new EventSource("/control/subscribe");
+
+	evtSource.onmessage = function(event) {
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
+	}
+	evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
+	evtSource.addEventListener("complete", function(event) { pageUpdate(event.data) ; if (DebugOnOff) document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
 }
-evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
-evtSource.addEventListener("complete", function(event) { pageUpdate(event.data) ; if (DebugOnOff) document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
-
+else {
+	useServerSentEvents = false;
+	document.getElementById("refreshAllBox").classList.remove("hidden") ;
+}
 
 dataGetter("p", "", pageUpdate) ; // get all the data on startup
 
@@ -1067,18 +1096,33 @@ dataGetter("p", "", pageUpdate) ; // get all the data on startup
 var PollCounter = 1 ;
 function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
 
-	if (PollCounter % 30 == 0) { // every 15 seconds
-		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
-	}
-
 	if (PollCounter % 2 == 0) { // every 1 second
-		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
+		if (lastKnownVideoState != "filesave")
+			img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
 
 		dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
 	}
 
+	if (PollCounter % 30 == 0) { // every 15 seconds
+		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
+	}
+
 	if (PollCounter % 120 == 0) { // every 60 seconds
 		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
+	}
+
+
+	if (!useServerSentEvents) { // no server-sent events; ask for updates
+		if (PollCounter % 3 == 0)
+			dataGetter('get', 'state', pageUpdate) ; // check for a change in state
+
+		if (PollCounter % 5 == 0) {
+			dataGetter('get', 'videoState', pageUpdate) ; // check for video state changes
+		}
+
+		if (PollCounter % 31 == 0)
+			dataGetter('get', 'externalPower', pageUpdate) ; // check for external power connection
+
 	}
 
 

@@ -40,12 +40,18 @@
 #saveVideoButton.disabled { /* when the save button is disabled */
 /*	box-shadow: 0 0 3px 3px #a00; */
 	background-color: #222;
-	text-decoration: line-through; /* cross out the apply button */
+	text-decoration: line-through; /* cross out the save button */
 }
 #maxShutterButton { float: right; }
 
 
 #resolutionBox { clear: left; }
+
+#refreshAllBox { max-width: 278px; }
+#refreshButton { float: right; }
+
+#imageDisplay { line-height: 430px; }
+
 
 
 /*@media screen and (max-width: 3000px) {
@@ -122,7 +128,7 @@
 @media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
 	#playSave { display: none; } /* hide the settings button */
 	/* show the settings button in the menu drop-down ? */
-	#menu { width: 100%; }
+	#menu { width: 90%; }
 }
 
 
@@ -130,7 +136,7 @@
 </head>
 
 
-<body>
+<body onclick="">
 
 	<div class="header">
 		<div class="titleImage">
@@ -221,7 +227,7 @@
 
 		<div id="analogGainBox" class="horizLayout">
 			<b> Analog Gain </b> &ensp;
-			<div id="analogGain" class="selectContainerHolder">SELECT<div id="analogGainInner" class="selectContainer">
+			<div id="analogGain" class="selectContainerHolder" onclick="">SELECT<div id="analogGainInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> 0dB (x1) </a>
 				<a onclick="dropDownSelect(this)"> 6dB (x2) </a>
 				<a onclick="dropDownSelect(this)"> 12dB (x4) </a>
@@ -232,7 +238,7 @@
 
 		<div id="resolutionBox" class="horizLayout">
 			<b> Resolution </b> &ensp;
-			<div class="selectContainerHolder">Presets<div id="resolution" class="selectContainer">
+			<div class="selectContainerHolder" onclick="">Presets<div id="resolution" class="selectContainer">
 				<a> Unset (are you sure that you're connected with javascript enabled?) </a>
 			</div></div>
 			<br>
@@ -256,7 +262,7 @@
 
 		<div id="whiteBalanceBox" class="horizLayout">
 			<b> White Balance </b> &ensp;
-			<div id="whiteBalance" class="selectContainerHolder">Presets<div id="whiteBalanceInner" class="selectContainer">
+			<div id="whiteBalance" class="selectContainerHolder" onclick="">Presets<div id="whiteBalanceInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> 8000K </a> <!-- Cloudy Sky -->
 				<a onclick="dropDownSelect(this)"> 6500K </a> <!-- Noon Daylight -->
 				<a onclick="dropDownSelect(this)"> 5600K </a> <!-- Avg Daylight -->
@@ -273,7 +279,7 @@
 			<b> Save Video </b>
 <!--			&emsp; -->
 			<br>
-			<div id="storageLocation" class="selectContainerHolder">Location<div id="storageLocationInner" class="selectContainer">
+			<div id="storageLocation" class="selectContainerHolder" onclick="">Location<div id="storageLocationInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> No Storage Connected </a>
 				<a onclick="dropDownSelect(this)">Refresh</a>
 			</div></div>
@@ -288,13 +294,20 @@
 			<br>
 			<span class="instruction">Leave empty to use autoname</span>
 			<br><br>
-			<div id="saveFormat" class="selectContainerHolder">File Format<div id="saveFormatInner" class="selectContainer">
+			<div id="saveFormat" class="selectContainerHolder" onclick="">File Format<div id="saveFormatInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)">H.264 (mp4)</a>
 				<a onclick="dropDownSelect(this)">CinemaDNG (raw)</a>
 				<a onclick="dropDownSelect(this)">TIFF (images)</a>
 				<a onclidk="dropDownSelect(this)">TIFF RAW (images)</a>
 			</div></div>
 			<a id="saveVideoButton" class="button disabled" onclick="saveWholeVideo()"> Save </a>
+		</div>
+
+		<div id="refreshAllBox" class="horizLayout hidden">
+			<b> Refresh Parameters </b>
+			<br>
+			<a id="refreshButton" class="button" onclick="dropDownSelect(this)"> Refresh </a>
+			<span class="instruction">This browser does not get alerted to changes from the camera. Use this button to update this page to match the camera</span>
 		</div>
 
 	</div>
@@ -537,6 +550,8 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
 						  "Cancel Save":	function() { dataSender("stopFilesave", "{}") ; },
 						  "Record Mode":	function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
+
+						  "Refresh":		function() { dataGetter("p", "", pageUpdate) ; },
 						}
 
 
@@ -726,16 +741,24 @@ img.onload = function scaleToFit(){
 	}
 }
 
+document.getElementById("menu").onmouseover = function(){ document.getElementById("menuList").style.display = "block" ; }
+document.getElementById("menu").onmouseout = function() {
+	var otherMenu = document.getElementById("menuList") ;
+	setTimeout( function() {
+		if (!document.getElementById("menu").classList.contains("active"))
+			document.getElementById("menuList").style.display = "" ;
+	}, 50) ;
+}
 
 					//	 key	 	 inactive		active
 var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
-var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ dataSender("startRecording", "{}"); } ],
-						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ document.getElementById("menuList").style.display = "block" ;} ],
+var buttonFunctions = {	"record":		[ function(){ dataRequester("stopRecording", "", pageUpdate);}, function(){ dataRequester("startRecording", "{}", pageUpdate); } ],
+						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
-						"focusPeaking":	[ function(){ dataSender("set", '{"focusPeakingLevel": 0}') ;}, function(){ dataSender("set", '{"focusPeakingLevel": 0.2}') ;} ],
-						"zebraStripes":	[ function(){ dataSender("set", '{"zebraLevel": 0}') ;}, function(){ dataSender("set", '{"zebraLevel": 0.01}') ;} ],
+						"focusPeaking":	[ function(){ dataRequester("set", '{"focusPeakingLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"focusPeakingLevel": 0.2}', pageUpdate) ;} ],
+						"zebraStripes":	[ function(){ dataRequester("set", '{"zebraLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"zebraLevel": 0.01}', pageUpdate) ;} ],
 
 						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
 					  }
@@ -832,7 +855,8 @@ function pageUpdate(rawData){
 	if (parsedData.state == "idle") { // idle (ready to record)
 		videoWindow.style.border = VideoOutlineStyle ; // set the idle outline colour
 		recButton = document.getElementById("record") ; // get the record button
-		recButton.classList.remove("disabled") ; // take away the 'disabled' class
+		if (lastKnownVideoState == "live")
+			recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 0) ; // turn off the record button
 		stateSelecter(document.getElementById("blackCal"), 0) ; // turn off the blackCal button
 	}
@@ -941,14 +965,20 @@ function pageUpdate(rawData){
 
 		exposureValue = parsedData.exposurePeriod ; // set the exposure value (used for some other calculations)
 
-		 // slider is not linear; parabolic
-		document.getElementById("shutter").value = Math.sqrt(exposureValue / exposureMax) * exposureMax ;
+		if (document.getElementById("shutter") != document.activeElement) {
+			 // slider is not linear; parabolic
+			document.getElementById("shutter").value = Math.sqrt(exposureValue / exposureMax) * exposureMax ;
+		}
 
-		 // calculate the exposure as a percent and report it
-		document.getElementById("exposurePercent").value = parseFloat(exposureValue / exposureMax * 100).toFixed(1) ;
+		if (document.getElementById("exposurePercent") != document.activeElement) {
+			 // calculate the exposure as a percent and report it
+			document.getElementById("exposurePercent").value = parseFloat(exposureValue / exposureMax * 100).toFixed(1) ;
+		}
 
-		 // calculate the exposure angle
-		document.getElementById("exposureDegrees").value = parseFloat(exposureValue / framePeriod * 360).toFixed(1) ;
+		if (document.getElementById("exposureDegrees") != document.activeElement) {
+			 // calculate the exposure angle
+			document.getElementById("exposureDegrees").value = parseFloat(exposureValue / framePeriod * 360).toFixed(1) ;
+		}
 	}
 
 	if ("exposurePercent" in parsedData)
@@ -1009,7 +1039,6 @@ function pageUpdate(rawData){
 	}
 
 	if ("videoState" in parsedData) { // got the current videoState
-		lastKnownVideoState = parsedData.videoState ; // set the last known video state
 		switch (parsedData.videoState) {
 			case "live":
 				document.getElementById("saveProgress").classList.add("hidden")
@@ -1023,13 +1052,12 @@ function pageUpdate(rawData){
 				document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
 				document.getElementById("saveProgress").lastChild.textContent = "Playback Position" ;
 				recButton.classList.add("disabled") ; // disable the record button
-
-				document.getElementById("overlayButtons").innerHTML = '<a id="overlayNavigateButton" href="/PlaySave.html">Play/Save Screen</a> <a id="overlayRecModeButton" onclick="dropDownSelect(this)">Record Mode</a>'
-
+				document.getElementById("overlayButtons").innerHTML = '<a id="overlayNavigateButton" href="/PlaySave.html">Play/Save Screen</a> <a id="overlayRecModeButton" onclick="dropDownSelect(this)">Record Mode</a>' ;
 				break ;
 
 			case "filesave":
-				document.getElementById("saveProgressFill").style.width = 0 ;
+				if (lastKnownVideoState != "filesave")
+					document.getElementById("saveProgressFill").style.width = 0 ;
 				document.getElementById("saveProgress").classList.remove("hidden") ; // show the progress bar
 				document.getElementById("videoStateOverlay").innerHTML = "Saving Video" ;
 				recButton.classList.add("disabled") ; // disable the record button
@@ -1040,6 +1068,7 @@ function pageUpdate(rawData){
 				document.getElementById("overlayButtons").innerHTML = '<a onclick="dropDownSelect(this)">Cancel Save</a>' ;
 				break ;
 		}
+		lastKnownVideoState = parsedData.videoState ; // set the last known video state
 	}
 
 	if ("playbackStart" in parsedData)
@@ -1055,7 +1084,7 @@ function pageUpdate(rawData){
 			// display a progress bar here
 			var progress = parsedData.playbackPosition / lastKnownFrameEnd * 100 ;
 			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
-				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.playbackPosition + " of: " + lastKnownFrameEnd ;
+				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame " + parsedData.playbackPosition + " of " + lastKnownFrameEnd ;
 				document.getElementById("saveProgressFill").style.width = progress + "%" ;
 			}
 
@@ -1108,15 +1137,22 @@ function dataGetter(method, parameter, callMeMaybe){
 	requestSender.send(parameter) ;
 }
 
-const evtSource = new EventSource("/control/subscribe");
+var useServerSentEvents = true;
 
-evtSource.onmessage = function(event) {
-	if (DebugOnOff)
-		document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
+if (typeof(EventSource) != "undefined") {
+	const evtSource = new EventSource("/control/subscribe");
+
+	evtSource.onmessage = function(event) {
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
+	}
+	evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
+	evtSource.addEventListener("complete", function(event) { pageUpdate(event.data) ; if (DebugOnOff) document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
 }
-evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
-evtSource.addEventListener("complete", function(event) { pageUpdate(event.data) ; if (DebugOnOff) document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
-
+else {
+	useServerSentEvents = false;
+document.getElementById("refreshAllBox").classList.remove("hidden") ;
+}
 
 dataGetter("p", "", pageUpdate) ; // get all the data on startup
 
@@ -1127,20 +1163,36 @@ findFrameRates() ; // get the frame rates when this page loads
 var PollCounter = 1 ;
 function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
 
-	if (PollCounter % 30 == 0) { // every 15-ish seconds
-		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
-	}
-
 	if (PollCounter % 2 == 0) { // every 1 second
-//		img.src = "/cgi-bin/screenCap#e" + Math.random() ; // ask for an updated image
-		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
+
+		if (lastKnownVideoState != "filesave")
+			img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
 
 		if ( (lastKnownVideoState == "filesave") || (lastKnownVideoState == "play") )
 			dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
 	}
 
+	if (PollCounter % 30 == 0) { // every 15-ish seconds
+		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
+	}
+
 	if (PollCounter % 120 == 0) { // every 60-ish seconds
 		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
+	}
+
+
+	if (!useServerSentEvents) { // no server-sent events; ask for updates
+		if (PollCounter % 3 == 0)
+			dataGetter('get', 'state', pageUpdate) ; // check for a change in state
+
+		if (PollCounter % 5 == 0) {
+			dataGetter('get', 'exposurePeriod', pageUpdate) ; // check for exposure updates
+			dataGetter('get', 'videoState', pageUpdate) ; // check for video state changes
+		}
+
+		if (PollCounter % 31 == 0)
+			dataGetter('get', 'externalPower', pageUpdate) ; // check for external power connection
+
 	}
 
 	PollCounter++ ;
