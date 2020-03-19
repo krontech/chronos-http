@@ -116,6 +116,27 @@ input[type="text"]{
 }
 
 
+.matchBackground {
+	color: black;
+}
+
+
+.overlayButtons a {
+	background-color: #0067B9; /* pantone 2144 */
+}
+.overlayButtons a:hover {
+	background-color: #3D87CB; /* pantone 2143 */
+}
+
+a.innerDropDown.active {
+	background-color: #004EA8; /* pantone 2145 */
+}
+a.innerDropDown.active:hover {
+	background-color: #3D87CB; /* pantone 2143 */
+}
+.innerDropDownList a {
+	background-color: #004EA8; /* pantone 2145 */
+}
 
 
 
@@ -140,7 +161,9 @@ input[type="text"]{
 	border-color: #3D87CB; /* pantone 2143 */
 }
 
-
+#startEndFill {
+	background-color: #0067B9; /* pantone 2144 */
+}
 
 
 
@@ -211,6 +234,14 @@ a:hover .saveIcon:after { border-top-color: #333; }
 .active a:hover .saveicon:after { border-top-color: #aaa; }
 
 
+a.innerDropDown:before { /* folder drop-down triangle inside drop-down */
+	border: 7px solid transparent;
+	border-left: 10px solid white;
+}
+a.innerDropDown.active:before {
+	border: 7px solid transparent;
+	border-top: 10px solid white;
+}
 
 
 

@@ -383,7 +383,10 @@ input[type=text]{
 #menu.active + .menuContainer, #menu:hover + .menuContainer, .menuContainer:hover { display: block; }
 
 
-
+.matchBackground {
+	color: black;
+	font-size: 30%;
+}
 
 .stateNotice {
 	content: "Saving Video";
