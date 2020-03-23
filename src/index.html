@@ -793,8 +793,8 @@ img.onload = function scaleToFit(){
 	}
 }
 
-document.getElementById("menu").onmouseover = function(){ document.getElementById("menuList").style.display = "block" ; }
-document.getElementById("menu").onmouseout = function() {
+document.getElementById("menu").onmouseenter = function(){ document.getElementById("menuList").style.display = "block" ; }
+document.getElementById("menu").onmouseleave = function() {
 	var otherMenu = document.getElementById("menuList") ;
 	setTimeout( function() {
 		if (!document.getElementById("menu").classList.contains("active"))
