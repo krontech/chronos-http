@@ -550,18 +550,28 @@ var framePeriod = 3000 ;
 
 var lastSentExposureValue = exposureValue ;
 
-document.getElementById("shutter").onchange = function() { // note that this is not linear
-	exposureValue = Math.pow( ((this.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
-	dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
+if ( (!detectIE()) || (parseInt(detectIE()) > 16) ) { // not internet explorer
+	document.getElementById("shutter").onchange = function() { // note that this is not linear
+		exposureValue = Math.pow( ((this.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
+		dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
+	}
 }
+else { // looks like internet explorer
+	if (DebugOnOff)
+		document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
 
-
-document.getElementById("exposureDegrees").onchange = function() { // send the exposure time in nanosecods when it's changed
-	dataSender ("set", '{"shutterAngle":' + parseFloat(this.value) + '}') ;
+	document.getElementById("shutter").onmouseup = function() { // note that this is not linear
+		exposureValue = Math.pow( ((this.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
+		dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
+	}
 }
 
 document.getElementById("exposurePercent").onchange = function() { // send the exposure as a percent when it's changed
 	dataSender ("set", '{"exposurePercent":' + parseFloat(this.value) + '}') ;
+}
+
+document.getElementById("exposureDegrees").onchange = function() { // send the exposure time in nanosecods when it's changed
+	dataSender ("set", '{"shutterAngle":' + parseFloat(this.value) + '}') ;
 }
 
 document.getElementById("exposureTime").onchange = function() { // send the exposure time in nanoseconds when it's changed
