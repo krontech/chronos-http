@@ -254,13 +254,13 @@
 			<b> Video Settings </b>
 			<br>
 			Video framerate:
-			<input type="number" id="saveFPSNum" min="1" max="60" step="1" value="60"> fps
+			<input type="number" id="saveFPSNum" min="1" max="60" step="1" value="60" onChange="boundInput(this)"> fps
 			<br>
 			Bits per pixel:
-			<input type="number" id="bitsPerPixelNum" min="0.25" step="0.05" max="2.0" value="0.70">
+			<input type="number" id="bitsPerPixelNum" min="0.25" step="0.05" max="2.0" value="0.70" onChange="boundInput(this)">
 			<br>
 			Max Bitrate:
-			<input type="number" id="maxBitrateNum" min="1" max="60" step="1" value="40"> Mbps
+			<input type="number" id="maxBitrateNum" min="1" max="60" step="1" value="40" onChange="boundInput(this)"> Mbps
 			<br>
 			Text Overlay:
 			<a id="textOverlayButton" class="button" onclick="toggler(this)"> Off </a>
@@ -268,7 +268,7 @@
 
 		<div id="playBackBox" class="horizLayout">
 			<b> Play Speed </b>
-			<input type="number" id="playBackRateNum" onChange="justRunSomething(this)" min="0" max="1920" step="1" value="60"> fps
+			<input type="number" id="playBackRateNum" min="0" max="1920" step="1" value="60" onChange="boundInput(this)"> fps
 			<br>
 			<span class="instruction">Note that the image displayed on this page only updates once per second</span>
 		</div>
@@ -491,6 +491,14 @@ function getFileList() {
 }
 
 
+function boundInput(element) {
+	if (parseInt(element.value) > parseInt(element.max))
+		element.value = element.max ;
+	else if (parseInt(element.value) < parseInt(element.min))
+		element.value = element.min ;
+}
+
+
 var inputFunctions = {	"startMarker":		function(value){ dataRequester("set", '{"playbackStart": ' + value + '}', pageUpdate) ; setPlayBackLength() ; markerFill() ; },
 						"endMarker":		function(value){ setPlayBackLength() ; markerFill() ; },
 						"timeLine":			function(value){ dataRequester("set", '{"playbackPosition": ' + value + '}', pageUpdate) ; },
@@ -502,10 +510,10 @@ var inputFunctions = {	"startMarker":		function(value){ dataRequester("set", '{"
 
 						"overlayPlayModeButton": function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
 
-						"currentFrameNum":	function(value){ dataRequester("set", '{"playbackPosition": ' + value + '}', pageUpdate) ; },
-						"startFrameNum":	function(value){ document.getElementById("startMarker").value = value ; dataSender("set", '{"playbackStart": ' + value + '}') ; setPlayBackLength() ; markerFill() ; },
-						"endFrameNum":		function(value){ document.getElementById("endMarker").value = value ; setPlayBackLength() ; markerFill() ; },
-						"frameLengthNum":	function(value){ dataRequester("set", '{"playbackLength": ' + value + '}', pageUpdate) ; },
+						"currentFrameNum":	function(value){ if (value < 0) { value = 0 ; } else if (value > parseInt(document.getElementById("totalFramesNum").innerHTML)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) ; } dataRequester("set", '{"playbackPosition": ' + value + '}', pageUpdate) ; },
+						"startFrameNum":	function(value){ if (value < 0) { value = 0 ; } else if (value > parseInt(document.getElementById("totalFramesNum").innerHTML)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) ; } document.getElementById("startMarker").value = value ; dataSender("set", '{"playbackStart": ' + value + '}') ; setPlayBackLength() ; markerFill() ; },
+						"endFrameNum":		function(value){ if (value < 0) { value = 0 ; } else if (value > parseInt(document.getElementById("totalFramesNum").innerHTML)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) ; } document.getElementById("endMarker").value = value ; setPlayBackLength() ; markerFill() ; },
+						"frameLengthNum":	function(value){ if (value < 0) { value = 0 ; } else if (value > (parseInt(document.getElementById("totalFramesNum").innerHTML) - document.getElementById("startFrameNum").value)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) - document.getElementById("startFrameNum").value ; } dataRequester("set", '{"playbackLength": ' + value + '}', pageUpdate) ; },
 
 						"overlayStopSaveButton": function() { dataSender("stopFilesave", "{}") ; },
 					 }
@@ -522,6 +530,8 @@ function sliderDragged(element) {
 
 function setPlayBackLength() {
 	var length = parseInt(document.getElementById("endMarker").value) - parseInt(document.getElementById("startMarker").value) ;
+	if (length < 0)
+		length = 0;
 	dataSender ("set", '{"playbackLength": ' + length + '}') ; // set the length
 }
 
@@ -586,7 +596,6 @@ function saveVideo() {
 
 		request += ', "start": ' + lastKnownStartFrame ;
 		request += ', "length": ' + parseInt(lastKnownFrameEnd - lastKnownStartFrame) ;
-
 
 		var maxBitRate = document.getElementById("maxBitrateNum").value * 1000000 ;
 		var bitRate = document.getElementById("bitsPerPixelNum").value ; // start with the bits per pixel

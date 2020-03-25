@@ -567,19 +567,29 @@ else { // looks like internet explorer
 }
 
 document.getElementById("exposurePercent").onchange = function() { // send the exposure as a percent when it's changed
+	boundInput(this) ;
 	dataSender ("set", '{"exposurePercent":' + parseFloat(this.value) + '}') ;
 }
 
 document.getElementById("exposureDegrees").onchange = function() { // send the exposure time in nanosecods when it's changed
+	boundInput(this) ;
 	dataSender ("set", '{"shutterAngle":' + parseFloat(this.value) + '}') ;
 }
 
 document.getElementById("exposureTime").onchange = function() { // send the exposure time in nanoseconds when it's changed
+	boundInput(this) ;
 	dataSender ("set", '{"exposurePeriod":' + parseInt(this.value * 1000) + '}') ;
 }
 
 function maxShutter() {
 	dataSender ("set", '{"exposurePercent": 100}') ;
+}
+
+function boundInput(element) {
+	if (parseInt(element.value) > parseInt(element.max))
+		element.value = element.max ;
+	else if (parseInt(element.value) < parseInt(element.min))
+		element.value = element.min ;
 }
 
 var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGain": 1}'); },
