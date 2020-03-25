@@ -176,6 +176,8 @@ img {
 	cursor: pointer;
 }
 
+input[type=range]::-moz-range-track { background: transparent; border: none; }
+
 input[type=range]::-moz-focus-outer { border: 0; } /* remove the dotted outline from the sliders */
 input[type=range]:focus { outline: none; }
 
@@ -225,7 +227,7 @@ input[type=range]:focus { outline: none; }
 	width: 100%;
 	height: 0;
 /*	border-radius: 8px; */
-	background: orange;
+	background: transparent;
 /*	background-image: linear-gradient(to right, black, white);*/
 	margin: 0;
 }
