@@ -837,3 +837,31 @@ a.innerDropDown.active:before {
 	margin: 0 -4px;
 	font-size: 80%;
 }
+
+
+.popUpBackground {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	z-index: 88;
+}
+
+
+.popUpMessage {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	box-sizing: border-box;
+	max-width: 98%;
+	background: black;
+	border-radius: 10px;
+	padding: 1%;
+	border: 0px solid black;
+	box-shadow: 0 0 10px 10px black;
+	z-index: 90;
+}
