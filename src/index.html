@@ -687,20 +687,20 @@ function usePresetResolution(element) {
 	document.getElementById("fps").value = pieces[4] ; // set the preset framerate
 
 	// calculate horizontal offset (to center the window on the sensor)
-	document.getElementById("hOff").value = Math.floor((1280 - pieces[0]) / 2) ;
+	document.getElementById("hOff").value = Math.floor((document.getElementById("hRes").max - pieces[0]) / 2) ;
 
 	// calculate vertical offset (to center the window on the sensor)
-	document.getElementById("vOff").value = Math.floor((1024 - pieces[2]) / 2) ;
+	document.getElementById("vOff").value = Math.floor((document.getElementById("vRes").max - pieces[2]) / 2) ;
 
 	updatePreviewWindow() ; // update the sensor preview window
 }
 
 function centerWindow() { // center the sensor preview window
 	// calculate horizontal offset (to center the window on the sensor)
-	document.getElementById("hOff").value = Math.floor((1280 - parseInt(document.getElementById("hRes").value)) / 2) ;
+	document.getElementById("hOff").value = Math.floor((document.getElementById("hRes").max - parseInt(document.getElementById("hRes").value)) / 2) ;
 
 	// calculate vertical offset (to center the window on the sensor)
-	document.getElementById("vOff").value = Math.floor((1024 - parseInt(document.getElementById("vRes").value)) / 2) ;
+	document.getElementById("vOff").value = Math.floor((document.getElementById("vRes").max - parseInt(document.getElementById("vRes").value)) / 2) ;
 
 	updatePreviewWindow() ; // update the sensor preview window
 }
