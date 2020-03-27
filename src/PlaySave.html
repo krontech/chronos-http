@@ -208,10 +208,10 @@
 		</div>
 
 		<div id="timelineHolder" class="timelineHolder">
-			<input id="startMarker" class="timelineMarker" onchange="sliderDragged(this)" type="range" min="0" max="100" value="15" step="1">
-			<input id="endMarker" class="timelineMarker" onchange="sliderDragged(this)" type="range" min="0" max="100" value="85" step="1">
+			<input id="startMarker" class="timelineMarker" oninput="justRunSomething(this)" type="range" min="0" max="100" value="15" step="1" onmouseup="frameChange(this)">
+			<input id="endMarker" class="timelineMarker" oninput="justRunSomething(this)" type="range" min="0" max="100" value="85" step="1" onmouseup="frameChange(this)">
 			<div id="startEndFill"></div>
-			<input id="timeLine" class="timeline" onchange="sliderDragged(this)" type="range" step="1">
+			<input id="timeLine" class="timeline" oninput="sliderDragged(this)" type="range" step="1" onmouseup="frameChange(this)">
 		</div>
 
 		<div class="Text-bar">
@@ -238,16 +238,16 @@
 			<b> Frames </b>
 			<br>
 			Frame:
-			<input type="number" id="currentFrameNum" onChange="justRunSomething(this)" min="0" value="1"> / <span id="totalFramesNum">#</span>
+			<input type="number" id="currentFrameNum" oninput="justRunSomething(this)" min="0" value="1" onfocusout="frameChange(this)"> / <span id="totalFramesNum">#</span>
 			<br>
 			Starting Frame:
-			<input type="number" id="startFrameNum" onChange="justRunSomething(this)" min="0">
+			<input type="number" id="startFrameNum" oninput="justRunSomething(this)" min="0" onfocusout="frameChange(this)">
 			<br>
 			Ending Frame:
-			<input type="number" id="endFrameNum" onChange="justRunSomething(this)" min="0">
+			<input type="number" id="endFrameNum" oninput="justRunSomething(this)" min="0" onfocusout="frameChange(this)">
 			<br>
 			Length:
-			<input type="number" id="frameLengthNum" onChange="justRunSomething(this)" min="0">
+			<input type="number" id="frameLengthNum" oninput="justRunSomething(this)" min="0" onfocusout="frameChange(this)">
 		</div>
 
 		<div id="videoSettingsBox" class="horizLayout">
@@ -379,10 +379,6 @@ if (detectIE()) {
 	if ( (parseInt(detectIE()) <= 16) ) { // detect an older version (especially IE)
 		if (DebugOnOff)
 			document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
-
-		document.getElementById("startMarker").outerHTML ='<input id="startMarker" class="timelineMarker" onmouseup="sliderDragged(this)" type="range" min="0" max="100" value="15" step="1">' ;
-		document.getElementById("endMarker").outerHTML ='<input id="endMarker" class="timelineMarker" onmouseup="sliderDragged(this)" type="range" min="0" max="100" value="85" step="1">' ;
-		document.getElementById("timeLine").outerHTML ='<input id="timeLine" class="timeline" onmouseup="sliderDragged(this)" type="range" step="1">' ;
 	}
 }
 
@@ -499,41 +495,68 @@ function boundInput(element) {
 }
 
 
-var inputFunctions = {	"startMarker":		function(value){ dataRequester("set", '{"playbackStart": ' + value + '}', pageUpdate) ; setPlayBackLength() ; markerFill() ; },
-						"endMarker":		function(value){ setPlayBackLength() ; markerFill() ; },
-						"timeLine":			function(value){ dataRequester("set", '{"playbackPosition": ' + value + '}', pageUpdate) ; },
+var inputFunctions = {	"startMarker":		function(value){ document.getElementById("startFrameNum").value = value ; markerFill() ; setFrameLength() ; },
+						"endMarker":		function(value){ document.getElementById("endFrameNum").value = value ; markerFill() ; setFrameLength() ; },
 
-						"frameMarkStart":	function(){ document.getElementById("startMarker").value = document.getElementById("timeLine").value ; sliderDragged(document.getElementById("startMarker")) ; },
-						"frameMarkEnd":		function(){ document.getElementById("endMarker").value = document.getElementById("timeLine").value ; sliderDragged(document.getElementById("endMarker")) ; },
+						"frameMarkStart":	function(){ document.getElementById("startMarker").value = document.getElementById("timeLine").value ; justRunSomething(document.getElementById("startMarker")) ; frameChange(document.getElementById("startMarker")) ; },
+						"frameMarkEnd":		function(){ document.getElementById("endMarker").value = document.getElementById("timeLine").value ; justRunSomething(document.getElementById("endMarker")) ; frameChange(document.getElementById("endMarker")) ; },
 						"frameStepB":		function(){ document.getElementById("timeLine").stepDown() ; sliderDragged(document.getElementById("timeLine")) ; },
 						"frameStepF":		function(){ document.getElementById("timeLine").stepUp() ; sliderDragged(document.getElementById("timeLine")) ; },
 
 						"overlayPlayModeButton": function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
 
-						"currentFrameNum":	function(value){ if (value < 0) { value = 0 ; } else if (value > parseInt(document.getElementById("totalFramesNum").innerHTML)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) ; } dataRequester("set", '{"playbackPosition": ' + value + '}', pageUpdate) ; },
-						"startFrameNum":	function(value){ if (value < 0) { value = 0 ; } else if (value > parseInt(document.getElementById("totalFramesNum").innerHTML)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) ; } document.getElementById("startMarker").value = value ; dataSender("set", '{"playbackStart": ' + value + '}') ; setPlayBackLength() ; markerFill() ; },
-						"endFrameNum":		function(value){ if (value < 0) { value = 0 ; } else if (value > parseInt(document.getElementById("totalFramesNum").innerHTML)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) ; } document.getElementById("endMarker").value = value ; setPlayBackLength() ; markerFill() ; },
-						"frameLengthNum":	function(value){ if (value < 0) { value = 0 ; } else if (value > (parseInt(document.getElementById("totalFramesNum").innerHTML) - document.getElementById("startFrameNum").value)) { value = parseInt(document.getElementById("totalFramesNum").innerHTML) - document.getElementById("startFrameNum").value ; } dataRequester("set", '{"playbackLength": ' + value + '}', pageUpdate) ; },
+						"currentFrameNum":	function(value){ boundInput(document.getElementById("currentFrameNum")) ; document.getElementById("timeLine").value = value ; sliderDragged(document.getElementById("timeLine")) ; },
+						"startFrameNum":	function(value){ boundInput(document.getElementById("startFrameNum")) ; document.getElementById("startMarker").value = value ; markerFill() ; setFrameLength() ; },
+						"endFrameNum":		function(value){ boundInput(document.getElementById("endFrameNum")) ; document.getElementById("endMarker").value = value ; markerFill() ; setFrameLength() ; },
+						"frameLengthNum":	function(value){ setFrameLength() ; markerFill() ; },
 
 						"overlayStopSaveButton": function() { dataSender("stopFilesave", "{}") ; },
 					 }
 
 function justRunSomething(element) {
 	if (element.id in inputFunctions) // if the key-value exists
-		inputFunctions[element.id](element.value) // run the function (with the value given)
+		inputFunctions[element.id](element.value) ; // run the function (with the value given)
 }
+
 
 function sliderDragged(element) {
-	if (element.id in inputFunctions) // if the key-value exists
-		inputFunctions[element.id](element.value) // run the function (with the value given)
+	if (typeof sliderDragged.requestCount == 'undefined')
+		sliderDragged.requestCount = 0 ;
+
+	if (element.id == "timeLine" ) {
+
+		var callWhenFinished = function(inputParams) { // set the callback / finished function
+			pageUpdate(inputParams) ; // actually update the page
+			sliderDragged.requestCount -= 1 ; // allow another request
+		}
+		if (sliderDragged.requestCount < 1) {
+			sliderDragged.requestCount += 1 ;
+			dataRequester("set", '{"playbackPosition": ' + element.value + '}', callWhenFinished) ; // set the current fram (playback position)
+		}
+	}
 }
 
-function setPlayBackLength() {
-	var length = parseInt(document.getElementById("endMarker").value) - parseInt(document.getElementById("startMarker").value) ;
+function setFrameLength() {
+	var end = document.getElementById("endMarker") ;
+	var start = document.getElementById("startMarker") ;
+	var length = parseInt(end.value) - parseInt(start.value) ;
 	if (length < 0)
-		length = 0;
-	dataSender ("set", '{"playbackLength": ' + length + '}') ; // set the length
+		length = 0 ;
+//	dataSender ("set", '{"playbackLength": ' + length + '}') ; // set the length
+
+	if (document.getElementById("frameLengthNum") != document.activeElement) { // not focusing on frameLengthNum
+		document.getElementById("frameLengthNum").value = length ;
+	}
+	else {
+		element = document.getElementById("frameLengthNum") ;
+		element.max = parseInt(end.max) - parseInt(start.value) ; // set the frameLength max
+		boundInput(element) ; // force to between min and max
+		end.value = parseInt(element.value) + parseInt(start.value) ; // set the end value
+		boundInput(end) ; // keep the end value from being too high / too low
+		document.getElementById("endFrameNum").value = end.value ; // copy the end frame value to the numeric display
+	}
 }
+
 
 function markerFill() {
 	var start = document.getElementById("startMarker") ;
@@ -545,7 +568,7 @@ function markerFill() {
 
 	if (start > end) {
 		start = end ; // force to always have start <= end
-		document.getElementById("startMarker").value = document.getElementById("endMarker").value;
+		document.getElementById("startMarker").value = document.getElementById("endMarker").value ;
 	}
 
 	var fillBar = document.getElementById("startEndFill") ;
@@ -556,6 +579,29 @@ function markerFill() {
 
 
 
+function frameChange(element) {
+	switch (element.id) {
+		case "startMarker":
+		case "startFrameNum":
+			dataSender("set", '{"playbackStart": ' + element.value + '}') ;
+			break ;
+
+		case "endMarker":
+		case "endFrameNum":
+			dataSender ("set", '{"playbackLength": ' + document.getElementById("frameLengthNum").value + '}') ; // set the length
+			break ;
+
+		case "timeLine":
+		case "currentFrameNum":
+			dataRequester("set", '{"playbackPosition": ' + element.value + '}', pageUpdate) ; // set the current fram (playback position)
+			break ;
+
+		case "frameLengthNum":
+			dataSender ("set", '{"playbackLength": ' + element.value + '}') ; // set the length
+			break ;
+
+	}
+}
 
 var StorageInfo ;
 
@@ -1006,9 +1052,11 @@ function pageUpdate(rawData){
 
 	if ("playbackStart" in parsedData) {
 		lastKnownStartFrame = parsedData.playbackStart ; // set the last known playback starting point
-		document.getElementById("startMarker").value = parsedData.playbackStart ; // set the slider position
+		if (document.getElementById("startMarker") != document.activeElement)
+			document.getElementById("startMarker").value = parsedData.playbackStart ; // set the slider position
 
-		document.getElementById("startFrameNum").value = parsedData.playbackStart ;
+		if (document.getElementById("startFrameNum") != document.activeElement)
+			document.getElementById("startFrameNum").value = parsedData.playbackStart ;
 
 		if ("totalFrames" in parsedData)
 			document.getElementById("frameLengthNum").max = parsedData.totalFrames - parsedData.playbackStart ;
@@ -1016,14 +1064,17 @@ function pageUpdate(rawData){
 
 	if ("playbackLength" in parsedData) {
 		lastKnownFrameEnd = parseInt(parsedData.playbackLength + parseInt(document.getElementById("startMarker").value)) ; // set the last known playback length
-		document.getElementById("endMarker").value = parseInt(parsedData.playbackLength) + parseInt(document.getElementById("startMarker").value) ;
+		if (document.getElementById("endMarker") != document.activeElement)
+			document.getElementById("endMarker").value = parseInt(parsedData.playbackLength) + parseInt(document.getElementById("startMarker").value) ;
 		markerFill() ; // update the highlighted area above the timeline
 
-		document.getElementById("frameLengthNum").value = parsedData.playbackLength ;
+		if (document.getElementById("frameLengthNum") != document.activeElement)
+			document.getElementById("frameLengthNum").value = parsedData.playbackLength ;
 
 		document.getElementById("frameLengthNum").max = document.getElementById("totalFramesNum").value - document.getElementById("startFrameNum").value ;
 
-		document.getElementById("endFrameNum").value = document.getElementById("endMarker").value ;
+		if (document.getElementById("endFrameNum") != document.activeElement)
+			document.getElementById("endFrameNum").value = document.getElementById("endMarker").value ;
 	}
 
 	if ("playbackPosition" in parsedData) { // get the playback frame
