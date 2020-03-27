@@ -216,13 +216,13 @@
 
 		<div id="exposureBox" class="horizLayout">
 			<b> Exposure (Shutter) </b>
-			<input class="slider" type="range" id="shutter">
+			<input class="slider" type="range" id="shutter" oninput="holdWhileSliding(this)">
 			<br>
-			<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.1"> &deg;
+			<input type="number" id="exposureDegrees" min="0.0" max="360.0" step="0.1" oninput="changeExposureOften(this)"> &deg;
 			&ensp;
-			<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.1"> %
+			<input type="number" id="exposurePercent" min="0.0" max="100.0" step="0.1" oninput="changeExposureOften(this)"> %
 			&ensp;
-			<input type="number" id="exposureTime" step="0.01"> µs
+			<input type="number" id="exposureTime" step="0.01" min="0" oninput="changeExposureOften(this)"> µs
 			<a id="maxShutterButton" class="button" onclick="maxShutter()"> MAX </a>
 		</div>
 
@@ -243,20 +243,20 @@
 				<a> Unset (are you sure that you're connected with javascript enabled?) </a>
 			</div></div>
 			<br>
-			<input type="number" id="hRes" onChange="updatePreviewWindow()"> x <input type="number" id="vRes" onChange="updatePreviewWindow()">
+			<input type="number" id="hRes" onInput="centerWindow()"> x <input type="number" id="vRes" onInput="centerWindow()">
 			<br>
 			<div id="sensorBackground"><div id="sensorCoverageText" class="coverageText">Sensor Coverage</div><div id="sensorWindow"></div></div>
 			<br>
 			<b> Offset </b>
 			<br>
-			<input type="number" id="hOff" onChange="updatePreviewWindow()" min="0" max="1088"> x <input type="number" id="vOff"  onChange="updatePreviewWindow()" min="0" max="928">
+			<input type="number" id="hOff" onInput="updatePreviewWindow()" min="0" max="1088"> x <input type="number" id="vOff"  onInput="updatePreviewWindow()" min="0" max="928">
 			&ensp;
 			<a id="centerWindow" class="button" onclick="centerWindow()"> Center </a>
 			<br>
 			<br>
 			<b> Frame Rate </b>
 			<br>
-			<input type="number" id="fps" >
+			<input type="number" id="fps" min="60" oninput="checkMaxFROften()">
 			<a id="maxFRButton" class="button" onclick="getMaxFrameRate()"> MAX </a>
 			<a id="applyButton" class="button" onclick="applyResolution()"> Apply </a>
 		</div>
@@ -398,7 +398,7 @@
 var DebugOnOff = false ;
 
 function tester1func() {
-
+	checkMaxFROften() ;
 }
 
 
@@ -563,38 +563,57 @@ var exposureMin = 1000 ;
 var exposureMax = 2000 ;
 var framePeriod = 3000 ;
 
-var lastSentExposureValue = exposureValue ;
+function holdWhileSliding(element) {
 
-if ( (!detectIE()) || (parseInt(detectIE()) > 16) ) { // not internet explorer
-	document.getElementById("shutter").onchange = function() { // note that this is not linear
-		exposureValue = Math.pow( ((this.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
-		dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
+	if (typeof holdWhileSliding.requestCount == 'undefined')
+		holdWhileSliding.requestCount = 0 ;
+
+	exposureValue = Math.pow( ((element.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
+
+	var notTooOften = function() {
+		holdWhileSliding.requestCount -= 1 ;
+	}
+
+	if (holdWhileSliding.requestCount < 1) {
+		holdWhileSliding.requestCount += 1 ;
+		dataRequester ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}', notTooOften) ;
+	}
+
+}
+
+function changeExposureOften(element) {
+	boundInput(element) ;
+
+	if (typeof changeExposureOften.requestCount == 'undefined')
+		changeExposureOften.requestCount = 0 ;
+
+
+	var whenFinished = function() {
+		changeExposureOften.requestCount -= 1 ;
+	}
+
+	var sendParams = "" ;
+
+	switch (element.id) {
+		case "exposurePercent":
+			sendParams = '{"exposurePercent":' + parseFloat(element.value) + '}' ;
+			break ;
+
+		case "exposureDegrees":
+			sendParams = '{"shutterAngle":' + parseFloat(element.value) + '}' ;
+			break ;
+
+		case "exposureTime":
+			sendParams = '{"exposurePeriod":' + parseInt(element.value * 1000) + '}' ;
+			break ;
+	}
+
+	if ( (sendParams != "") && (changeExposureOften.requestCount < 1) ) {
+		changeExposureOften.requestCount += 1 ;
+		dataRequester ("set", sendParams, whenFinished) ;
 	}
 }
-else { // looks like internet explorer
-	if (DebugOnOff)
-		document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
 
-	document.getElementById("shutter").onmouseup = function() { // note that this is not linear
-		exposureValue = Math.pow( ((this.value - exposureMin) / (exposureMax - exposureMin)), 2 ) * exposureMax ;
-		dataSender ("set", '{"exposurePeriod":' + parseInt(exposureValue) + '}') ;
-	}
-}
-
-document.getElementById("exposurePercent").onchange = function() { // send the exposure as a percent when it's changed
-	boundInput(this) ;
-	dataSender ("set", '{"exposurePercent":' + parseFloat(this.value) + '}') ;
-}
-
-document.getElementById("exposureDegrees").onchange = function() { // send the exposure time in nanosecods when it's changed
-	boundInput(this) ;
-	dataSender ("set", '{"shutterAngle":' + parseFloat(this.value) + '}') ;
-}
-
-document.getElementById("exposureTime").onchange = function() { // send the exposure time in nanoseconds when it's changed
-	boundInput(this) ;
-	dataSender ("set", '{"exposurePeriod":' + parseInt(this.value * 1000) + '}') ;
-}
 
 function maxShutter() {
 	dataSender ("set", '{"exposurePercent": 100}') ;
@@ -653,10 +672,8 @@ function applyResolution() {
 	var hOff = document.getElementById("hOff") ;
 	var vOff = document.getElementById("vOff") ;
 
-	if ( (parseInt(hRes.value) <= parseInt(hRes.max)) && (parseInt(hRes.value) >= parseInt(hRes.min))
-	  && (parseInt(hOff.value) <= parseInt(hOff.max)) && (parseInt(hOff.value) >= parseInt(hOff.min))
-	  && (parseInt(vRes.value) <= parseInt(vRes.max)) && (parseInt(vRes.value) >= parseInt(vRes.min))
-	  && (parseInt(vOff.value) <= parseInt(vOff.max)) && (parseInt(vOff.value) >= parseInt(vOff.min)) ) {
+	if ( (hRes.validity.valid) && (vRes.validity.valid) && (hOff.validity.valid) && (vOff.validity.valid)
+	&& (document.getElementById("fps").validity.valid) && (!document.getElementById("applyButton").classList.contains("disabled")) ) {
 
 		var parameters = '{"resolution": {"hRes": ' + document.getElementById("hRes").value ;
 		parameters += ', "vRes": ' + document.getElementById("vRes").value ;
@@ -665,18 +682,72 @@ function applyResolution() {
 		parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ) ;
 		parameters += '}}' ;
 
-		dataSender("set", parameters) ; // request these settings
+//		dataSetter("set", parameters) ; // request these settings
+		dataRequester("set", parameters, maxShutter) ; // request these settings >> set shutter to max after I get a response
+
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML += "Sending these resolution settings: " + parameters ;
+
 	}
+	else if (DebugOnOff)
+		document.getElementById("debugger").innerHTML += "Could not send resolution settings -- one or more resolution settings outside of range" ;
 }
 
 function getMaxFrameRate() {
 	var retrieval = function (stringBack) { // what to do with the data that comes back
 		var jsonBack = JSON.parse(stringBack) ;
-		if ("minFramePeriod" in jsonBack)
-			document.getElementById("fps").value = Math.floor(1000000000 / jsonBack.minFramePeriod) ;
+		if ("minFramePeriod" in jsonBack) {
+			var fpsBox = document.getElementById("fps") ;
+			fpsBox.value = Math.floor(1000000000 / jsonBack.minFramePeriod) ;
+			fpsBox.max = (1000000000 / parseFloat(jsonBack.minFramePeriod)).toFixed(1) ;
+
+			if (!fpsBox.validity.valid)
+				document.getElementById("applyButton").classList.add("disabled") ;
+			else if ( (document.getElementById("hRes").validity.valid) && (document.getElementById("vRes").validity.valid)
+			&& (document.getElementById("hOff").validity.valid) && (document.getElementById("vOff").validity.valid) )
+				document.getElementById("applyButton").classList.remove("disabled") ;
+		}
+
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML += "\nmaxFrameRate got this: " + stringBack ;
 	}
 	dataRequester("getResolutionTimingLimits", '{"hRes":' + document.getElementById("hRes").value + ',"vRes":' + document.getElementById("vRes").value + '}', retrieval) ;	
 }
+
+
+function checkMaxFROften() {
+
+	if (typeof checkMaxFROften.requestCount == 'undefined')
+		checkMaxFROften.requestCount = 0 ;
+
+	var retrieval = function (stringBack) { // what to do with the data that comes back
+		var jsonBack = JSON.parse(stringBack) ;
+		if ("minFramePeriod" in jsonBack) {
+			var fpsBox = document.getElementById("fps") ;
+//			fpsBox.value = Math.floor(1000000000 / jsonBack.minFramePeriod) ;
+			fpsBox.max = (1000000000 / parseFloat(jsonBack.minFramePeriod)).toFixed(1) ;
+
+			if (!fpsBox.validity.valid)
+				document.getElementById("applyButton").classList.add("disabled") ;
+			else if ( (document.getElementById("hRes").validity.valid) && (document.getElementById("vRes").validity.valid)
+			&& (document.getElementById("hOff").validity.valid) && (document.getElementById("vOff").validity.valid) )
+				document.getElementById("applyButton").classList.remove("disabled") ;
+		}
+
+		checkMaxFROften.requestCount -= 1 ;
+
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML += "<br>maxFrameRate got this: " + stringBack ;
+	}
+
+	if (checkMaxFROften.requestCount < 1) {
+		checkMaxFROften.requestCount += 1 ;
+		dataRequester("getResolutionTimingLimits", '{"hRes":' + document.getElementById("hRes").value + ',"vRes":' + document.getElementById("vRes").value + '}', retrieval) ;	
+	}
+	else if (DebugOnOff)
+		document.getElementById("debugger").innerHTML += "<br> --> did not send maxUpdate" ;
+}
+
 
 function usePresetResolution(element) {
 	var temp = element.innerText.replace(/[^\d]/gi, ' ') ; // strip out anything other than digits
@@ -715,17 +786,17 @@ function updatePreviewWindow() { // show a preview of the sensor usage window
 	hOff.max = parseInt(hRes.max) - parseInt(hRes.value) ; // set the maximum horizontal offset
 	vOff.max = parseInt(vRes.max) - parseInt(vRes.value) ; // set the maximum vertical offset
 
+	checkMaxFROften() ; // check the max frame rate
+
 	if ( (parseInt(hRes.value) == parseInt(hRes.max)) && (parseInt(vRes.value) == parseInt(vRes.max)) )
 		document.getElementById("sensorCoverageText").innerText = "Sensor Coverage\n[Full]" ;
 	else
 		document.getElementById("sensorCoverageText").innerText = "Sensor Coverage" ;
 
-	if ( (parseInt(hRes.value) <= parseInt(hRes.max)) && (parseInt(hRes.value) >= parseInt(hRes.min))
-	  && (parseInt(hOff.value) <= parseInt(hOff.max)) && (parseInt(hOff.value) >= parseInt(hOff.min))
-	  && (parseInt(vRes.value) <= parseInt(vRes.max)) && (parseInt(vRes.value) >= parseInt(vRes.min))
-	  && (parseInt(vOff.value) <= parseInt(vOff.max)) && (parseInt(vOff.value) >= parseInt(vOff.min)) ) {
+	if ( (hRes.validity.valid) && (vRes.validity.valid) && (hOff.validity.valid) && (vOff.validity.valid) ) {
 
-		document.getElementById("applyButton").classList.remove("disabled") ;
+		if (document.getElementById("fps").validity.valid)
+			document.getElementById("applyButton").classList.remove("disabled") ;
 
 		var window = document.getElementById("sensorWindow") ;
 		window.style.width = (hRes.value / 5) + "px" ;
@@ -737,6 +808,7 @@ function updatePreviewWindow() { // show a preview of the sensor usage window
 	}
 	else
 		document.getElementById("applyButton").classList.add("disabled") ;
+
 }
 
 
@@ -1035,7 +1107,7 @@ function pageUpdate(rawData){
 
 	if ("exposureMin" in parsedData) {
 		document.getElementById("shutter").min = parsedData.exposureMin ;
-		document.getElementById("exposureTime").min = (parsedData.exposureMin / 1000).toFixed(1) ;
+//		document.getElementById("exposureTime").min = (parsedData.exposureMin / 1000).toFixed(1) ;
 
 		exposureMin = parsedData.exposureMin ; // set the minimum (save for other calculations)
 	}
@@ -1048,7 +1120,10 @@ function pageUpdate(rawData){
 	}
 
 	if ("exposurePeriod" in parsedData) {
-		document.getElementById("exposureTime").value = parseFloat(parsedData.exposurePeriod / 1000).toFixed(1) ;
+
+		if (document.getElementById("exposureTime") != document.activeElement) {
+			document.getElementById("exposureTime").value = parseFloat(parsedData.exposurePeriod / 1000).toFixed(1) ;
+		}
 
 		exposureValue = parsedData.exposurePeriod ; // set the exposure value (used for some other calculations)
 
