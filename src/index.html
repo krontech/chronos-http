@@ -154,21 +154,23 @@
 	<div class="heading-bar">
 		<a id="main" class="active"> <div class="homeIcon"></div> Main </a>
 		<a id="playSave" href="PlaySave.html"> <div class="playIcon"></div> Play & Save </a>
-		<a id="storage"> <div class="saveIcon"></div> Storage </a>
+<!--		<a id="storage"> <div class="saveIcon"></div> Storage </a>
 		<a id="settings"> <div class="settingsIcon"></div> Settings </a>
+-->
 		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Help / About </a>
 
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
 		<div id="menuList" onmouseover="menuKeeper()" class="menuContainer menuClickOk">
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
-			<a> About Camera </a>
+<!--			<a> About Camera </a>
 			<a> Camera Settings </a>
 			<a> Triggers & IO </a>
+-->
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-			<a onclick="dropDownSelect(this)">Debug Tools</a>
+<!--			<a onclick="dropDownSelect(this)">Debug Tools</a> -->
 		</div>
 
 	</div>
@@ -188,6 +190,7 @@
 				<div id="saveProgressFill" class="progressBarFill"></div>
 				Progress
 			</div>
+			<div id="blackCalOverlay" class="overlayMessage hidden">Running Black Calibration</div>
 		</div>
 
 		<div class="Text-bar">
@@ -773,6 +776,9 @@ function centerWindow() { // center the sensor preview window
 	// calculate vertical offset (to center the window on the sensor)
 	document.getElementById("vOff").value = Math.floor((document.getElementById("vRes").max - parseInt(document.getElementById("vRes").value)) / 2) ;
 
+	if ( parseInt(document.getElementById("vOff").value) % 2 == 1 ) // if the number is odd
+		document.getElementById("vOff").value -= 1 ;
+
 	updatePreviewWindow() ; // update the sensor preview window
 }
 
@@ -1018,12 +1024,14 @@ function pageUpdate(rawData){
 			recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 0) ; // turn off the record button
 		stateSelecter(document.getElementById("blackCal"), 0) ; // turn off the blackCal button
+		document.getElementById("blackCalOverlay").classList.add("hidden") ;
 	}
 	else if (parsedData.state == "recording") { // recording
 		videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
 		recButton = document.getElementById("record") ; // get the record button
 		recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 1) ; // turn on the record button
+		document.getElementById("blackCalOverlay").classList.add("hidden") ;
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
 		videoWindow.style.border = "3px dashed white"; // set the blackCal outline color
@@ -1031,6 +1039,7 @@ function pageUpdate(rawData){
 		recButton.classList.remove("active") ;
 		recButton.classList.add("disabled") ;
 		stateSelecter(document.getElementById("blackCal"), 1) ; // turn on the blackCal button
+		document.getElementById("blackCalOverlay").classList.remove("hidden") ;
 	}
 
 
