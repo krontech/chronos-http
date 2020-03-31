@@ -170,7 +170,7 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-<!--			<a onclick="dropDownSelect(this)">Debug Tools</a> -->
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
 		</div>
 
 	</div>
@@ -379,17 +379,17 @@
 <div class="matchBackground"> This page was made by Nicholas Faliszewski </div>
 
 
-<div id="popUpBackground" class="popUpBackground hidden"> </div>
-
-<div id="messageWarn" class="popUpMessage hidden">
-	<div id="overwrittenBox" class="horizLayout">
-		You have not saved any of the previous recording. Do you want to erase it and start a new recording?
-		<br>
-		<a id="yesOverwriteBtn" style="float: right;" class="button">Yes</a>
-		<a id="noOverwriteBtn" style="float: right;" class="button">No</a>
-	</div>
-	<div id="somethingWeirdBox" class="horizLayout">
-		Something weird is happening
+<div id="popUpBackground" class="popUpBackground hidden">
+	<div id="messageWarn" class="popUpMessage">
+		<div id="overwrittenBox" class="horizLayout hidden">
+			You have not saved any of the previous recording. Do you want to erase it and start a new recording?
+			<br>
+			<a id="noOverwriteBtn" style="float: right;" class="button" onclick="dropDownSelect(this)">No (don't record)</a>
+			<a id="yesOverwriteBtn" style="float: right;" class="button" onclick="dropDownSelect(this)">Yes (overwrite)</a>
+		</div>
+		<div id="somethingWeirdBox" class="horizLayout hidden">
+			Something weird is happening
+		</div>
 	</div>
 </div>
 
@@ -401,18 +401,65 @@
 var DebugOnOff = false ;
 
 function tester1func() {
-	checkMaxFROften() ;
+	setCookie("warnOverwrite", "true") ;
 }
 
 
 function tester2func() {
-
+	setCookie("warnOverwrite", "false") ;
 }
 
 
 function tester3func() {
 
+	if (getCookie("savedRecording") == "true") {
+		// already saved the recording
+	}
+
+
+	if (getCookie("warnOverwrite") == "false") {
+		// don't warn me about overwriting a recording
+	}
+
+	
 }
+
+
+/* check cookies */
+
+theme(getCookie("theme")) ; // change the theme if a "theme" cookie was set
+
+
+
+
+
+
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+
+function setCookie (name, value) {
+	var expiryDate = new Date() ;
+
+//	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*30) ; // add 30 days (time is in ms)
+	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
+
+	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
+}
+
 
 if (detectIE()) {
 	if (DebugOnOff)
@@ -555,10 +602,16 @@ function useStorageLocation(key) {
 
 var VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
 
-function theme(selection) { // set a new stylesheet to use (not protected against the theme not existing
-	document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
+function theme(selection) { // set a new stylesheet to use
 
-	VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
+	if ( (selection == "default") || (selection == "monochrome") || (selection == "darker") || (selection == "lighter") || (selection == "monoDark") || (selection == "newDefault") ) {
+		document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
+
+		setCookie("theme", selection) ; // save the theme to a cookie for persistance
+
+		VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
+
+	}
 }
 
 var exposureValue = document.getElementById("shutter").value ;
@@ -657,6 +710,8 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						  "Record Mode":	function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
 
 						  "Update":		function() { dataGetter("p", "", pageUpdate) ; },
+						  "Yes (overwrite)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; dataRequester("startRecording", "{}", pageUpdate) ; },
+						  "No (don't record)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; stateSelecter(recButton, 0) ; },
 						}
 
 
@@ -919,7 +974,7 @@ document.getElementById("menu").onmouseleave = function() {
 var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
-var buttonFunctions = {	"record":		[ function(){ dataRequester("stopRecording", "", pageUpdate);}, function(){ dataRequester("startRecording", "{}", pageUpdate); } ],
+var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ if ( (getCookie("savedRecording") != "false") || (getCookie("warnOverwrite") == "false") ) { dataRequester("startRecording", "{}", pageUpdate); } else { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("overwrittenBox").classList.remove("hidden") ; stateSelecter(recButton, 0) ; } } ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataRequester("set", '{"focusPeakingLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"focusPeakingLevel": 0.2}', pageUpdate) ;} ],
@@ -1032,6 +1087,7 @@ function pageUpdate(rawData){
 		recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 1) ; // turn on the record button
 		document.getElementById("blackCalOverlay").classList.add("hidden") ;
+		setCookie("savedRecording", "false") ; // this data has not been saved yet
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
 		videoWindow.style.border = "3px dashed white"; // set the blackCal outline color
@@ -1237,6 +1293,8 @@ function pageUpdate(rawData){
 				dataGetter ("get", "playbackLength", pageUpdate) ; // get the length
 
 				document.getElementById("overlayButtons").innerHTML = '<a onclick="dropDownSelect(this)">Cancel Save</a>' ;
+
+				setCookie("savedRecording", "true") ; // saved the video (don't need to warn next time I record)
 				break ;
 		}
 		lastKnownVideoState = parsedData.videoState ; // set the last known video state

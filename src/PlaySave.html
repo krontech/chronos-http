@@ -188,7 +188,7 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-<!--			<a onclick="dropDownSelect(this)">Debug Tools</a> -->
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
 		</div>
 
 	</div>
@@ -369,6 +369,37 @@ function tester2func() {
 
 function tester3func() {
 
+}
+
+
+/* check cookies */
+
+theme(getCookie("theme")) ; // check if a theme was already set
+
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+
+function setCookie (name, value) {
+	var expiryDate = new Date() ;
+
+//	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*30) ; // add 30 days (time is in ms)
+	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
+
+	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
 }
 
 
@@ -712,10 +743,16 @@ function useStorageLocation(key) {
 
 var VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
 
-function theme(selection) { // set a new stylesheet to use (not protected against the theme not existing
-	document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
+function theme(selection) { // set a new stylesheet to use
 
-	VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
+	if ( (selection == "default") || (selection == "monochrome") || (selection == "darker") || (selection == "lighter") || (selection == "monoDark") || (selection == "newDefault") ) {
+		document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
+
+		setCookie("theme", selection) ; // save the theme to a cookie for persistance
+
+		VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
+
+	}
 }
 
 
@@ -886,6 +923,7 @@ function pageUpdate(rawData){
 	}
 	else if (parsedData.state == "recording") { // recording
 		videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
+		setCookie("savedRecording", "false") ; // new data is being recorded that has not been saved yet
 
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
@@ -985,6 +1023,8 @@ function pageUpdate(rawData){
 				stateSelecter(document.getElementById("playButton"), 0) ;
 
 				document.getElementById("overlayButtons").innerHTML = '<a id="overlayStopSaveButton" onclick="justRunSomething(this)">Cancel Save</a>'
+
+				setCookie("savedRecording", "true") ; // saved the video (don't need to warn next time I record)
 				break ;
 		}
 		lastKnownVideoState = parsedData.videoState ; // set the last known video state
@@ -999,6 +1039,7 @@ function pageUpdate(rawData){
 			document.getElementById("playButton").classList.add("disabled") ;
 			stateSelecter(document.getElementById("playButton"), 0) ;
 			lastKnownVideoState = "filesave" ;
+			setCookie("savedRecording", "true") ; // saved the video (don't need to warn next time I record)
 		}
 
 		if ( ("playback" in parsedData) && (parsedData.playback == true) ) {
