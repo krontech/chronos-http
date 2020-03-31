@@ -46,7 +46,8 @@ a { color: white; }
 	border-color: black;
 }
 
-input[type=range]::-webkit-slider-thumb, .slider::-webkit-slider-thumb {
+.slider input[type=range]::-webkit-slider-thumb, .slider::-webkit-slider-thumb,
+.timeline input[type=range]::-webkit-slider-thumb, .timeline::-webkit-slider-thumb {
 	background-color: #0067B9; /* pantone 2144 */
 	border-color: black;
 }

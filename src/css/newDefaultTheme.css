@@ -68,7 +68,8 @@ a { color: var(--TextColor) }
 	border-color: var(--PageBG);
 }
 
-input[type=range]::-webkit-slider-thumb, .slider::-webkit-slider-thumb {
+.slider input[type=range]::-webkit-slider-thumb, .slider::-webkit-slider-thumb,
+.timeline input[type=range]::-webkit-slider-thumb, .timeline::-webkit-slider-thumb {
 	background-color: var(--ActiveBG);
 	border-color: var(--PageBG);
 }
