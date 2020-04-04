@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8"/>
+<title>Chronos</title>
+
+
+<link rel="stylesheet" href="css/fontFile.css"> 
+
+<link rel="styleSheet" href="css/sizeAndSpacing.css">
+<link id="themeSelection" rel="styleSheet" href="css/defaultTheme.css">
+<link id="windozeFixer" rel="styleSheet" href="">
+
+<style>
+
+/******** Specific to this page ********/
+
+
+/*@media screen and (max-width: 3000px) {
+	.rightContainer { box-shadow: 0 0 3px 3px inset white; }
+} */
+
+
+
+</style>
+</head>
+
+
+<body onclick="">
+
+	<div class="header">
+		<div class="titleImage">
+			<img id="logoImage" src="Chronos High Speed logo.png">
+		</div>
+
+		<!-- <b class="title">&nbsp;CHRONOS</b> -->
+		<div class="subTitle">by <a href="https://www.krontech.ca" target="_blank">Kron Technologies</a></div>
+	</div>
+
+ <div class="mainContainer"> 
+
+	
+	<div class="heading-bar">
+		<a id="main" href="./"> <div class="homeIcon"></div> Main </a>
+		<a id="playSave" href="PlaySave.html"> <div class="playIcon"></div> Play & Save </a>
+<!--		<a id="storage"> <div class="saveIcon"></div> Storage </a>
+-->
+		<a id="settings" class="active"> <div class="settingsIcon"></div> Settings </a>
+		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Help / About </a>
+
+		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
+		<div id="menuList" onmouseover="menuKeeper()" class="menuContainer menuClickOk">
+			<a href="/"> Record (Main) </a>
+			<a href="PlaySave.html"> Play & Save </a>
+<!--			<a> About Camera </a>
+			<a> Camera Settings </a>
+			<a> Triggers & IO </a>
+-->
+			<a href="/apidoc/"> Documentation </a>
+			<a onclick="dropDownSelect(this)">Play Mode</a>
+			<a onclick="dropDownSelect(this)">Record Mode</a>
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
+		</div>
+
+	</div>
+
+
+	<div class="leftContainer">
+		<div class="horizLayout">
+			<b> Focus Peaking </b>
+			<br>
+			<div id="focusPeakingLevelDropdown" class="selectContainerHolder" onclick="">Level<div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Low</a>
+				<a onclick="dropDownSelect(this)">Medium</a>
+				<a onclick="dropDownSelect(this)">High</a>
+			</div></div>
+			<br>
+			<div id="focusPeakingColorDropdown" class="selectContainerHolder" onclick="">Color<div class="selectContainer">
+				<a onclick="dropDownSelect(this)" style="background-color: black;">Black</a>
+				<a onclick="dropDownSelect(this)" style="background-color: red;">Red</a>
+				<a onclick="dropDownSelect(this)" style="background-color: cyan; color: black;">Cyan</a>
+				<a onclick="dropDownSelect(this)" style="background-color: blue;">Blue</a>
+				<a onclick="dropDownSelect(this)" style="background-color: yellow; color: black;">Yellow</a>
+				<a onclick="dropDownSelect(this)" style="background-color: magenta;">Magenta</a>
+				<a onclick="dropDownSelect(this)" style="background-color: white; color: black;">White</a>
+				<a onclick="dropDownSelect(this)" style="background-color: green;">Green</a>
+			</div></div>
+		</div>
+
+		<div class="horizLayout">
+			<b> Notify Before Recording </b>
+			<br>
+			<span class="instruction"> Display a pop-up message before recording </span>
+			<br>
+			<div id="recordWarn" class="selectContainerHolder" onclick="">Overwrite<div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Always</a>
+				<a onclick="dropDownSelect(this)">If Unsaved</a>
+				<a onclick="dropDownSelect(this)">Never</a>
+			</div></div>
+			<br>
+			<span class="instruction"> Ask before discarding unsaved video in RAM </span>
+		</div>
+
+		<div class="horizLayout">
+			<b> Change Camera Mode </b>
+			<br>
+			<span class="instruction"> Change the camera into live/record mode or play/save mode </span>
+			<br>
+			<div id="changeModeDropdown" class="selectContainerHolder" onclick=""> Manually <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Manually</a>
+				<a onclick="dropDownSelect(this)">On Navigate</a>
+			</div></div>
+		</div>
+
+
+		<div class="horizLayout">
+			<b> Record Mode </b>
+			<br>
+			[ Normal / Segmented / Gated Burst / Live Slow Motion -- Dropdown ]
+			<br>
+			((--- other settings pertaining to these modes ---))
+		</div>
+
+
+		<div class="horizLayout">
+			<b> Auto Save </b>
+			<br>
+			<span class="instruction"> save automatically after finishing a recording </span>
+			<br>
+			( On ) ( Off )
+		</div>
+
+		<div class="horizLayout">
+			<b> Auto Record </b>
+			<br>
+			<span class="instruction"> automatically start recording </span>
+			<br>
+			( On ) ( Off )
+		</div>
+
+		<div class="horizLayout">
+			<b> Auto Power Mode </b>
+			<br>
+			<span class="instruction"> Power on as soon as power is connected </span>
+			<br>
+			( On ) ( Off )
+		</div>
+
+		<div class="horizLayout">
+			<b> Camera Display </b>
+			<br>
+			<span class="instruction"> Put the camera's rear screen to sleep </span>
+			<br>
+			( On ) ( Off )
+		</div>
+
+		<div class="horizLayout">
+			<b> White Balance Color Matrix </b>
+			<br>
+			<span class="instruction">  </span>
+			<br>
+			| a | b | c | <br>
+			| d | e | f | <br>
+			| g | h | i |
+		</div>
+
+		<div class="horizLayout">
+			<b> Trigger Delay </b>
+			<br>
+			<span class="instruction">  </span>
+			<br>
+			===========|==============
+		</div>
+
+		<div class="horizLayout">
+			<b> Webpage Theme </b>
+			<br>
+			<span class="instruction">  </span>
+			<br>
+			<div id="themeSelector" class="selectContainerHolder" onclick="">Webpage Theme<div class="selectContainer">
+				<a onclick='theme("default")'> Default </a>
+				<a onclick='theme("monochrome")'> Monochrome </a>
+				<a onclick='theme("darker")'> Dark </a>
+				<a onclick='theme("lighter")'> Light </a>
+				<a onclick='theme("monoDark")'> Monochrome Dark </a>
+				<a onclick='theme("newDefault")'> Light 2 </a>
+			</div></div>
+		</div>
+
+
+	<br><br>
+
+		<div class="Text-bar">
+			<div id="battery" class="no-click">
+				<div id="batteryContainer" class="battery">
+					<div id="battery-level"></div>
+				</div>
+				<span id="battery%">0%</span>
+			</div>
+		</div>
+
+
+	</div>
+
+
+	<div id="debugBar" class="Text-bar">
+		<a id="tester1" onclick="tester1func()"> tester1 </a>
+		<a id="tester2" onclick="tester2func()"> tester2 </a>
+		<a id="tester3" onclick="tester3func()"> tester3 </a>
+		<a id="debugToggle" onclick="toggler(this)"> Display Messages </a>
+		<div class="no-click"></div>
+		<a onclick='theme("default")'> Default Theme </a>
+		<a onclick='theme("monochrome")'> Mono Theme </a>
+		<a onclick='theme("darker")'> Darker Theme </a>
+		<a onclick='theme("lighter")'> Lighter Theme </a>
+		<a onclick='theme("monoDark")'> Mono Dark </a>
+		<a onclick='theme("newDefault")'> Light Theme2 </a>
+	</div>
+	<br>
+	<span id="debugger">  </span>
+
+	<span id="debugger2">  </span>
+ </div>
+
+<br>
+<div class="matchBackground"> This page was made by Nicholas Faliszewski </div>
+
+</body>
+
+<script>
+
+var DebugOnOff = true ;
+
+
+function tester1func() {
+
+
+}
+
+
+function tester2func() {
+
+}
+
+
+function tester3func() {
+
+}
+
+
+/* check cookies */
+
+switch (getCookie("thm")) {
+	case "":
+		setCookie("thm", "dt") ;
+	case "dt":
+		theme("default") ;
+		break ;
+
+	case "mo":
+		theme("monochrome") ;
+		break ;
+
+	case "dk":
+		theme("darker") ;
+		break ;
+
+	case "lt":
+		theme("lighter") ;
+		break ;
+
+	case "md":
+		theme("monoDark") ;
+		break ;
+
+	case "l2":
+		theme("newDefault") ;
+		break ;
+}
+
+switch (getCookie("fpl")) {
+	case "":
+		setCookie("fpl", 0.67) ; // set to Medium
+	case "0.67":
+		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = "Medium" ;
+		break ;
+
+	case "0.33":
+		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " Low " ;
+		break ;
+
+	case "1.0":
+	case "1":
+		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " High " ;
+		break ;
+}
+
+
+switch (getCookie("wo")) {
+	case "":
+		setCookie("wo", "u") ;
+	case "u":
+		document.getElementById("recordWarn").firstChild.textContent = "If Unsaved" ;
+		break ;
+
+	case "a":
+		document.getElementById("recordWarn").firstChild.textContent = "Always" ;
+		break ;
+
+	case "n":
+		document.getElementById("recordWarn").firstChild.textContent = "Never";
+		break ;
+}
+
+switch (getCookie("mc")) {
+	case "":
+		setCookie("mc", "m") ;
+	case "m":
+		document.getElementById("changeModeDropdown").firstChild.textContent = "Manually" ;
+		break ;
+
+	case "n":
+		document.getElementById("changeModeDropdown").firstChild.textContent = "On Navigation" ;
+		break ;
+}
+
+
+
+/*
+	Cookie Descriptions:
+
+	id	name / description
+	---|-----------------------|
+	fpl	"focus peaking level"	number from 0 to 1
+	mc	"mode change"			"n" to change mode on navigation, "m" to change mode manually
+	sr	"saved recording"		1 when recording was saved, 0 when not saved
+	thm	"theme"					2-letter code to indicate each theme
+	wo	"warn overwrite"		"a" always warn, "n" never warn, "u" warn on unsaved recordings
+
+
+*/
+
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+
+
+
+
+
+
+function setCookie (name, value) {
+	var expiryDate = new Date() ;
+
+//	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*30) ; // add 30 days (time is in ms)
+	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
+
+	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
+}
+
+
+if (detectIE()) {
+	if (DebugOnOff)
+		document.getElementById("debugger2").innerHTML = "MS Browser detected" ;
+	
+	document.getElementById("windozeFixer").href = "css/windozeFixes.css" ;
+	
+	if ( (parseInt(detectIE()) <= 16) ) { // detect an older version (especially IE)
+		if (DebugOnOff)
+			document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
+	}
+}
+
+
+function detectIE() {
+  var ua = window.navigator.userAgent;
+
+  // Test values; Uncomment to check result …
+
+  // IE 10
+  // ua = 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)';
+  
+  // IE 11
+  // ua = 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko';
+  
+  // Edge 12 (Spartan)
+  // ua = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0';
+  
+  // Edge 13
+  // ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586';
+
+  var msie = ua.indexOf('MSIE ');
+  if (msie > 0) {
+    // IE 10 or older => return version number
+    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+  }
+
+  var trident = ua.indexOf('Trident/');
+  if (trident > 0) {
+    // IE 11 => return version number
+    var rv = ua.indexOf('rv:');
+    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+  }
+
+  var edge = ua.indexOf('Edge/');
+  if (edge > 0) {
+    // Edge (IE 12+) => return version number
+    return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+  }
+
+  // other browser
+  return false;
+}
+
+
+
+function theme(selection) { // set a new stylesheet to use
+
+	if ( (selection == "default") || (selection == "monochrome") || (selection == "darker") || (selection == "lighter") || (selection == "monoDark") || (selection == "newDefault") ) {
+		document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
+
+//		VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
+
+		switch (selection) {
+			case "":
+			case "default":
+				document.getElementById("themeSelector").firstChild.textContent = "Default" ;
+				setCookie("thm", "dt") ; // save the theme to a cookie for persistance
+				break ;
+
+			case "monochrome":
+				document.getElementById("themeSelector").firstChild.textContent = "Monochrome" ;
+				setCookie("thm", "mo") ; // save the theme to a cookie for persistance
+				break ;
+
+			case "darker":
+				document.getElementById("themeSelector").firstChild.textContent = "Dark" ;
+				setCookie("thm", "dk") ; // save the theme to a cookie for persistance
+				break ;
+
+			case "lighter":
+				document.getElementById("themeSelector").firstChild.textContent = "Light" ;
+				setCookie("thm", "lt") ; // save the theme to a cookie for persistance
+				break ;
+
+			case "monoDark":
+				document.getElementById("themeSelector").firstChild.textContent = "Monochrome Dark" ;
+				setCookie("thm", "md") ; // save the theme to a cookie for persistance
+				break ;
+
+			case "newDefault":
+				document.getElementById("themeSelector").firstChild.textContent = "Light 2" ;
+				setCookie("thm", "l2") ; // save the theme to a cookie for persistance
+				break ;
+
+			default:
+				document.getElementById("themeSelector").firstChild.textContent = "Theme Selection" ;
+		}
+	}
+}
+
+var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
+						"Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
+						"Record Mode":		function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
+
+						"Low":				function() { setCookie("fpl", 0.33) ; dataGetter("get", "focusPeakingLevel", pageUpdate) ; document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " Low " ; },
+						"Medium":			function() { setCookie("fpl", 0.67) ; dataGetter("get", "focusPeakingLevel", pageUpdate) ; document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = "Medium" ; },
+						"High":				function() { setCookie("fpl", 1.0) ; dataGetter("get", "focusPeakingLevel", pageUpdate) ; document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " High "; },
+
+						"Black":			function() { dataSender("set", '{"focusPeakingColor": "black"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Black " ; },
+						"Red":				function() { dataSender("set", '{"focusPeakingColor": "red"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Red " ; },
+						"Cyan":				function() { dataSender("set", '{"focusPeakingColor": "cyan"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Cyan " ; },
+						"Blue":				function() { dataSender("set", '{"focusPeakingColor": "blue"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Blue " ; },
+						"Yellow":			function() { dataSender("set", '{"focusPeakingColor": "yellow"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = "Yellow" ; },
+						"Magenta":			function() { dataSender("set", '{"focusPeakingColor": "magenta"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = "Magenta" ; },
+						"White":			function() { dataSender("set", '{"focusPeakingColor": "white"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " White " ; },
+						"Green":			function() { dataSender("set", '{"focusPeakingColor": "green"}') ; document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Green " ; },
+
+						"Always":			function() { setCookie("wo", "a") ; document.getElementById("recordWarn").firstChild.textContent = "Always" ; },
+						"Never":			function() { setCookie("wo", "n") ; document.getElementById("recordWarn").firstChild.textContent = "Never" ; },
+						"If Unsaved":		function() { setCookie("wo", "u") ; document.getElementById("recordWarn").firstChild.textContent = "In Unsaved" ; },
+
+						"Manually":			function() { setCookie("mc", "m") ; document.getElementById("changeModeDropdown").firstChild.textContent = "Manually" ; },
+						"On Navigate":		function() { setCookie("mc", "n") ; document.getElementById("changeModeDropdown").firstChild.textContent = "On Navigation" ; },
+
+						}
+
+
+function dropDownSelect (element) {
+	if (element.innerText in dropDownFunctions) // if the key-value exists
+		dropDownFunctions[element.innerText]() ; // run the function
+}
+
+
+
+
+document.getElementById("menu").onmouseenter = function(){ document.getElementById("menuList").style.display = "block" ; }
+document.getElementById("menu").onmouseleave = function() {
+	var otherMenu = document.getElementById("menuList") ;
+	setTimeout( function() {
+		if (!document.getElementById("menu").classList.contains("active"))
+			document.getElementById("menuList").style.display = "" ;
+	}, 50) ;
+}
+
+					//	 key	 	 inactive		active
+var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
+					}
+
+var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
+
+						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
+					  }
+
+
+function toggler(element) { // toggle the class (active/inactive), change the name, and run a function for a toggle button/switch
+	var leftRight = 0 ;
+
+	if (element.classList.contains("active")) { // changing to 'inactive' or no state set previously
+		element.classList.remove("active") ; // remove the "active" styling
+		element.classList.add("inactive") ; // use the "inactive" styling
+		leftRight = 0 ; // use the 'left' column for names / functions
+	}
+	else if (element.classList.contains("disabled")) { // button disabled
+		return ; // don't do anything
+	}
+	else {
+		element.classList.remove("inactive") ; // remove the "inactive" styling
+		element.classList.add("active") ; // use the "active" styling
+		leftRight = 1 ; // use the 'right' column for names / functions
+	}
+
+	if (element.id in nameChange) // check if key-value exists
+		element.innerHTML = nameChange[element.id][leftRight] ; // set name to the left (inactive) or right (active) one
+
+	if (element.id in buttonFunctions) // if the key-value exists
+		buttonFunctions[element.id][leftRight]() ; // run the left (inactive) or right (active) function
+}
+
+function stateSelecter(element, state) { // this is like toggler above, but doesn't run the function ; set the class (active/inactive), change the name
+
+	if (state) { // switch to active
+		element.classList.remove("inactive") ; // remove the "inactive" styling
+		element.classList.add("active") ; // use the "active" styling
+	}
+	else { // switch to inactive
+		element.classList.remove("active") ; // remove the "active" styling
+		element.classList.add("inactive") ; // use the "inactive" styling
+	}
+
+	if (element.id in nameChange) // check if key-value exists
+		element.innerHTML = nameChange[element.id][state] ; // set name to the left (inactive) or right (active) one
+}
+
+
+function menuKeeper() {
+	document.getElementById("menu").classList.remove("inactive");
+	document.getElementById("menu").classList.add("active");
+}
+
+
+function batteryPercent(level, charging) { // set the percentage (level) of the battery (and whether it's charging)
+	var indicator = document.getElementById("battery-level") ;
+	var text = document.getElementById("battery%") ;
+
+	if (level <= 100 && level >= 0) { // not charging (and level is ok)
+		text.innerHTML = level.toString() + "%" ;
+
+
+		if (charging) {
+			indicator.style.height = "100%" ; // just make the level full when charging
+			indicator.style.backgroundColor = "white" ; // white background while charging
+			indicator.innerHTML = '<div id="chargeIcon" class="hidden"></div>' ; // add the charging indicator
+		}
+		else {
+			indicator.style.height = level.toString() + "%" ;
+			indicator.innerHTML = '' ; // clear the charging icon
+
+			if (level <= 20)
+				indicator.style.backgroundColor = "#a00" ; // red (low)
+			else if (level <= 55)
+				indicator.style.backgroundColor = "#e7ba00" ; // yellow (less than half)
+			else
+				indicator.style.backgroundColor = "green" ; // green (fine / more than half)
+		}
+	}
+}
+
+
+var lastKnownBatteryLevel = 0 ;
+var lastKnownExternalPower = false ;
+
+
+
+function pageUpdate(rawData){
+	var parsedData = JSON.parse(rawData) ;
+
+	if (DebugOnOff)
+		document.getElementById("debugger").innerHTML += "<br><br>got info:" + rawData ;
+
+	if ("batteryChargePercent" in parsedData) {
+		lastKnownBatteryLevel = Math.round(parsedData.batteryChargePercent) ; // set the last known battery percent value
+		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
+	}
+
+	if ("externalPower" in parsedData) {
+		lastKnownExternalPower = parsedData.externalPower ; // set the last known power connection
+		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
+	}
+
+	if ("focusPeakingLevel" in parsedData) {
+		if (parsedData.focusPeakingLevel != 0) {
+			if ( (getCookie("fpl") != "") && (getCookie("fpl") != parsedData.focusPeakingLevel) )
+			dataSender("set", '{"focusPeakingLevel": ' + getCookie("fpl") + '}') ;
+		}
+	}
+
+	if ("focusPeakingColor" in parsedData) {
+		switch (parsedData.focusPeakingColor) {
+			case "black":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Black " ;
+				break ;
+
+			case "red":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Red " ;
+				break ;
+
+			case "cyan":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Cyan " ;
+				break ;
+
+			case "blue":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Blue " ;
+				break ;
+
+			case "yellow":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = "Yellow" ;
+				break ;
+
+			case "magenta":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = "Magenta" ;
+				break ;
+
+			case "white":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " White " ;
+				break ;
+
+			case "green":
+				document.getElementById("focusPeakingColorDropdown").firstChild.textContent = " Green " ;
+				break ;
+		}
+	}
+
+}
+
+
+
+function dataRequester(method, parameter, callMeMaybe) {
+	var requestSender = new XMLHttpRequest() ; // set up a new request
+	requestSender.open("POST", "/control/" + method, true) ; // use "post", and use the /control/ method
+	requestSender.setRequestHeader("Content-Type", "application/json") ; // use json format
+	requestSender.withCredentials = true ;
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){ // wait for successful response
+			callMeMaybe(requestSender.responseText) ; // call the callback function with the response text
+		}
+	}
+
+	requestSender.send(parameter) ;
+}
+
+
+function dataSender(method, parameter){
+	var requestSender = new XMLHttpRequest() ;
+	requestSender.open("POST", "/control/" + method, true) ;
+	requestSender.setRequestHeader("Content-Type", "application/json") ;
+	requestSender.withCredentials = true ;
+	
+	requestSender.send(parameter) ;
+}
+
+function dataGetter(method, parameter, callMeMaybe){
+	var requestSender = new XMLHttpRequest() ;
+	requestSender.open("GET", "/control/" + method + ( (parameter !== "") ? "?" + parameter : "")) ;
+	requestSender.setRequestHeader("Content-Type", "application/json") ;
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){
+			callMeMaybe(requestSender.responseText) ; // call this function to deal with the input and update the page
+			 // callback function, passing in the string we got back
+		}
+	}
+
+	requestSender.send(parameter) ;
+}
+
+var useServerSentEvents = true;
+
+if (typeof(EventSource) != "undefined") {
+	const evtSource = new EventSource("/control/subscribe");
+
+	evtSource.onmessage = function(event) {
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
+	}
+	evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
+	evtSource.addEventListener("complete", function(event) { pageUpdate(event.data) ; if (DebugOnOff) document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
+}
+else {
+	useServerSentEvents = false;
+document.getElementById("refreshAllBox").classList.remove("hidden") ;
+}
+
+dataGetter("p", "", pageUpdate) ; // get all the data on startup
+
+
+
+var PollCounter = 1 ;
+function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
+
+	if (PollCounter % 2 == 0) { // every 1 second
+
+	}
+
+	if (PollCounter % 30 == 0) { // every 15-ish seconds
+		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
+	}
+
+	if (PollCounter % 120 == 0) { // every 60-ish seconds
+		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
+	}
+
+
+	if (!useServerSentEvents) { // no server-sent events; ask for updates
+
+		if (PollCounter % 31 == 0)
+			dataGetter('get', 'externalPower', pageUpdate) ; // check for external power connection
+
+	}
+
+	PollCounter++ ;
+}
+
+
+var intervalID = setInterval(pollOnlyUpdates, 500) ; // poll the camera for things that are not reported
+
+
+
+
+
+</script>
+</html>
+
+
+
+

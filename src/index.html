@@ -155,8 +155,8 @@
 		<a id="main" class="active"> <div class="homeIcon"></div> Main </a>
 		<a id="playSave" href="PlaySave.html"> <div class="playIcon"></div> Play & Save </a>
 <!--		<a id="storage"> <div class="saveIcon"></div> Storage </a>
-		<a id="settings"> <div class="settingsIcon"></div> Settings </a>
 -->
+		<a id="settings" href="settings.html"> <div class="settingsIcon"></div> Settings </a>
 		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Help / About </a>
 
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
@@ -164,7 +164,7 @@
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
 <!--			<a> About Camera </a>
-			<a> Camera Settings </a>
+			<a href="settings.html"> Camera Settings </a>
 			<a> Triggers & IO </a>
 -->
 			<a href="/apidoc/"> Documentation </a>
@@ -401,18 +401,20 @@
 var DebugOnOff = false ;
 
 function tester1func() {
-	setCookie("warnOverwrite", "true") ;
+	setCookie("wo", "a") ;
+	setCookie("fpl", "0.33") ;
 }
 
 
 function tester2func() {
-	setCookie("warnOverwrite", "false") ;
+	setCookie("wo", "n") ;
+	setCookie("fpl", "0.67") ;
 }
 
 
 function tester3func() {
 
-	if (getCookie("savedRecording") == "true") {
+	if (getCookie("sr") == 1) {
 		// already saved the recording
 	}
 
@@ -421,13 +423,43 @@ function tester3func() {
 		// don't warn me about overwriting a recording
 	}
 
-	
+	setCookie("fpl", "1.0") ;
 }
 
 
 /* check cookies */
 
-theme(getCookie("theme")) ; // change the theme if a "theme" cookie was set
+switch (getCookie("thm")) {
+	case "":
+		setCookie("thm", "dt") ;
+	case "dt":
+		theme("default") ;
+		break ;
+
+	case "mo":
+		theme("monochrome") ;
+		break ;
+
+	case "dk":
+		theme("darker") ;
+		break ;
+
+	case "lt":
+		theme("lighter") ;
+		break ;
+
+	case "md":
+		theme("monoDark") ;
+		break ;
+
+	case "l2":
+		theme("newDefault") ;
+		break ;
+}
+
+if (getCookie("mc") == "n") {
+	setTimeout( function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; }, 350) ;
+}
 
 
 
@@ -606,8 +638,6 @@ function theme(selection) { // set a new stylesheet to use
 
 	if ( (selection == "default") || (selection == "monochrome") || (selection == "darker") || (selection == "lighter") || (selection == "monoDark") || (selection == "newDefault") ) {
 		document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
-
-		setCookie("theme", selection) ; // save the theme to a cookie for persistance
 
 		VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
 
@@ -974,10 +1004,10 @@ document.getElementById("menu").onmouseleave = function() {
 var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
-var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ if ( (getCookie("savedRecording") != "false") || (getCookie("warnOverwrite") == "false") ) { dataRequester("startRecording", "{}", pageUpdate); } else { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("overwrittenBox").classList.remove("hidden") ; stateSelecter(recButton, 0) ; } } ],
+var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ if ( (getCookie("sr") != 0) && (getCookie("wo") != "a") || (getCookie("wo") == "n") ) { dataRequester("startRecording", "{}", pageUpdate); } else { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("overwrittenBox").classList.remove("hidden") ; stateSelecter(recButton, 0) ; } } ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
-						"focusPeaking":	[ function(){ dataRequester("set", '{"focusPeakingLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"focusPeakingLevel": 0.2}', pageUpdate) ;} ],
+						"focusPeaking":	[ function(){ dataRequester("set", '{"focusPeakingLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"focusPeakingLevel": ' + ((getCookie("fpl") == "") ? '0.2}' : getCookie("fpl") + '}') , pageUpdate) ; } ],
 						"zebraStripes":	[ function(){ dataRequester("set", '{"zebraLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"zebraLevel": 0.01}', pageUpdate) ;} ],
 
 						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
@@ -1087,7 +1117,7 @@ function pageUpdate(rawData){
 		recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 1) ; // turn on the record button
 		document.getElementById("blackCalOverlay").classList.add("hidden") ;
-		setCookie("savedRecording", "false") ; // this data has not been saved yet
+		setCookie("sr", 0) ; // this data has not been saved yet
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
 		videoWindow.style.border = "3px dashed white"; // set the blackCal outline color
@@ -1294,7 +1324,7 @@ function pageUpdate(rawData){
 
 				document.getElementById("overlayButtons").innerHTML = '<a onclick="dropDownSelect(this)">Cancel Save</a>' ;
 
-				setCookie("savedRecording", "true") ; // saved the video (don't need to warn next time I record)
+				setCookie("sr", 1) ; // saved the video (don't need to warn next time I record)
 				break ;
 		}
 		lastKnownVideoState = parsedData.videoState ; // set the last known video state

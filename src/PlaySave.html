@@ -173,8 +173,8 @@
 		<a id="main" href="./"> <div class="homeIcon"></div> Main </a>
 		<a id="playSave" class="active"> <div class="playIcon"></div> Play & Save </a>
 <!--		<a id="storage"> <div class="saveIcon"></div> Storage </a>
-		<a id="settings"> <div class="settingsIcon"></div> Settings </a>
 -->
+		<a id="settings" href="settings.html"> <div class="settingsIcon"></div> Settings </a>
 		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Help / About </a>
 
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
@@ -182,7 +182,7 @@
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
 <!--			<a> About Camera </a>
-			<a> Camera Settings </a>
+			<a href="settings.html"> Camera Settings </a>
 			<a> Triggers & IO </a>
 -->
 			<a href="/apidoc/"> Documentation </a>
@@ -339,7 +339,7 @@
 		<a onclick='theme("darker")'> Darker Theme </a>
 		<a onclick='theme("lighter")'> Lighter Theme </a>
 		<a onclick='theme("monoDark")'> Mono Dark </a>
-		<a onclick='theme("newDefault")'> New Default </a>
+		<a onclick='theme("newDefault")'> Light Theme2 </a>
 	</div>
 	<br>
 	<span id="debugger">  </span>
@@ -374,7 +374,37 @@ function tester3func() {
 
 /* check cookies */
 
-theme(getCookie("theme")) ; // check if a theme was already set
+switch (getCookie("thm")) {
+	case "":
+		setCookie("thm", "dt") ;
+	case "dt":
+		theme("default") ;
+		break ;
+
+	case "mo":
+		theme("monochrome") ;
+		break ;
+
+	case "dk":
+		theme("darker") ;
+		break ;
+
+	case "lt":
+		theme("lighter") ;
+		break ;
+
+	case "md":
+		theme("monoDark") ;
+		break ;
+
+	case "l2":
+		theme("newDefault") ;
+		break ;
+}
+
+if (getCookie("mc") == "n") {
+	dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ;
+}
 
 
 function getCookie(cname) {
@@ -748,8 +778,6 @@ function theme(selection) { // set a new stylesheet to use
 	if ( (selection == "default") || (selection == "monochrome") || (selection == "darker") || (selection == "lighter") || (selection == "monoDark") || (selection == "newDefault") ) {
 		document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
 
-		setCookie("theme", selection) ; // save the theme to a cookie for persistance
-
 		VideoOutlineStyle = document.getElementById("videoDisplay").style.border ; // get the style of the border
 
 	}
@@ -923,7 +951,7 @@ function pageUpdate(rawData){
 	}
 	else if (parsedData.state == "recording") { // recording
 		videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
-		setCookie("savedRecording", "false") ; // new data is being recorded that has not been saved yet
+		setCookie("sr", 0) ; // new data is being recorded that has not been saved yet
 
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
@@ -1024,7 +1052,7 @@ function pageUpdate(rawData){
 
 				document.getElementById("overlayButtons").innerHTML = '<a id="overlayStopSaveButton" onclick="justRunSomething(this)">Cancel Save</a>'
 
-				setCookie("savedRecording", "true") ; // saved the video (don't need to warn next time I record)
+				setCookie("sr", 1) ; // saved the video (don't need to warn next time I record)
 				break ;
 		}
 		lastKnownVideoState = parsedData.videoState ; // set the last known video state
@@ -1039,7 +1067,7 @@ function pageUpdate(rawData){
 			document.getElementById("playButton").classList.add("disabled") ;
 			stateSelecter(document.getElementById("playButton"), 0) ;
 			lastKnownVideoState = "filesave" ;
-			setCookie("savedRecording", "true") ; // saved the video (don't need to warn next time I record)
+			setCookie("sr", 1) ; // saved the video (don't need to warn next time I record)
 		}
 
 		if ( ("playback" in parsedData) && (parsedData.playback == true) ) {
