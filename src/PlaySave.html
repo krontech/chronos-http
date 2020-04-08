@@ -104,7 +104,6 @@
 
 @media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
 	#playSave { display: none; } /* hide the main button */
-	/* show the main button in the menu drop-down ? */
 }
 
 @media screen and (max-width: 1006px) and (min-width: 684px) {
@@ -113,14 +112,12 @@
 
 @media screen and (max-width: 940px) { /* change formatting when screen size is narrower than this */
 	#help { display: none; } /* hide the help button */
-	/* show the help button in the menu drop-down ? */
 
 	body { margin: 0; }
 }
 
 @media screen and (max-width: 705px) { /* change formatting when screen size is narrower than this */
 	#storage { display: none; } /* hide the storage button */
-	/* show the storage button in the menu drop-down ? */
 
 	.subTitle { display: none; }
 }
@@ -132,7 +129,6 @@
 
 @media screen and (max-width: 542px) { /* change formatting when screen size is narrower than this */
 	#settings { display: none; } /* hide the playSave button */
-	/* show the playSave button in the menu drop-down ? */
 
 	#saveProgress { bottom: 17%; left: 5%; }
 	#videoStateOverlay { bottom: 199%; }
@@ -145,7 +141,7 @@
 
 @media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
 	#main { display: none; } /* hide the settings button */
-	/* show the settings button in the menu drop-down ? */
+
 	#menu { width: 90%; }
 }
 
@@ -182,7 +178,9 @@
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
 <!--			<a> About Camera </a>
+-->
 			<a href="settings.html"> Camera Settings </a>
+<!--
 			<a> Triggers & IO </a>
 -->
 			<a href="/apidoc/"> Documentation </a>
@@ -375,8 +373,6 @@ function tester3func() {
 /* check cookies */
 
 switch (getCookie("thm")) {
-	case "":
-		setCookie("thm", "dt") ;
 	case "dt":
 		theme("default") ;
 		break ;
@@ -530,6 +526,8 @@ function getFileList() {
 									folderElement += parsedList[folderIndex][index2] + "</a>" ;
 								}
 							}
+							if (parsedList[folderIndex].totalFileCount == 0)
+								folderElement += '<a> >> No Downloadable Files </a>' ;
 						}
 						folderElement += '</div>' ;
 						document.getElementById("fileDownloadListInner").innerHTML += folderElement ;
@@ -1152,12 +1150,11 @@ function pageUpdate(rawData){
 		if (lastKnownVideoState == "filesave") {
 			// display a progress bar here
 			var progress = parseFloat(parsedData.playbackPosition - lastKnownStartFrame) / parseFloat(lastKnownFrameEnd - lastKnownStartFrame) * 100 ;
-			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
-				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame: " + parsedData.playbackPosition + " of: " + lastKnownFrameEnd ;
-				if (progress < 100)
-					document.getElementById("saveProgressFill").style.width = progress + "%" ;
-				else
-					document.getElementById("saveProgressFill").style.width = "99.9%" ;
+			if (progress > 99.9)
+				progress = 99.9 ;
+			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) { // only go up with the percentage
+				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame " + parsedData.playbackPosition + " of " + lastKnownFrameEnd ;
+				document.getElementById("saveProgressFill").style.width = progress + "%" ;
 			}
 		}
 		else if (lastKnownVideoState == "play") {

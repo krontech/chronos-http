@@ -17,7 +17,6 @@
 
 #record		{ width: 170px; padding: 22px 0; }
 
-
 #blackCal	  { width: 140px; }
 
 #zebraStripes { width: 110px; }
@@ -92,20 +91,17 @@
 
 @media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
 	#main { display: none; } /* hide the main button */
-	/* show the main button in the menu drop-down ? */
 
 }
 
 @media screen and (max-width: 940px) { /* change formatting when screen size is narrower than this */
 	#help { display: none; } /* hide the help button */
-	/* show the help button in the menu drop-down ? */
 
 	body { margin: 0; }
 }
 
 @media screen and (max-width: 705px) { /* change formatting when screen size is narrower than this */
 	#storage { display: none; } /* hide the storage button */
-	/* show the storage button in the menu drop-down ? */
 
 	.subTitle { display: none; }
 }
@@ -116,7 +112,6 @@
 
 @media screen and (max-width: 542px) { /* change formatting when screen size is narrower than this */
 	#settings { display: none; } /* hide the playSave button */
-	/* show the playSave button in the menu drop-down ? */
 
 	#saveProgress { bottom: 25%; left: 2%}
 	#videoStateOverlay { bottom: 110%}
@@ -128,7 +123,7 @@
 
 @media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
 	#playSave { display: none; } /* hide the settings button */
-	/* show the settings button in the menu drop-down ? */
+
 	#menu { width: 90%; }
 }
 
@@ -164,7 +159,9 @@
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
 <!--			<a> About Camera </a>
+-->
 			<a href="settings.html"> Camera Settings </a>
+<!--
 			<a> Triggers & IO </a>
 -->
 			<a href="/apidoc/"> Documentation </a>
@@ -340,38 +337,6 @@
 
 	<span id="debugger2">  </span>
 
-<!--
-	<div class="swatch" style="background-color: black;">black</div>
-	<div class="swatch" style="background-color: #1a1a1a;">#1a1a1a</div>
-	<div class="swatch" style="background-color: #222;">#222</div>
-	<div class="swatch" style="background-color: #333;">#333</div>
-	<div class="swatch" style="background-color: #606060;">#606060</div>
-	<div class="swatch" style="background-color: rgb(96,96,96);">rgb(96,96,96)</div>
-	<div class="swatch" style="background-color: #777;">#777</div>
-	<div class="swatch" style="background-color: #aaa;">#aaa</div>
-	<div class="swatch" style="background-color: #ddd;">#ddd</div>
-	<div class="swatch" style="background-color: white;">white</div>
-
-	<div class="swatch" style="background-color: #1e6c94;">#1e6c94</div>
-	<div class="swatch" style="background-color: #13455f;">#13455f</div>
-
-	<div class="swatch" style="background-color: #2f9a9b;">#2f9a9b</div>
-	<div class="swatch" style="background-color: #1D6262;">#1D6262</div>
-	<div class="swatch" style="background-color: #1b4546;">#1b4546</div>
-	<div class="swatch" style="background-color: green;">green</div>
-
-	<div class="swatch" style="background-color: red;">red</div>
-	<div class="swatch" style="background-color: #c80000;">#c80000</div>
-	<div class="swatch" style="background-color: #a00;">#a00</div>
-	<div class="swatch" style="background-color: #800;">#800</div>
-	<div class="swatch" style="background-color: yellow;">yellow</div>
-	<div class="swatch" style="background-color: #e7ba00;">#e7ba00</div>
-
-	<div class="swatch" style="background-color: #3D87CB;">#3D87CB</div>
-	<div class="swatch" style="background-color: #0067B9;">#0067B9</div>
-	<div class="swatch" style="background-color: #004EA8;">#004EA8</div>
-	<div class="swatch" style="background-color: #9C9687 ;">#9C9687 </div>
--->
 
  </div>
 
@@ -401,37 +366,24 @@
 var DebugOnOff = false ;
 
 function tester1func() {
-	setCookie("wo", "a") ;
-	setCookie("fpl", "0.33") ;
+
 }
 
 
 function tester2func() {
-	setCookie("wo", "n") ;
-	setCookie("fpl", "0.67") ;
+	
 }
 
 
 function tester3func() {
 
-	if (getCookie("sr") == 1) {
-		// already saved the recording
-	}
-
-
-	if (getCookie("warnOverwrite") == "false") {
-		// don't warn me about overwriting a recording
-	}
-
-	setCookie("fpl", "1.0") ;
+	
 }
 
 
 /* check cookies */
 
 switch (getCookie("thm")) {
-	case "":
-		setCookie("thm", "dt") ;
 	case "dt":
 		theme("default") ;
 		break ;
@@ -741,7 +693,7 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 
 						  "Update":		function() { dataGetter("p", "", pageUpdate) ; },
 						  "Yes (overwrite)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; dataRequester("startRecording", "{}", pageUpdate) ; },
-						  "No (don't record)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; stateSelecter(recButton, 0) ; },
+						  "No (don't record)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; stateSelecter(document.getElementById("record"), 0) ; },
 						}
 
 
@@ -972,9 +924,6 @@ window.onclick = function(event) { // check where a click was: if it was outside
 	}
 }
 
-var baseAddress = window.location.pathname.slice(1, -11); // directory path of this page (before this page)
-
-
 var img = document.getElementById("imageDisplay") ;
 
 var videoWindow = document.getElementById("videoDisplay");
@@ -1004,7 +953,7 @@ document.getElementById("menu").onmouseleave = function() {
 var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
-var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ if ( (getCookie("sr") != 0) && (getCookie("wo") != "a") || (getCookie("wo") == "n") ) { dataRequester("startRecording", "{}", pageUpdate); } else { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("overwrittenBox").classList.remove("hidden") ; stateSelecter(recButton, 0) ; } } ],
+var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ if ( (getCookie("sr") != 0) && (getCookie("wo") != "a") || (getCookie("wo") == "n") ) { dataRequester("startRecording", "{}", pageUpdate); } else { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("overwrittenBox").classList.remove("hidden") ; stateSelecter(document.getElementById("record"), 0) ; } } ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataRequester("set", '{"focusPeakingLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"focusPeakingLevel": ' + ((getCookie("fpl") == "") ? '0.2}' : getCookie("fpl") + '}') , pageUpdate) ; } ],
@@ -1094,6 +1043,7 @@ var lastKnownExternalPower = false ;
 var lastKnownVideoState = "live" ;
 var lastKnownFrameEnd = 1 ;
 var lastKnownCurrentFrame = 0 ;
+var lastKnownRecordMode = "" ;
 
 
 function pageUpdate(rawData){
@@ -1127,6 +1077,9 @@ function pageUpdate(rawData){
 		stateSelecter(document.getElementById("blackCal"), 1) ; // turn on the blackCal button
 		document.getElementById("blackCalOverlay").classList.remove("hidden") ;
 	}
+
+	if ("recMode" in parsedData)
+		lastKnownRecordMode = parsedData.recMode ;
 
 
 	if ("batteryChargePercent" in parsedData) {
@@ -1300,7 +1253,7 @@ function pageUpdate(rawData){
 			case "live":
 				document.getElementById("saveProgress").classList.add("hidden")
 				document.getElementById("videoStateOverlay").innerHTML = "Live Display" ;
-				recButton.classList.remove("disabled") ; // take away the 'disabled' class
+				document.getElementById("record").classList.remove("disabled") ; // take away the 'disabled' class
 				break ;
 
 			case "play":
@@ -1308,7 +1261,7 @@ function pageUpdate(rawData){
 				document.getElementById("videoStateOverlay").innerHTML = "Playing Video" ;
 				document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
 				document.getElementById("saveProgress").lastChild.textContent = "Playback Position" ;
-				recButton.classList.add("disabled") ; // disable the record button
+				document.getElementById("record").classList.add("disabled") ; // disable the record button
 				document.getElementById("overlayButtons").innerHTML = '<a id="overlayNavigateButton" href="/PlaySave.html">Play/Save Screen</a> <a id="overlayRecModeButton" onclick="dropDownSelect(this)">Record Mode</a>' ;
 				break ;
 
@@ -1317,7 +1270,7 @@ function pageUpdate(rawData){
 					document.getElementById("saveProgressFill").style.width = 0 ;
 				document.getElementById("saveProgress").classList.remove("hidden") ; // show the progress bar
 				document.getElementById("videoStateOverlay").innerHTML = "Saving Video" ;
-				recButton.classList.add("disabled") ; // disable the record button
+				document.getElementById("record").classList.add("disabled") ; // disable the record button
 
 				dataGetter ("get", "playbackStart", pageUpdate) ; // get the starting frame
 				dataGetter ("get", "playbackLength", pageUpdate) ; // get the length
@@ -1342,12 +1295,12 @@ function pageUpdate(rawData){
 		if (lastKnownVideoState == "filesave") {
 			// display a progress bar here
 			var progress = parsedData.playbackPosition / lastKnownFrameEnd * 100 ;
-			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) {
+			if (progress > 99.9)
+				progress = 99.9 ;
+			if (parseFloat(progress) > parseFloat(document.getElementById("saveProgressFill").style.width)) { // only go up with the percentage
 				document.getElementById("saveProgress").lastChild.textContent = progress.toFixed(1) + "% --  frame " + parsedData.playbackPosition + " of " + lastKnownFrameEnd ;
 				document.getElementById("saveProgressFill").style.width = progress + "%" ;
 			}
-
-			
 		}
 		else if (lastKnownVideoState == "play") {
 			document.getElementById("saveProgressFill").style.width = (lastKnownCurrentFrame / lastKnownFrameEnd * 100) + "%" ;
@@ -1429,6 +1382,9 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 
 		if ( (lastKnownVideoState == "filesave") || (lastKnownVideoState == "play") )
 			dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
+
+		if (lastKnownRecordMode != "normal")
+			dataGetter('get', 'state', pageUpdate) ;
 	}
 
 	if (PollCounter % 30 == 0) { // every 15-ish seconds
