@@ -16,9 +16,84 @@
 
 
 /*@media screen and (max-width: 3000px) {
-	.rightContainer { box-shadow: 0 0 3px 3px inset white; }
-} */
+	.leftContainer, .rightContainer { box-shadow: 0 0 3px 3px inset white; }
+}*/
 
+@media screen and (min-width: 1600px) {
+	.leftContainer, .rightContainer { max-width: 785px; }
+}
+
+@media screen and (max-width: 1600px) {
+	.leftContainer, .rightContainer { max-width: 680px; }
+}
+
+@media screen and (max-width: 1400px) {
+	.leftContainer, .rightContainer { max-width: 785px; }
+}
+@media screen and (max-width: 800px) {
+	.leftContainer, .rightContainer { max-width: 100%; }
+}
+
+
+
+
+@media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
+	#settings { display: none; } /* hide the settings button */
+}
+
+@media screen and (max-width: 940px) { /* change formatting when screen size is narrower than this */
+	#help { display: none; } /* hide the help button */
+
+	body { margin: 0; }
+}
+
+@media screen and (max-width: 705px) { /* change formatting when screen size is narrower than this */
+	#storage { display: none; } /* hide the storage button */
+
+	.subTitle { display: none; }
+}
+
+@media screen and (max-width: 743px) {
+	#saveAsBox { clear: left; }
+}
+
+@media screen and (max-width: 542px) { /* change formatting when screen size is narrower than this */
+	#playSave { display: none; } /* hide the PlaySave button */
+}
+
+@media screen and (max-width: 455px) { /* change formatting when screen size is narrower than this */
+	.titleImage img { width: 100%; height: auto; }
+}
+
+@media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
+	#main { display: none; } /* hide the main button */
+	#menu { width: 90%; }
+}
+
+
+
+#colMatrixa, #colMatrixd, #colMatrixg, #colourPreset1Btn, #colourPreset2Btn, #colourIdentityBtn,
+#whiteBalNuma, #autoSaveButton {
+	margin-left: 0;
+}
+
+#colourApplyBtn { float: right; }
+
+#resetAll {
+	float: right;
+	width: 235px;
+}
+
+#changeModeBox { max-width: 285px; }
+#autoSaveBox {
+	max-width: 220px;
+	padding-bottom: 14px;
+}
+#camDisplayBox {
+	padding-bottom: 14px;
+}
+
+#colourMatrixBox { clear: left; }
 
 
 </style>
@@ -65,6 +140,147 @@
 
 
 	<div class="leftContainer">
+
+
+		<div id="changeModeBox" class="horizLayout">
+			<b> Change Camera Mode </b>
+			<br>
+			<span class="instruction"> Select when to change the camera into live/record mode or play/save mode </span>
+			<br>
+			<div id="changeModeDropdown" class="selectContainerHolder" onclick=""> Manually <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Manually</a>
+				<a onclick="dropDownSelect(this)">On Navigate</a>
+			</div></div>
+		</div>
+
+
+		<div id="autoSaveBox" class="horizLayout">
+			<b> Auto Save </b>
+			<br>
+			<span class="instruction"> Save the entire recording automatically after finishing a recording </span>
+			<br>
+			<a id="autoSaveButton" class="button" onclick="toggler(this)">No</a>
+		</div>
+
+
+		<div class="horizLayout">
+			<b> Notify Before Recording </b>
+			<br>
+<!--			<span class="instruction"> Display a pop-up message before recording </span>
+-->
+			<span class="instruction"> Ask before discarding unsaved video in RAM </span>
+			<br>
+			<div id="recordWarn" class="selectContainerHolder" onclick="">If Unsaved<div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Always</a>
+				<a onclick="dropDownSelect(this)">If Unsaved</a>
+				<a onclick="dropDownSelect(this)">Never</a>
+			</div></div>
+			<span class="instruction"> (Webpage Only) </span>
+		</div>
+
+
+		<div id="camDisplayBox" class="horizLayout">
+			<b> Camera Display </b>
+			<br>
+			<span class="instruction"> Toggle the camera's display </span>
+			<br>
+			Display: <a id="displayToggleButton" class="button" onclick="toggler(this)">On</a>
+		</div>
+
+
+		<div class="horizLayout">
+			<b> Record Mode </b>
+			<br>
+			<div id="recordModeDropdown" class="selectContainerHolder" onclick=""> Normal <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Normal</a>
+				<a onclick="dropDownSelect(this)">Segmented</a>
+				<a onclick="dropDownSelect(this)">Gated Burst</a>
+<!--				<a onclick="dropDownSelect(this)">Live Slow Motion</a> -->
+			</div></div>
+			<div id="segmentNumberBox">
+				Number of Segments:
+				<input id="segmentNum" type="number" min="1" max="500" step="1" oninput="justRunSomething(this)">
+				<br>
+				Ring Buffer:
+				<a id="disableRBButton" class="button" onclick="justRunSomething(this)">Enabled</a>
+			</div>
+			<div id="prerecordBox">
+				Prerecord Frames:
+				<input id="preRecFrameNum" type="number" min="0" max="9000" step="1" oninput="justRunSomething(this)">
+				<br>
+				Prerecord Time:
+				<input id="preRecTimeNum" type="number" min="0.000000" max="5.0000000">
+			</div>
+			<br>
+		</div>
+
+
+		<div class="horizLayout">
+			<b> Auto Power Mode </b>
+			<br>
+<!--			<span class="instruction"> Power on as soon as power is connected </span>
+			<br>
+-->
+			<div id="autoPowerDropdown" class="selectContainerHolder" onclick=""> Disabled <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Disabled</a>
+				<a onclick="dropDownSelect(this)">Turn on if AC inserted</a>
+				<a onclick="dropDownSelect(this)">Turn off if AC removed</a>
+				<a onclick="dropDownSelect(this)">Both</a>
+			</div></div>
+		</div>
+
+
+
+
+
+	</div>
+
+	<div class="rightContainer">
+
+
+		<div id="colourMatrixBox" class="horizLayout">
+			<b> Color Matrix </b>
+			<br>
+<!--			<span class="instruction">  </span>
+			<br>
+-->
+<!--			<div class="colourMatrixNumbers">-->
+				<input id="colMatrixa" type="number" min="-5.0" max="5.0" step="0.0001"><input id="colMatrixb" type="number" min="-5.0" max="5.0" step="0.0001"><input id="colMatrixc" type="number" min="-5.0" max="5.0" step="0.0001">
+				<br>
+				<input id="colMatrixd" type="number" min="-5.0" max="5.0" step="0.0001"><input id="colMatrixe" type="number" min="-5.0" max="5.0" step="0.0001"><input id="colMatrixf" type="number" min="-5.0" max="5.0" step="0.0001">
+				<br>
+				<input id="colMatrixg" type="number" min="-5.0" max="5.0" step="0.0001"><input id="colMatrixh" type="number" min="-5.0" max="5.0" step="0.0001"><input id="colMatrixi" type="number" min="-5.0" max="5.0" step="0.0001">
+<!--			</div>
+			<div id="colourButtons"> -->
+<!--				<a id="colourDefaultBtn" class="button" onclick="justRunSomething(this)">Default</a> -->
+				<br>
+				<a id="colourPreset1Btn" class="button" onclick="justRunSomething(this)">CIECAM16/D55</a>
+				<br>
+				<a id="colourPreset2Btn" class="button" onclick="justRunSomething(this)">CIECAM02/D55</a>
+				<br>
+				<a id="colourIdentityBtn" class="button" onclick="justRunSomething(this)">Identity</a>
+				<a id="colourApplyBtn" class="button" onclick="justRunSomething(this)">Apply</a>
+<!--			</div> -->
+		</div>
+
+
+		<div class="horizLayout">
+			<b> Custom White Balance </b>
+			<br>
+			<input id="whiteBalNuma" type="number" min="-5.0" max="5.0" step="0.0001"><input id="whiteBalNumb" type="number" min="-5.0" max="5.0" step="0.0001"><input id="whiteBalNumc" type="number" min="-5.0" max="5.0" step="0.0001">
+			<a id="whiteBalApplyBtn" class="button" onclick="justRunSomething(this)">Apply</a>
+		</div>
+
+
+		<div class="horizLayout">
+			<b> Trigger Delay </b>
+			<br>
+			<span class="instruction">  </span>
+			<br>
+			===========|==============
+		</div>
+
+
 		<div class="horizLayout">
 			<b> Focus Peaking </b>
 			<br>
@@ -86,95 +302,9 @@
 			</div></div>
 		</div>
 
-		<div class="horizLayout">
-			<b> Notify Before Recording </b>
-			<br>
-			<span class="instruction"> Display a pop-up message before recording </span>
-			<br>
-			<div id="recordWarn" class="selectContainerHolder" onclick="">Overwrite<div class="selectContainer">
-				<a onclick="dropDownSelect(this)">Always</a>
-				<a onclick="dropDownSelect(this)">If Unsaved</a>
-				<a onclick="dropDownSelect(this)">Never</a>
-			</div></div>
-			<br>
-			<span class="instruction"> Ask before discarding unsaved video in RAM </span>
-		</div>
-
-		<div class="horizLayout">
-			<b> Change Camera Mode </b>
-			<br>
-			<span class="instruction"> Change the camera into live/record mode or play/save mode </span>
-			<br>
-			<div id="changeModeDropdown" class="selectContainerHolder" onclick=""> Manually <div class="selectContainer">
-				<a onclick="dropDownSelect(this)">Manually</a>
-				<a onclick="dropDownSelect(this)">On Navigate</a>
-			</div></div>
-		</div>
-
-
-		<div class="horizLayout">
-			<b> Record Mode </b>
-			<br>
-			[ Normal / Segmented / Gated Burst / Live Slow Motion -- Dropdown ]
-			<br>
-			((--- other settings pertaining to these modes ---))
-		</div>
-
-
-		<div class="horizLayout">
-			<b> Auto Save </b>
-			<br>
-			<span class="instruction"> save automatically after finishing a recording </span>
-			<br>
-			( On ) ( Off )
-		</div>
-
-		<div class="horizLayout">
-			<b> Auto Record </b>
-			<br>
-			<span class="instruction"> automatically start recording </span>
-			<br>
-			( On ) ( Off )
-		</div>
-
-		<div class="horizLayout">
-			<b> Auto Power Mode </b>
-			<br>
-			<span class="instruction"> Power on as soon as power is connected </span>
-			<br>
-			( On ) ( Off )
-		</div>
-
-		<div class="horizLayout">
-			<b> Camera Display </b>
-			<br>
-			<span class="instruction"> Put the camera's rear screen to sleep </span>
-			<br>
-			( On ) ( Off )
-		</div>
-
-		<div class="horizLayout">
-			<b> White Balance Color Matrix </b>
-			<br>
-			<span class="instruction">  </span>
-			<br>
-			| a | b | c | <br>
-			| d | e | f | <br>
-			| g | h | i |
-		</div>
-
-		<div class="horizLayout">
-			<b> Trigger Delay </b>
-			<br>
-			<span class="instruction">  </span>
-			<br>
-			===========|==============
-		</div>
 
 		<div class="horizLayout">
 			<b> Webpage Theme </b>
-			<br>
-			<span class="instruction">  </span>
 			<br>
 			<div id="themeSelector" class="selectContainerHolder" onclick="">Webpage Theme<div class="selectContainer">
 				<a onclick='theme("default")'> Default </a>
@@ -187,22 +317,23 @@
 		</div>
 
 
-	<br><br>
-
-		<div class="Text-bar">
-			<div id="battery" class="no-click">
-				<div id="batteryContainer" class="battery">
-					<div id="battery-level"></div>
-				</div>
-				<span id="battery%">0%</span>
-			</div>
-		</div>
-
 
 	</div>
 
 
-	<div id="debugBar" class="Text-bar">
+	<div class="Text-bar">
+		<div id="battery" class="no-click">
+			<div id="batteryContainer" class="battery">
+				<div id="battery-level"></div>
+			</div>
+			<span id="battery%">0%</span>
+		</div>
+
+		<a id="resetAll" onclick="justRunSomething(this)">Reset All Settings<br>to Default</a>
+	</div>
+
+
+	<div id="debugBar" class="Text-bar hidden">
 		<a id="tester1" onclick="tester1func()"> tester1 </a>
 		<a id="tester2" onclick="tester2func()"> tester2 </a>
 		<a id="tester3" onclick="tester3func()"> tester3 </a>
@@ -228,14 +359,17 @@
 
 <script>
 
-var DebugOnOff = true ;
+var DebugOnOff = false ;
+
+function resetAll() {
+	// reset all the settings
+}
 
 
 function tester1func() {
 
 
 }
-
 
 function tester2func() {
 
@@ -244,100 +378,11 @@ function tester2func() {
 
 function tester3func() {
 
+	document.getElementById("debugger").innerHTML = "" ;
+
 }
 
 
-/* check cookies */
-
-switch (getCookie("thm")) {
-	case "":
-		setCookie("thm", "dt") ;
-	case "dt":
-		theme("default") ;
-		break ;
-
-	case "mo":
-		theme("monochrome") ;
-		break ;
-
-	case "dk":
-		theme("darker") ;
-		break ;
-
-	case "lt":
-		theme("lighter") ;
-		break ;
-
-	case "md":
-		theme("monoDark") ;
-		break ;
-
-	case "l2":
-		theme("newDefault") ;
-		break ;
-}
-
-switch (getCookie("fpl")) {
-	case "":
-		setCookie("fpl", 0.67) ; // set to Medium
-	case "0.67":
-		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = "Medium" ;
-		break ;
-
-	case "0.33":
-		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " Low " ;
-		break ;
-
-	case "1.0":
-	case "1":
-		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " High " ;
-		break ;
-}
-
-
-switch (getCookie("wo")) {
-	case "":
-		setCookie("wo", "u") ;
-	case "u":
-		document.getElementById("recordWarn").firstChild.textContent = "If Unsaved" ;
-		break ;
-
-	case "a":
-		document.getElementById("recordWarn").firstChild.textContent = "Always" ;
-		break ;
-
-	case "n":
-		document.getElementById("recordWarn").firstChild.textContent = "Never";
-		break ;
-}
-
-switch (getCookie("mc")) {
-	case "":
-		setCookie("mc", "m") ;
-	case "m":
-		document.getElementById("changeModeDropdown").firstChild.textContent = "Manually" ;
-		break ;
-
-	case "n":
-		document.getElementById("changeModeDropdown").firstChild.textContent = "On Navigation" ;
-		break ;
-}
-
-
-
-/*
-	Cookie Descriptions:
-
-	id	name / description
-	---|-----------------------|
-	fpl	"focus peaking level"	number from 0 to 1
-	mc	"mode change"			"n" to change mode on navigation, "m" to change mode manually
-	sr	"saved recording"		1 when recording was saved, 0 when not saved
-	thm	"theme"					2-letter code to indicate each theme
-	wo	"warn overwrite"		"a" always warn, "n" never warn, "u" warn on unsaved recordings
-
-
-*/
 
 
 function getCookie(cname) {
@@ -495,6 +540,16 @@ var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElem
 						"Manually":			function() { setCookie("mc", "m") ; document.getElementById("changeModeDropdown").firstChild.textContent = "Manually" ; },
 						"On Navigate":		function() { setCookie("mc", "n") ; document.getElementById("changeModeDropdown").firstChild.textContent = "On Navigation" ; },
 
+						"Normal":			function() { dataRequester("set", '{"recMode": "normal"}', pageUpdate) ; },
+						"Segmented":		function() { dataRequester("set", '{"recMode": "segmented"}', pageUpdate) ; },
+						"Gated Burst":		function() { dataRequester("set", '{"recMode": "burst"}', pageUpdate) ; },
+						"Disabled":			function() { dataRequester("set", '{"powerOffWhenMainsLost": false, "powerOnWhenMainsConnected": false}', pageUpdate) ; },
+						"Turn on if AC inserted": function() { dataRequester("set", '{"powerOffWhenMainsLost": false, "powerOnWhenMainsConnected": true}', pageUpdate) ; },
+						"Turn off if AC removed": function() { dataRequester("set", '{"powerOffWhenMainsLost": true, "powerOnWhenMainsConnected": false}', pageUpdate) ; },
+						"Both":				function() { dataRequester("set", '{"powerOffWhenMainsLost": true, "powerOnWhenMainsConnected": true}', pageUpdate) ; },
+
+
+
 						}
 
 
@@ -503,6 +558,26 @@ function dropDownSelect (element) {
 		dropDownFunctions[element.innerText]() ; // run the function
 }
 
+
+
+var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{"recSegments": ' + value + '}', pageUpdate) ; },
+
+						"colourDefaultBtn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
+						"colourIdentityBtn":	function() { detourRequester("set", '{"colorMatrix": [1.0, 0.0, 0.0,  0.0, 1.0, 0.0,  0.0, 0.0, 1.0]}', pageUpdate) ; },
+						"colourApplyBtn":		function() { detourRequester("set", '{"colorMatrix": [' + document.getElementById("colMatrixa").value + ', ' + document.getElementById("colMatrixb").value + ', ' + document.getElementById("colMatrixc").value + ', ' + document.getElementById("colMatrixd").value + ', ' + document.getElementById("colMatrixe").value + ', ' + document.getElementById("colMatrixf").value + ', ' + document.getElementById("colMatrixg").value + ', ' + document.getElementById("colMatrixh").value + ', ' + document.getElementById("colMatrixi").value + ']}', pageUpdate) ; },
+						"colourPreset1Btn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
+						"colourPreset2Btn":		function() { detourRequester("set", '{"colorMatrix": [1.23291, 0.646729, -0.776367,  -0.321777, 1.68994, -0.380859,  -0.0612793, -0.640869,1.52563]}', pageUpdate) ; },
+
+						"whiteBalApplyBtn":		function() { detourRequester("set", '{"wbColor": [' + document.getElementById("whiteBalNuma").value + ', ' + document.getElementById("whiteBalNumb").value + ', ' + document.getElementById("whiteBalNumc").value + ']}', pageUpdate) ; },
+
+						"resetAll":				function() {  },
+					 }
+
+
+function justRunSomething(element) {
+	if (element.id in inputFunctions) // if the key-value exists
+		inputFunctions[element.id](element.value) ; // run the function (with the value given)
+}
 
 
 
@@ -515,13 +590,26 @@ document.getElementById("menu").onmouseleave = function() {
 	}, 50) ;
 }
 
+
+window.onclick = function(event) { // check where a click was: if it was outside a menu, close that menu
+	if ( !event.target.matches(".menuClickOk") && (event.target.parent == undefined || !event.target.parent.matches(".menuClickOk"))
+	&& (document.getElementById("menu").matches(".active")) ) {
+		toggler(document.getElementById("menu")) ; // toggle off the button (and close the menu)
+	}
+}
+
+
 					//	 key	 	 inactive		active
-var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
-					}
+var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
+					"autoSaveButton":		[ "No", "Yes" ],
+				}
 
 var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
 
-						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
+						"debugToggle":			[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
+						"displayToggleButton":	[ function(){ dataRequester("set", '{"backlightEnabled": false}', pageUpdate) ; }, function(){ dataRequester("set", '{"backlightEnabled": true}', pageUpdate) ; } ],
+						"autoSaveButton":		[ function(){ setCookie("as", 0) ; }, function() { setCookie("as", 1) ; } ],
+
 					  }
 
 
@@ -559,6 +647,8 @@ function stateSelecter(element, state) { // this is like toggler above, but does
 		element.classList.remove("active") ; // remove the "active" styling
 		element.classList.add("inactive") ; // use the "inactive" styling
 	}
+
+	state *= 1 ;
 
 	if (element.id in nameChange) // check if key-value exists
 		element.innerHTML = nameChange[element.id][state] ; // set name to the left (inactive) or right (active) one
@@ -663,6 +753,73 @@ function pageUpdate(rawData){
 		}
 	}
 
+	if ("recMode" in parsedData) {
+		switch (parsedData.recMode) {
+			case "normal":
+				document.getElementById("recordModeDropdown").firstChild.textContent = " Normal " ;
+				document.getElementById("segmentNumberBox").classList.add("hidden") ;
+				document.getElementById("prerecordBox").classList.add("hidden") ;
+				break ;
+
+			case "segmented":
+				document.getElementById("recordModeDropdown").firstChild.textContent = "Segmented" ;
+				document.getElementById("segmentNumberBox").classList.remove("hidden") ;
+				document.getElementById("prerecordBox").classList.add("hidden") ;
+				break ;
+
+			case "burst":
+				document.getElementById("recordModeDropdown").firstChild.textContent = "Gated Burst" ;
+				document.getElementById("segmentNumberBox").classList.add("hidden") ;
+				document.getElementById("prerecordBox").classList.remove("hidden") ;
+				break ;
+		}
+	}
+
+	if ("recSegments" in parsedData) {
+
+		if (document.getElementById("segmentNum") != document.activeElement)
+			document.getElementById("segmentNum").value = parsedData.recSegments ;
+	}
+
+
+	if ( ("powerOnWhenMainsConnected" in parsedData) && ("powerOffWhenMainsLost" in parsedData) ) {
+
+		if ( (parsedData.powerOnWhenMainsConnected == true) && (parsedData.powerOffWhenMainsLost == true) )
+			document.getElementById("autoPowerDropdown").firstChild.textContent = "Both" ;
+		else if ( (parsedData.powerOnWhenMainsConnected == true) && (parsedData.powerOffWhenMainsLost == false) )
+			document.getElementById("autoPowerDropdown").firstChild.textContent = "Turn on if AC Inserted" ;
+		else if ( (parsedData.powerOnWhenMainsConnected == false) && (parsedData.powerOffWhenMainsLost == true) )
+			document.getElementById("autoPowerDropdown").firstChild.textContent = "Turn off if AC Removed" ;
+		else if ( (parsedData.powerOnWhenMainsConnected == false) && (parsedData.powerOffWhenMainsLost == false) )
+			document.getElementById("autoPowerDropdown").firstChild.textContent = "Disabled" ;
+	}
+
+	if ("backlightEnabled" in parsedData) { // turn the rear screen on or off
+		stateSelecter(document.getElementById("displayToggleButton"), parsedData.backlightEnabled) ;
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML += "\nGot backlight command: " + parsedData.backlightEnabled ;
+	}
+
+	if ("colorMatrix" in parsedData) {
+		document.getElementById("colMatrixa").value = parsedData.colorMatrix[0].toFixed(4) ;
+		document.getElementById("colMatrixb").value = parsedData.colorMatrix[1].toFixed(4) ;
+		document.getElementById("colMatrixc").value = parsedData.colorMatrix[2].toFixed(4) ;
+
+		document.getElementById("colMatrixd").value = parsedData.colorMatrix[3].toFixed(4) ;
+		document.getElementById("colMatrixe").value = parsedData.colorMatrix[4].toFixed(4) ;
+		document.getElementById("colMatrixf").value = parsedData.colorMatrix[5].toFixed(4) ;
+
+		document.getElementById("colMatrixg").value = parsedData.colorMatrix[6].toFixed(4) ;
+		document.getElementById("colMatrixh").value = parsedData.colorMatrix[7].toFixed(4) ;
+		document.getElementById("colMatrixi").value = parsedData.colorMatrix[8].toFixed(4) ;
+	}
+
+	if ("wbColor" in parsedData) {
+		document.getElementById("whiteBalNuma").value = parsedData.wbColor[0].toFixed(4) ;
+		document.getElementById("whiteBalNumb").value = parsedData.wbColor[1].toFixed(4) ;
+		document.getElementById("whiteBalNumc").value = parsedData.wbColor[2].toFixed(4) ;
+	}
+
 }
 
 
@@ -701,6 +858,21 @@ function dataGetter(method, parameter, callMeMaybe){
 		if (this.readyState == 4 && this.status == 200){
 			callMeMaybe(requestSender.responseText) ; // call this function to deal with the input and update the page
 			 // callback function, passing in the string we got back
+		}
+	}
+
+	requestSender.send(parameter) ;
+}
+
+function detourRequester(method, parameter, callMeMaybe) {
+	var requestSender = new XMLHttpRequest() ; // set up a new request
+	requestSender.open("POST", "/cgi-bin/longWayAround", true) ; // use "post", and use the work around script for json arrays
+	requestSender.setRequestHeader("Content-Type", "application/json") ; // use json format
+	requestSender.withCredentials = true ;
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){ // wait for successful response
+			callMeMaybe(requestSender.responseText) ; // call the callback function with the response text
 		}
 	}
 
@@ -753,6 +925,105 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 
 	PollCounter++ ;
 }
+
+
+
+/* check cookies */
+
+switch (getCookie("thm")) {
+	case "":
+		setCookie("thm", "dt") ;
+	case "dt":
+		theme("default") ;
+		break ;
+
+	case "mo":
+		theme("monochrome") ;
+		break ;
+
+	case "dk":
+		theme("darker") ;
+		break ;
+
+	case "lt":
+		theme("lighter") ;
+		break ;
+
+	case "md":
+		theme("monoDark") ;
+		break ;
+
+	case "l2":
+		theme("newDefault") ;
+		break ;
+}
+
+switch (getCookie("fpl")) {
+	case "":
+		setCookie("fpl", 0.67) ; // set to Medium
+	case "0.67":
+		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = "Medium" ;
+		break ;
+
+	case "0.33":
+		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " Low " ;
+		break ;
+
+	case "1.0":
+	case "1":
+		document.getElementById("focusPeakingLevelDropdown").firstChild.textContent = " High " ;
+		break ;
+}
+
+
+switch (getCookie("wo")) {
+	case "":
+		setCookie("wo", "u") ;
+	case "u":
+		document.getElementById("recordWarn").firstChild.textContent = "If Unsaved" ;
+		break ;
+
+	case "a":
+		document.getElementById("recordWarn").firstChild.textContent = "Always" ;
+		break ;
+
+	case "n":
+		document.getElementById("recordWarn").firstChild.textContent = "Never";
+		break ;
+}
+
+switch (getCookie("mc")) {
+	case "":
+		setCookie("mc", "m") ;
+	case "m":
+		document.getElementById("changeModeDropdown").firstChild.textContent = "Manually" ;
+		break ;
+
+	case "n":
+		document.getElementById("changeModeDropdown").firstChild.textContent = "On Navigation" ;
+		break ;
+}
+
+
+//if (getCookie("as") == 1) {
+	stateSelecter(document.getElementById("autoSaveButton"), getCookie("as")) ;
+//}
+
+
+/*
+	Cookie Descriptions:
+
+	id	name / description
+	---|-----------------------|
+	fpl	"focus peaking level"	number from 0 to 1
+	mc	"mode change"			"n" to change mode on navigation, "m" to change mode manually
+	sr	"saved recording"		1 when recording was saved, 0 when not saved
+	thm	"theme"					2-letter code to indicate each theme
+	wo	"warn overwrite"		"a" always warn, "n" never warn, "u" warn on unsaved recordings
+	as	"auto save"				0 to not auto save, 1 to auto save
+
+
+*/
 
 
 var intervalID = setInterval(pollOnlyUpdates, 500) ; // poll the camera for things that are not reported
