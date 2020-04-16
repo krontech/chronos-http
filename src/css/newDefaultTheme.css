@@ -247,6 +247,9 @@ a.innerDropDown.active:hover {
 a:hover .saveIcon:after { border-top-color: var(--HoverBG); }
 
 
+
+
+
  /* Icon colors (active) */
 .active .saveIcon:after { border-top-color: var(--TextColor2); }
 .active .homeIcon { background-color: var(--TextColor2); }
@@ -258,6 +261,21 @@ a:hover .saveIcon:after { border-top-color: var(--HoverBG); }
 
  /* Icon masking colors (active, hover) */
 .active a:hover .saveicon:after { border-top-color: var(--ActiveHoverBG); }
+
+
+
+ /* Icon colors (active) */
+.active .homeIcon, .active .saveIcon, .active .settingsIcon, .active .settingsIcon:before { background-color: var(--TextColor2); }
+.active .homeIcon:after { border-bottom-color: var(--TextColor2); }
+.active .playIcon { border-left-color: var(--TextColor2); }
+
+ /* Icon masking colors (active) */
+.active .saveIcon:after { border-top-color: var(--HoverBG); }
+.active .settingsIcon:after { background-color: var(--ActiveBG); }
+
+ /* Icon masking colors (active, hover) */
+.active:hover .saveIcon:after { border-top-color: var(--ActiveHoverBG); }
+.active:hover .settingsIcon:after { background-color: var(--ActiveHoverBG); }
 
 
 a.innerDropDown:before { /* folder drop-down triangle inside drop-down */

@@ -222,17 +222,18 @@ a.innerDropDown.active:hover {
 a:hover .saveIcon:after { border-top-color: #333; }
 
 
- /* Icon colors (active) */
-.active .saveIcon:after { border-top-color: white; }
-.active .homeIcon { background-color: white; }
+  /* Icon colors (active) */
+.active .homeIcon, .active .saveIcon { background-color: white; }
 .active .homeIcon:after { border-bottom-color: white; }
 .active .playIcon { border-left-color: white; }
 
  /* Icon masking colors (active) */
-.active .saveIcon { background-color: #333; }
+.active .saveIcon:after { border-top-color: #0067B9; /* pantone 2144 */ }
+.active .settingsIcon:after { background-color: #0067B9; /* pantone 2144 */ }
 
  /* Icon masking colors (active, hover) */
-.active a:hover .saveicon:after { border-top-color: #aaa; }
+.active:hover .saveIcon:after { border-top-color: #004EA8; /* pantone 2145 */ }
+.active:hover .settingsIcon:after { background-color: #004EA8; /* pantone 2145 */ }
 
 
 a.innerDropDown:before { /* folder drop-down triangle inside drop-down */
