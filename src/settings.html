@@ -310,9 +310,9 @@
 				<a onclick='theme("default")'> Default </a>
 				<a onclick='theme("monochrome")'> Monochrome </a>
 				<a onclick='theme("darker")'> Dark </a>
-				<a onclick='theme("lighter")'> Light </a>
+				<a onclick='theme("newDefault")'> Light </a>
 				<a onclick='theme("monoDark")'> Monochrome Dark </a>
-				<a onclick='theme("newDefault")'> Light 2 </a>
+				<a onclick='theme("lighter")'> Light 2 </a>
 			</div></div>
 		</div>
 
@@ -496,7 +496,7 @@ function theme(selection) { // set a new stylesheet to use
 				break ;
 
 			case "lighter":
-				document.getElementById("themeSelector").firstChild.textContent = "Light" ;
+				document.getElementById("themeSelector").firstChild.textContent = "Light 2" ;
 				setCookie("thm", "lt") ; // save the theme to a cookie for persistance
 				break ;
 
@@ -506,7 +506,7 @@ function theme(selection) { // set a new stylesheet to use
 				break ;
 
 			case "newDefault":
-				document.getElementById("themeSelector").firstChild.textContent = "Light 2" ;
+				document.getElementById("themeSelector").firstChild.textContent = "Light" ;
 				setCookie("thm", "l2") ; // save the theme to a cookie for persistance
 				break ;
 
@@ -1017,7 +1017,7 @@ switch (getCookie("mc")) {
 	---|-----------------------|
 	fpl	"focus peaking level"	number from 0 to 1
 	mc	"mode change"			"n" to change mode on navigation, "m" to change mode manually
-	sr	"saved recording"		1 when recording was saved, 0 when not saved
+	sr	"save recording"		0 when recording was saved, 1 when not saved
 	thm	"theme"					2-letter code to indicate each theme
 	wo	"warn overwrite"		"a" always warn, "n" never warn, "u" warn on unsaved recordings
 	as	"auto save"				0 to not auto save, 1 to auto save

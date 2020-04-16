@@ -227,7 +227,8 @@
 		</div>
 
 		<div id="analogGainBox" class="horizLayout">
-			<b> Analog Gain </b> &ensp;
+			<b> Analog Gain </b>
+			&ensp;
 			<div id="analogGain" class="selectContainerHolder" onclick="">SELECT<div id="analogGainInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> 0dB (x1) </a>
 				<a onclick="dropDownSelect(this)"> 6dB (x2) </a>
@@ -355,6 +356,16 @@
 		<div id="somethingWeirdBox" class="horizLayout hidden">
 			Something weird is happening
 		</div>
+		<div id="resNotAppliedBox" class="horizLayout hidden">
+			The resolution & framerate settings were changed, but they were not applied. Do you want to use the new settings?
+			<a id="noResNotApplied" style="float: right;" class="button" onclick="dropDownSelect(this)">Yes (apply the changed settings)</a>
+			<a id="yesResNotApplied" style="float: right;" class="button" onclick="dropDownSelect(this)">No (revert to previous settings)</a>
+		</div>
+		<div id="errorWhileSavingBox" class="horizLayout hidden">
+			Cannont save the file
+			<br>
+			<a id="errorWhileSaving" style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
+		</div>
 	</div>
 </div>
 
@@ -366,18 +377,20 @@
 var DebugOnOff = false ;
 
 function tester1func() {
+	document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("resNotAppliedBox").classList.remove("hidden") ;
 
 }
 
 
 function tester2func() {
-	
+	document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("errorWhileSavingBox").classList.remove("hidden") ;
 }
 
 
 function tester3func() {
 
-	
+	if ("" == 0)
+		document.getElementById("debugger").innerHTML += "<br> Zero is equal to \"\""
 }
 
 
@@ -538,6 +551,15 @@ function saveWholeVideo() {
 
 		dataSender ("startFilesave", request) ; // actually save the file
 	}
+	else {
+		if (StorageLocation == "")
+			document.getElementById("errorWhileSavingBox").firstChild.textContent = "Cannot save video. Please select a storage device." ;
+		else
+			document.getElementById("errorWhileSavingBox").firstChild.textContent = "Nothing to save. Please record something first." ;
+
+		document.getElementById("popUpBackground").classList.remove("hidden") ;
+		document.getElementById("errorWhileSavingBox").classList.remove("hidden") ; // show the reason why you're unable to save
+	}
 }
 
 
@@ -563,9 +585,27 @@ function useStorageLocation(key) {
 
 		document.getElementById("storageLocation").firstChild.textContent = temp ; // write the selected storage location to the 'storage location' drop-down
 
-		document.getElementById("storageSize").innerHTML = (StorageInfo[key].size / 1000000).toFixed(1) + " GB" ;
-		document.getElementById("storageAvailable").innerHTML = (StorageInfo[key].available / 1000000).toFixed(1) + " GB" ;
-		document.getElementById("storageUsed").innerHTML = (StorageInfo[key].used / 1000000).toFixed(1) + " GB" ;
+
+		var requestSender = new XMLHttpRequest() ; // set up a new request
+		requestSender.open("get", "/cgi-bin/storageInfo?" + key) ; // call my 'storageInfo' script
+		requestSender.setRequestHeader("Content-Type", "application/json") ; // use json format
+
+		requestSender.onreadystatechange = function(){ // do something with the response
+			if (this.readyState == 4 && this.status == 200){ // wait for successful response
+				var jsonBack = JSON.parse(requestSender.responseText) ; // convert to json
+				if ("size" in jsonBack) // display the total storage space
+					document.getElementById("storageSize").innerHTML = (jsonBack.size / 1000000).toFixed(1) + " GB" ;
+				if ("available" in jsonBack) // display the available space
+					document.getElementById("storageAvailable").innerHTML = (jsonBack.available / 1000000).toFixed(1) + " GB" ;
+				if ("used" in jsonBack) // display the used space
+					document.getElementById("storageUsed").innerHTML = (jsonBack.used / 1000000).toFixed(1) + " GB" ;
+//				if ("usedPercent" in jsonBack)
+//					document.getElementById("").style.width = jsonBack.usedPercent + "%" ;
+			}
+		}
+
+		requestSender.send() ; // ask the camera for storage size info
+
 
 		StorageLocation = key ; // save the storage location
 
@@ -600,6 +640,7 @@ var exposureValue = document.getElementById("shutter").value ;
 var exposureMin = 1000 ;
 var exposureMax = 2000 ;
 var framePeriod = 3000 ;
+var resFRSettingsOnCam = [] ;
 
 function holdWhileSliding(element) {
 
@@ -665,35 +706,40 @@ function boundInput(element) {
 }
 
 var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGain": 1}'); },
-						  "6dB (x2)":		function(){ dataSender("set",'{"currentGain": 2}'); },
-						  "12dB (x4)":		function(){ dataSender("set",'{"currentGain": 4}'); },
-						  "18dB (x8)":		function(){ dataSender("set",'{"currentGain": 8}'); },
-						  "24dB (x16)":		function(){ dataSender("set",'{"currentGain": 16}'); },
+						"6dB (x2)":			function(){ dataSender("set",'{"currentGain": 2}'); },
+						"12dB (x4)":		function(){ dataSender("set",'{"currentGain": 4}'); },
+						"18dB (x8)":		function(){ dataSender("set",'{"currentGain": 8}'); },
+						"24dB (x16)":		function(){ dataSender("set",'{"currentGain": 16}'); },
 
-						  "8000K":			function(){ dataSender("set", '{"wbTemperature": 8000}'); },
-						  "6500K":			function(){ dataSender("set", '{"wbTemperature": 6500}'); },
-						  "5600K":			function(){ dataSender("set", '{"wbTemperature": 5600}'); },
-						  "5250K":			function(){ dataSender("set", '{"wbTemperature": 5250}'); },
-						  "4600K":			function(){ dataSender("set", '{"wbTemperature": 4600}'); },
-						  "3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}'); },
-						  "Custom":			function(){ document.getElementById("whiteBalance").firstChild.textContent = "Custom"; },
+						"8000K":			function(){ dataSender("set", '{"wbTemperature": 8000}'); },
+						"6500K":			function(){ dataSender("set", '{"wbTemperature": 6500}'); },
+						"5600K":			function(){ dataSender("set", '{"wbTemperature": 5600}'); },
+						"5250K":			function(){ dataSender("set", '{"wbTemperature": 5250}'); },
+						"4600K":			function(){ dataSender("set", '{"wbTemperature": 4600}'); },
+						"3200K":			function(){ dataSender("set", '{"wbTemperature": 3200}'); },
+						"Custom":			function(){ document.getElementById("whiteBalance").firstChild.textContent = "Custom"; },
 
-						  "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate); },
+						"Refresh":			function(){ dataGetter("get", 'externalStorage', pageUpdate); },
 
-						  "H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
-						  "CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
-						  "TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
-						  "TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; },
+						"H.264 (mp4)":		function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
+						"CinemaDNG (raw)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
+						"TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
+						"TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; },
 
-						  "Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
+						"Debug Tools":		function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
 
-						  "Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
-						  "Cancel Save":	function() { dataSender("stopFilesave", "{}") ; },
-						  "Record Mode":	function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
+						"Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
+						"Cancel Save":		function() { dataSender("stopFilesave", "{}") ; },
+						"Record Mode":		function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
 
-						  "Update":		function() { dataGetter("p", "", pageUpdate) ; },
-						  "Yes (overwrite)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; dataRequester("startRecording", "{}", pageUpdate) ; },
-						  "No (don't record)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; stateSelecter(document.getElementById("record"), 0) ; },
+						"Update":			function() { dataGetter("p", "", pageUpdate) ; },
+						"Yes (overwrite)":	function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; dataRequester("startRecording", "{}", pageUpdate) ; },
+						"No (don't record)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("overwrittenBox").classList.add("hidden") ; stateSelecter(document.getElementById("record"), 0) ; },
+
+						"Yes (apply the changed settings)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("resNotAppliedBox").classList.add("hidden") ; applyResolution() ; },
+						"No (revert to previous settings)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("resNotAppliedBox").classList.add("hidden") ; dataGetter("get", "resolution&frameRate", pageUpdate) ; },
+
+						"Ok":				function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("errorWhileSavingBox").classList.add("hidden") ; },
 						}
 
 
@@ -728,6 +774,7 @@ function applyResolution() {
 		if (DebugOnOff)
 			document.getElementById("debugger").innerHTML += "Sending these resolution settings: " + parameters ;
 
+		resFRSettingsOnCam = [hRes.value, vRes.value, hOff.value, vOff.value, document.getElementById("fps").value] ;
 	}
 	else if (DebugOnOff)
 		document.getElementById("debugger").innerHTML += "Could not send resolution settings -- one or more resolution settings outside of range" ;
@@ -940,6 +987,7 @@ img.onload = function scaleToFit(){
 	}
 }
 
+ // add mouseenter/leave events for the menu dropdown functionality
 document.getElementById("menu").onmouseenter = function(){ document.getElementById("menuList").style.display = "block" ; }
 document.getElementById("menu").onmouseleave = function() {
 	var otherMenu = document.getElementById("menuList") ;
@@ -949,17 +997,43 @@ document.getElementById("menu").onmouseleave = function() {
 	}, 50) ;
 }
 
+function checkResFRChanged() { // compare the resolution/offset/fps on the page to what was sent to or received from the camera
+	if ( resFRSettingsOnCam[0] == document.getElementById("hRes").value && resFRSettingsOnCam[1] == document.getElementById("vRes").value &&
+	 resFRSettingsOnCam[2] == document.getElementById("hOff").value && resFRSettingsOnCam[3] == document.getElementById("vOff").value &&
+	 resFRSettingsOnCam[4] == document.getElementById("fps").value )
+		return false ; // false, meaning the resolution or frame rate did not change
+
+	else
+		return true ; // true, meaning the resolution or frame rate changed
+}
+function tryToStartRecording () {
+	if (checkResFRChanged()) { // if the resolution/offset/frame-rate was changed, but not applied, show a warning
+		document.getElementById("popUpBackground").classList.remove("hidden") ; // unhide the background
+		document.getElementById("resNotAppliedBox").classList.remove("hidden") ; // unhide the warning
+		stateSelecter(document.getElementById("record"), 0) ; // set the record button back to inactive
+	}
+	else if ( (getCookie("sr") != 1) && (getCookie("wo") != "a") || (getCookie("wo") == "n") ) {
+		// if the video has been saved, or the user does not want a warning ever
+		dataRequester("startRecording", "{}", pageUpdate) ; // start recording
+	}
+	else { // display overwrite warning
+		document.getElementById("popUpBackground").classList.remove("hidden") ; // unhide the background
+		document.getElementById("overwrittenBox").classList.remove("hidden") ; // unhide the warning
+		stateSelecter(document.getElementById("record"), 0) ; // set the record button back to inactive
+	}
+}
 					//	 key	 	 inactive		active
 var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
-var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ if ( (getCookie("sr") != 0) && (getCookie("wo") != "a") || (getCookie("wo") == "n") ) { dataRequester("startRecording", "{}", pageUpdate); } else { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("overwrittenBox").classList.remove("hidden") ; stateSelecter(document.getElementById("record"), 0) ; } } ],
+
+var buttonFunctions = {	"record":		[ function(){ dataRequester("stopRecording", "", pageUpdate);}, function(){ tryToStartRecording() } ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataRequester("set", '{"focusPeakingLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"focusPeakingLevel": ' + ((getCookie("fpl") == "") ? '0.2}' : getCookie("fpl") + '}') , pageUpdate) ; } ],
 						"zebraStripes":	[ function(){ dataRequester("set", '{"zebraLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"zebraLevel": 0.01}', pageUpdate) ;} ],
 
-						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
+						"debugToggle":	[ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
 					  }
 
 
@@ -1067,7 +1141,7 @@ function pageUpdate(rawData){
 		recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 1) ; // turn on the record button
 		document.getElementById("blackCalOverlay").classList.add("hidden") ;
-		setCookie("sr", 0) ; // this data has not been saved yet
+		setCookie("sr", 1) ; // this data has not been saved yet
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
 		videoWindow.style.border = "3px dashed white"; // set the blackCal outline color
@@ -1143,11 +1217,18 @@ function pageUpdate(rawData){
 		}
 
 		updatePreviewWindow() ; // update the preview window thingy
+
+		resFRSettingsOnCam[0] = document.getElementById("hRes").value ;
+		resFRSettingsOnCam[1] = document.getElementById("vRes").value ;
+		resFRSettingsOnCam[2] = document.getElementById("hOff").value ;
+		resFRSettingsOnCam[3] = document.getElementById("vOff").value ;
 	}
 
 
-	if ("frameRate" in parsedData) // show the frame rate of the camera
+	if ("frameRate" in parsedData) { // show the frame rate of the camera
 		document.getElementById("fps").value = Math.floor(parsedData.frameRate) ;
+		resFRSettingsOnCam[4] = document.getElementById("fps").value ; // store the settings recieved from the camera
+	}
 
 	if ("framePeriod" in parsedData) // get the frame period (save for other calculations)
 		framePeriod = parsedData.framePeriod ;
@@ -1277,7 +1358,7 @@ function pageUpdate(rawData){
 
 				document.getElementById("overlayButtons").innerHTML = '<a onclick="dropDownSelect(this)">Cancel Save</a>' ;
 
-				setCookie("sr", 1) ; // saved the video (don't need to warn next time I record)
+				setCookie("sr", 0) ; // saved the video (don't need to warn next time I record)
 				break ;
 		}
 		lastKnownVideoState = parsedData.videoState ; // set the last known video state

@@ -345,6 +345,21 @@
 	<span id="debugger2">  </span>
  </div>
 
+
+
+<div id="popUpBackground" class="popUpBackground hidden">
+	<div id="messageWarn" class="popUpMessage">
+		<div id="somethingWeirdBox" class="horizLayout hidden">
+			Something weird is happening
+		</div>
+		<div id="errorWhileSavingBox" class="horizLayout hidden">
+			Cannont save the file
+			<br>
+			<a id="errorWhileSaving" style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
+		</div>
+	</div>
+</div>
+
 <br>
 <div class="matchBackground"> This page was made by Nicholas Faliszewski </div>
 
@@ -733,6 +748,14 @@ function saveVideo() {
 	else { // could not save file
 		if (DebugOnOff)
 			document.getElementById("debugger2").innerHTML = " ---- Could not save video ---- " ;
+
+		if (StorageLocation == "")
+			document.getElementById("errorWhileSavingBox").firstChild.textContent = "Cannot save video. Please select a storage device." ;
+		else
+			document.getElementById("errorWhileSavingBox").firstChild.textContent = "Nothing to save. Please record something first." ;
+
+		document.getElementById("popUpBackground").classList.remove("hidden") ;
+		document.getElementById("errorWhileSavingBox").classList.remove("hidden") ; // show the reason why you're unable to save
 	}
 }
 
@@ -747,9 +770,27 @@ function useStorageLocation(key) {
 
 		document.getElementById("storageLocation").firstChild.textContent = temp ; // write the selected storage location to the 'storage location' drop-down
 
-		document.getElementById("storageSize").innerHTML = (StorageInfo[key].size / 1000000).toFixed(1) + " GB" ;
-		document.getElementById("storageAvailable").innerHTML = (StorageInfo[key].available / 1000000).toFixed(1) + " GB" ;
-		document.getElementById("storageUsed").innerHTML = (StorageInfo[key].used / 1000000).toFixed(1) + " GB" ;
+
+		var requestSender = new XMLHttpRequest() ; // set up a new request
+		requestSender.open("get", "/cgi-bin/storageInfo?" + key) ; // call my 'storageInfo' script
+		requestSender.setRequestHeader("Content-Type", "application/json") ; // use json format
+
+		requestSender.onreadystatechange = function(){ // do something with the response
+			if (this.readyState == 4 && this.status == 200){ // wait for successful response
+				var jsonBack = JSON.parse(requestSender.responseText) ; // convert to json
+				if ("size" in jsonBack) // display the total storage space
+					document.getElementById("storageSize").innerHTML = (jsonBack.size / 1000000).toFixed(1) + " GB" ;
+				if ("available" in jsonBack) // display the available space
+					document.getElementById("storageAvailable").innerHTML = (jsonBack.available / 1000000).toFixed(1) + " GB" ;
+				if ("used" in jsonBack) // display the used space
+					document.getElementById("storageUsed").innerHTML = (jsonBack.used / 1000000).toFixed(1) + " GB" ;
+//				if ("usedPercent" in jsonBack)
+//					document.getElementById("").style.width = jsonBack.usedPercent + "%" ;
+			}
+		}
+
+		requestSender.send() ; // ask the camera for storage size info
+
 
 		StorageLocation = key ; // save the storage location
 
@@ -785,16 +826,18 @@ function theme(selection) { // set a new stylesheet to use
 
 var dropDownFunctions = { "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate); },
 
-						  "H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
-						  "CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
-						  "TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
-						  "TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; },
+						"H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
+						"CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
+						"TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
+						"TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; },
 
-						  "Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
-						  "Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
-						  "Record Mode":	function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
+						"Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
+						"Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
+						"Record Mode":	function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; },
 						  
-						  "Update":		function() { dataGetter("p", "", pageUpdate) ; },
+						"Update":		function() { dataGetter("p", "", pageUpdate) ; },
+
+						"Ok":				function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("errorWhileSavingBox").classList.add("hidden") ; },
 						}
 
 
@@ -949,7 +992,7 @@ function pageUpdate(rawData){
 	}
 	else if (parsedData.state == "recording") { // recording
 		videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
-		setCookie("sr", 0) ; // new data is being recorded that has not been saved yet
+		setCookie("sr", 1) ; // new data is being recorded that has not been saved yet
 
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
@@ -1050,7 +1093,7 @@ function pageUpdate(rawData){
 
 				document.getElementById("overlayButtons").innerHTML = '<a id="overlayStopSaveButton" onclick="justRunSomething(this)">Cancel Save</a>'
 
-				setCookie("sr", 1) ; // saved the video (don't need to warn next time I record)
+				setCookie("sr", 0) ; // saved the video (don't need to warn next time I record)
 				break ;
 		}
 		lastKnownVideoState = parsedData.videoState ; // set the last known video state
@@ -1065,7 +1108,7 @@ function pageUpdate(rawData){
 			document.getElementById("playButton").classList.add("disabled") ;
 			stateSelecter(document.getElementById("playButton"), 0) ;
 			lastKnownVideoState = "filesave" ;
-			setCookie("sr", 1) ; // saved the video (don't need to warn next time I record)
+			setCookie("sr", 0) ; // saved the video (don't need to warn next time I record)
 		}
 
 		if ( ("playback" in parsedData) && (parsedData.playback == true) ) {
