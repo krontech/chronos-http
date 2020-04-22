@@ -1389,6 +1389,13 @@ function pageUpdate(rawData){
 		lastKnownCurrentFrame = parsedData.playbackPosition ;
 	}
 
+	if ("sensorColorPattern" in parsedData) { // check if camera is color or black & white
+		if (parsedData.sensorColorPattern != "GRBG") {
+			document.getElementById("whiteBalanceBox").classList.add("hidden") ; // hide the white balance box
+		}
+
+	}
+
 }
 
 

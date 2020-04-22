@@ -12,12 +12,22 @@
 
 <style>
 
+
+.infoText {
+	display: inline-block;
+	margin-right: 100px;
+}
+
 /******** Specific to this page ********/
 
 
 /*@media screen and (max-width: 3000px) {
 	.leftContainer, .rightContainer { box-shadow: 0 0 3px 3px inset white; }
 }*/
+
+@media screen and (min-width: 1400px) {
+	#container1 { margin-bottom: 6px; }
+}
 
 @media screen and (min-width: 1600px) {
 	.leftContainer, .rightContainer { max-width: 785px; }
@@ -29,6 +39,8 @@
 
 @media screen and (max-width: 1400px) {
 	.leftContainer, .rightContainer { max-width: 785px; }
+
+	#container2 { margin-bottom: 6px; }
 }
 @media screen and (max-width: 800px) {
 	.leftContainer, .rightContainer { max-width: 100%; }
@@ -51,6 +63,7 @@
 	#storage { display: none; } /* hide the storage button */
 
 	.subTitle { display: none; }
+
 }
 
 @media screen and (max-width: 743px) {
@@ -59,6 +72,9 @@
 
 @media screen and (max-width: 542px) { /* change formatting when screen size is narrower than this */
 	#playSave { display: none; } /* hide the PlaySave button */
+
+
+	.infoText { margin-right: 0px; }
 }
 
 @media screen and (max-width: 455px) { /* change formatting when screen size is narrower than this */
@@ -139,8 +155,9 @@
 	</div>
 
 
-	<div class="leftContainer">
-
+<!--	<div class="leftContainer">
+-->
+	<div id="container1" class="rightContainer">
 
 		<div id="changeModeBox" class="horizLayout">
 			<b> Change Camera Mode </b>
@@ -206,10 +223,11 @@
 			</div>
 			<div id="prerecordBox">
 				Prerecord Frames:
-				<input id="preRecFrameNum" type="number" min="0" max="9000" step="1" oninput="justRunSomething(this)">
+				<input id="preRecFrameNum" type="number" min="1" max="9000" step="1" oninput="changeNumberOften(this)">
 				<br>
 				Prerecord Time:
-				<input id="preRecTimeNum" type="number" min="0.000000" max="5.0000000">
+<!--				<input id="preRecTimeNum" type="number" min="0.0000" max="900.0000" step="0.001" oninput="changeNumberOften(this)"> ms
+-->				<span id="preRecTimeNum">?? connecting</span>
 			</div>
 			<br>
 		</div>
@@ -235,7 +253,7 @@
 
 	</div>
 
-	<div class="rightContainer">
+	<div id="container2" class="rightContainer">
 
 
 		<div id="colourMatrixBox" class="horizLayout">
@@ -254,9 +272,10 @@
 			<div id="colourButtons"> -->
 <!--				<a id="colourDefaultBtn" class="button" onclick="justRunSomething(this)">Default</a> -->
 				<br>
-				<a id="colourPreset1Btn" class="button" onclick="justRunSomething(this)">CIECAM16/D55</a>
+				<a id="colourPreset1Btn" class="button" onclick="justRunSomething(this)">CIECAM16</a>
+				<span class="instruction"> Default</span>
 				<br>
-				<a id="colourPreset2Btn" class="button" onclick="justRunSomething(this)">CIECAM02/D55</a>
+				<a id="colourPreset2Btn" class="button" onclick="justRunSomething(this)">CIECAM02</a>
 				<br>
 				<a id="colourIdentityBtn" class="button" onclick="justRunSomething(this)">Identity</a>
 				<a id="colourApplyBtn" class="button" onclick="justRunSomething(this)">Apply</a>
@@ -264,7 +283,7 @@
 		</div>
 
 
-		<div class="horizLayout">
+		<div id="whiteBalanceBox" class="horizLayout">
 			<b> Custom White Balance </b>
 			<br>
 			<input id="whiteBalNuma" type="number" min="-5.0" max="5.0" step="0.0001"><input id="whiteBalNumb" type="number" min="-5.0" max="5.0" step="0.0001"><input id="whiteBalNumc" type="number" min="-5.0" max="5.0" step="0.0001">
@@ -311,10 +330,12 @@
 				<a onclick='theme("monochrome")'> Monochrome </a>
 				<a onclick='theme("darker")'> Dark </a>
 				<a onclick='theme("newDefault")'> Light </a>
-				<a onclick='theme("monoDark")'> Monochrome Dark </a>
+				<a onclick='theme("monoDark")'> Mono Dark </a>
 				<a onclick='theme("lighter")'> Light 2 </a>
 			</div></div>
 		</div>
+
+
 
 
 
@@ -330,6 +351,23 @@
 		</div>
 
 		<a id="resetAll" onclick="justRunSomething(this)">Reset All Settings<br>to Default</a>
+	</div>
+
+	<div class="horizLayout">
+		<b> About Camera </b>
+		<br>
+		<span id="cameraModel" class="infoText">Camera Model: </span>
+		<span id="serialNumber" class="infoText">Serial Number: </span>
+		<span id="cameraType" class="infoText">BW / Color </span>
+		<span id="releaseVersion" class="infoText">Release Version: </span>
+<!--		<span id="releaseCodename" class="infoText">Release Codename: </span>
+		<span id="build">Build: </span>
+-->
+		<span id="FPGARev" class="infoText">FPGA Revision: </span>
+		<span id="PMICVersion" class="infoText">PMIC Firmware Revision: </span>
+		<span id="sensorTemp" class="infoText">Sensor Temperature: </span>
+		<span id="systemTemp" class="infoText">System Temperature: </span>
+		<span id="shutdownReason" class="infoText">Last Shutdown Reason: </span>
 	</div>
 
 
@@ -367,7 +405,7 @@ function resetAll() {
 
 
 function tester1func() {
-
+	dataRequester("set", '{"recPreBurst": ' + document.getElementById("preRecFrameNum").value + '}', pageUpdate) ;
 
 }
 
@@ -378,8 +416,49 @@ function tester2func() {
 
 function tester3func() {
 
-	document.getElementById("debugger").innerHTML = "" ;
+}
 
+
+function boundInput(element) {
+	if (parseInt(element.value) > parseInt(element.max))
+		element.value = element.max ;
+	else if (parseInt(element.value) < parseInt(element.min))
+		element.value = element.min ;
+}
+
+function changeNumberOften(element) {
+	if (typeof changeNumberOften.requestCount == 'undefined') // kind of like a static variable
+		changeNumberOften.requestCount = 0 ;
+
+	boundInput(element) ; // make sure the input number is not too high or too low
+
+//	if (element.id == "preRecTimeNum") {
+//		var preRecFrames = document.getElementById("preRecFrameNum") ;
+//		element.step = (lastKnownFramePeriod / 1000000).toFixed(3) ;
+//		if ( element.valueAsNumber > (preRecFrames.valueAsNumber * lastKnownFramePeriod / 1000000).toFixed(3) ) {
+			// number was increased
+//			preRecFrames.value = (preRecFrames.valueAsNumber + 1) ; // increment the frame count, then calculate based on that
+//		}
+//		else {
+			// number was decreased
+//			preRecFrames.value = (preRecFrames.valueAsNumber - 1) ; // decrement the frame count, then calculate based on that
+//		}
+//		element.value = (preRecFrames.valueAsNumber * lastKnownFramePeriod / 1000000).toFixed(3) ;
+//		preRecFrames.value = Math.round(element.valueAsNumber * lastKnownFramePeriod / 1000000) ;
+//		boundInput(preRecFrames) ;
+//	}
+
+	if (element.id == "preRecFrameNum") {
+
+		var callWhenFinished = function(inputParams) { // set the callback / finished function
+			pageUpdate(inputParams) ; // actually update the page
+			changeNumberOften.requestCount -= 1 ; // allow another request
+		}
+		if (changeNumberOften.requestCount < 1) {
+			changeNumberOften.requestCount += 1 ;
+			dataRequester("set", '{"recPreBurst": ' + element.value + '}', callWhenFinished) ; // set the current fram (playback position)
+		}
+	}
 }
 
 
@@ -501,7 +580,7 @@ function theme(selection) { // set a new stylesheet to use
 				break ;
 
 			case "monoDark":
-				document.getElementById("themeSelector").firstChild.textContent = "Monochrome Dark" ;
+				document.getElementById("themeSelector").firstChild.textContent = "Mono Dark" ;
 				setCookie("thm", "md") ; // save the theme to a cookie for persistance
 				break ;
 
@@ -606,7 +685,7 @@ var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
 
 var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
 
-						"debugToggle":			[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
+						"debugToggle":			[ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
 						"displayToggleButton":	[ function(){ dataRequester("set", '{"backlightEnabled": false}', pageUpdate) ; }, function(){ dataRequester("set", '{"backlightEnabled": true}', pageUpdate) ; } ],
 						"autoSaveButton":		[ function(){ setCookie("as", 0) ; }, function() { setCookie("as", 1) ; } ],
 
@@ -692,7 +771,7 @@ function batteryPercent(level, charging) { // set the percentage (level) of the 
 var lastKnownBatteryLevel = 0 ;
 var lastKnownExternalPower = false ;
 
-
+var lastKnownFramePeriod = 0 ;
 
 function pageUpdate(rawData){
 	var parsedData = JSON.parse(rawData) ;
@@ -820,6 +899,60 @@ function pageUpdate(rawData){
 		document.getElementById("whiteBalNumc").value = parsedData.wbColor[2].toFixed(4) ;
 	}
 
+	if ("framePeriod" in parsedData)
+		lastKnownFramePeriod = parsedData.framePeriod ;
+
+	if ("recPreBurst" in parsedData) {
+		document.getElementById("preRecFrameNum").value = parsedData.recPreBurst ; // set the prerecord frames
+//		var timeBox = document.getElementById("preRecTimeNum") ;
+//		timeBox.value = (parsedData.recPreBurst * lastKnownFramePeriod / 1000000).toFixed(3) ;
+//		timeBox.step = 0.001 ;
+		document.getElementById("preRecTimeNum").innerHTML = (parsedData.recPreBurst * lastKnownFramePeriod / 1000000).toFixed(3) + " ms"
+	}
+
+	if ("recMaxFrames" in parsedData)
+		document.getElementById("preRecFrameNum").max = parsedData.recMaxFrames ; // set the recording frame limit
+
+
+
+	if ("cameraModel" in parsedData)
+		document.getElementById("cameraModel").innerHTML = "Camera Model: " + parsedData.cameraModel ;
+
+	if ("cameraSerial" in parsedData)
+		document.getElementById("serialNumber").innerHTML = "Serial Number: " + parsedData.cameraSerial ;
+
+	if ("cameraApiVersion" in parsedData)
+		document.getElementById("releaseVersion").innerHTML = "Release Version: " + parsedData.cameraApiVersion ;
+
+	if ("cameraFpgaVersion" in parsedData)
+		document.getElementById("FPGARev").innerHTML = "FPGA Revision: " + parsedData.cameraFpgaVersion ;
+
+	if ("pmicFirmwareVersion" in parsedData)
+		document.getElementById("PMICVersion").innerHTML = "PMIC Firmware Version: " + parsedData.pmicFirmwareVersion ;
+
+	if ("sensorTemperature" in parsedData)
+		document.getElementById("sensorTemp").innerHTML = "Sensor Temperature: " + parsedData.sensorTemperature + " &deg;C" ;
+
+	if ("systemTemperature" in parsedData)
+		document.getElementById("systemTemp").innerHTML = "System Temperature: " + parsedData.systemTemperature + " &deg;C" ;
+
+	if ("lastShutdownReason" in parsedData)
+		document.getElementById("shutdownReason").innerHTML = "Last Shutdown Reason: " + parsedData.lastShutdownReason ;
+
+	if ("sensorColorPattern" in parsedData) { // check if camera is color or black & white
+		if (parsedData.sensorColorPattern == "GRBG")
+			document.getElementById("cameraType").innerHTML = "Color" ;
+		else {
+			document.getElementById("cameraType").innerHTML = "Monochrome" ;
+
+			document.getElementById("colourMatrixBox").classList.add("hidden") ; // hide the color matrix box
+			document.getElementById("whiteBalanceBox").classList.add("hidden") ; // hide the white balance box
+		}
+
+	}
+
+//		document.getElementById("releaseCodename") // not sure what to do with this...
+//		document.getElementById("build") // not sure what to do with this...
 }
 
 

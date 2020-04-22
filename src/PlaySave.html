@@ -892,7 +892,7 @@ var nameChange = 	{	"playButton": 	["<div class='playIcon'></div>&ensp;Play", "<
 var buttonFunctions = {	"playButton":	[ function(){ dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; }, function(){ dataRequester("startPlayback", '{"framerate": ' + document.getElementById("playBackRateNum").value + ', "position": ' + document.getElementById("currentFrameNum").value + '}', pageUpdate) ;} ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"textOverlayButton":	[ function(){ dataSender("set", '{"overlayEnable": false}') ; }, function(){ dataSender("set", '{"overlayEnable": true}') ; } ],
-						"debugToggle":	[ function(){ DebugOnOff = false ; }, function() { DebugOnOff = true ; } ],
+						"debugToggle":	[ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
 					  }
 
 
