@@ -178,7 +178,7 @@
 		<div id="changeModeBox" class="horizLayout">
 			<b> Change Camera Mode </b>
 			<br>
-			<span class="instruction"> Select when to change the camera into live/record mode or play/save mode </span>
+			<span class="instruction"> Select when to change the camera into live/record mode or play/save mode (Webpage Only) </span>
 			<br>
 			<div id="changeModeDropdown" class="selectContainerHolder" onclick=""> Manually <div class="selectContainer">
 				<a onclick="dropDownSelect(this)">Manually</a>
@@ -216,7 +216,7 @@
 		<div class="horizLayout">
 			<b> Webpage Theme </b>
 			<br>
-			<span class="instruction">Select color scheme</span>
+			<span class="instruction">Select webpage colors</span>
 			<br>
 			<div id="themeSelector" class="selectContainerHolder" onclick="">Webpage Theme<div class="selectContainer">
 				<a onclick='theme("default")'> Default </a>
@@ -442,6 +442,52 @@ var DebugOnOff = false ;
 
 function resetAll() {
 	// reset all the settings
+
+
+	// reset all cookies
+
+	var expiryDate = new Date() ;
+
+	expiryDate.setTime(expiryDate.getTime() - 10) ; // already expired
+
+	document.cookie = "as=''; expires=" + expiryDate.toUTCString() + "; path=/" ; // clear auto-save/save-device cookie
+	document.cookie = "ff=''; expires=" + expiryDate.toUTCString() + "; path=/" ; // clear file format cookie
+	document.cookie = "fpl=''; expires=" + expiryDate.toUTCString() + "; path=/" ; // clear focus peaking level cookie
+	document.cookie = "mc=''; expires=" + expiryDate.toUTCString() + "; path=/" ; // clear mode change cookie
+	document.cookie = "thm=''; expires=" + expiryDate.toUTCString() + "; path=/" ; // clear theme cookie
+	document.cookie = "wo=''; expires=" + expiryDate.toUTCString() + "; path=/" ; // clear warn-overwrite cookie
+
+	theme("default") ;
+
+	// set state to idle
+	dataRequester("startLivedisplay", "{}", pageUpdate) ;
+
+	// clear recorded buffer
+	dataGetter("flushRecording", '', pageUpdate) ;
+
+	var bigRequest = '{' ;
+	bigRequest += '"recMode": "normal"' ; // record mode to normal
+	bigRequest += ', "resolution": {"hRes": 1280, "vRes": 1024, "minFrameTime": 0.00093545}' ; // resolution to default
+	bigRequest += ', "recTrigDelay": 0' ; // trigger delay to default
+	bigRequest += ', "focusPeakingColor": "cyan"' ; // set focus peaking color to cyan
+	bigRequest += ', "focusPeakingLevel": 0' ; // set focus peaking level to default (off)
+	bigRequest += ', "zebraLevel": 0' ; // turn off zebra stripes
+	bigRequest += ', "powerOffWhenMainsLost": false, "powerOnWhenMainsConnected": false' ; // disable auto-power mode
+	bigRequest += ', "currentGain": 1' ; // reset analog gain
+	bigRequest += ', "wbTemperature": 5600' ; // reset white balance to default color temperature
+	bigRequest += '}' ;
+
+	dataRequester("set", bigRequest, pageUpdate) ; // apply all these settings
+
+	extender = 0 ; // clear the trigger delay extender as well
+
+	// set color matrix to default
+	detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ;
+
+	// to-do later:
+		// reset all IO settings to default / cleared values
+
+	// re-load page?
 }
 
 
@@ -748,7 +794,7 @@ var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{
 
 						"whiteBalApplyBtn":		function() { detourRequester("set", '{"wbColor": [' + document.getElementById("whiteBalNuma").value + ', ' + document.getElementById("whiteBalNumb").value + ', ' + document.getElementById("whiteBalNumc").value + ']}', pageUpdate) ; },
 
-						"resetAll":				function() {  },
+						"resetAll":				function() { resetAll() ; },
 
 						"morePreRecTime":		function() { someOtherThing() },
 						"defaultTrigDelay":		function() { extender = 0 ; dataRequester("set", '{"recTrigDelay": 0}', pageUpdate) ; },
@@ -1008,17 +1054,12 @@ function pageUpdate(rawData){
 
 	if ("recPreBurst" in parsedData) {
 		document.getElementById("preRecFrameNum").value = parsedData.recPreBurst ; // set the prerecord frames
-//		var timeBox = document.getElementById("preRecTimeNum") ;
-//		timeBox.value = (parsedData.recPreBurst * lastKnownFramePeriod / 1000000).toFixed(3) ;
-//		timeBox.step = 0.001 ;
 		document.getElementById("preRecTimeNum").innerHTML = (parsedData.recPreBurst * lastKnownFramePeriod / 1000000).toFixed(3) + " ms"
 	}
 
 	if ("recMaxFrames" in parsedData) {
 		document.getElementById("preRecFrameNum").max = parsedData.recMaxFrames ; // set the recording frame limit
-//		document.getElementById("postTriggerFrameNum").max = parsedData.recMaxFrames ; // set the post-trigger limit
 		document.getElementById("preTriggerFrameNum").max = parsedData.recMaxFrames ; // set the pre-trigger limit
-//		document.getElementById("preRecordFrameNum").max = parsedData.recMaxFrames ; // set the pre-record limit
 		lastKnownMaxRecFrames = parsedData.recMaxFrames ; // save the last-known maximum record length
 	}
 
@@ -1059,9 +1100,6 @@ function pageUpdate(rawData){
 
 	}
 
-//		document.getElementById("releaseCodename") // not sure what to do with this...
-//		document.getElementById("build") // not sure what to do with this...
-
 
 	if ("recTrigDelay" in parsedData) {
 		if (document.getElementById("postTriggerFrameNum") != document.activeElement)
@@ -1082,18 +1120,14 @@ function pageUpdate(rawData){
 
 		if (document.getElementById("postTriggerTime") != document.activeElement)
 			document.getElementById("postTriggerTime").value = (parsedData.recTrigDelay * lastKnownFramePeriod / 1000000000).toFixed(4) ;
-//			document.getElementById("postTriggerTime").innerHTML = (parsedData.recTrigDelay * lastKnownFramePeriod / 1000000000).toFixed(4) + " seconds" ;
 		if (document.getElementById("preTriggerTime") != document.activeElement)
 			document.getElementById("preTriggerTime").value = (document.getElementById("preTriggerFrameNum").valueAsNumber * lastKnownFramePeriod / 1000000000).toFixed(4) ;
-//			document.getElementById("preTriggerTime").innerHTML = (document.getElementById("preTriggerFrameNum").valueAsNumber * lastKnownFramePeriod / 1000000000).toFixed(4) + " seconds" ;
 		if (document.getElementById("preRecordTime") != document.activeElement)
 			document.getElementById("preRecordTime").value = (document.getElementById("preRecordFrameNum").valueAsNumber * lastKnownFramePeriod / 1000000000).toFixed(4) ;
-//			document.getElementById("preRecordTime").innerHTML = (document.getElementById("preRecordFrameNum").valueAsNumber * lastKnownFramePeriod / 1000000000).toFixed(4) + " seconds" ;
 
 		if (document.getElementById("postTriggerSlider") != document.activeElement) { // update slider value, max, and red background
 			document.getElementById("postTriggerSlider").value = lastKnownMaxRecFrames + extender - parsedData.recTrigDelay ;
 			document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ;
-//			document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * 372 ) + "px" ;
 			document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ;
 		}
 	}
@@ -1296,7 +1330,7 @@ switch (getCookie("mc")) {
 	thm	"theme"					2-letter code to indicate each theme
 	wo	"warn overwrite"		"a" always warn, "n" never warn, "u" warn on unsaved recordings
 	as	"auto save"				<= 0 to not auto save, > 0 to select device to save on
-	ff	"file format"			0 
+	ff	"file format"			0: H264, 1: DNG, 2: Tiff12, 3: Tiff16(Raw)
 
 */
 
