@@ -280,7 +280,7 @@
 				<a onclick="dropDownSelect(this)"> No Storage Connected </a>
 				<a onclick="dropDownSelect(this)">Refresh</a>
 			</div></div>
-			<br>
+			<div class="smallPercentBar" id="storageBar"><div class="smallPercentBarFill"></div></div>
 			Size: <span id="storageSize"></span>
 			<br>
 			Used: <span id="storageUsed"></span>
@@ -770,6 +770,17 @@ function useStorageLocation(key) {
 
 		document.getElementById("storageLocation").firstChild.textContent = temp ; // write the selected storage location to the 'storage location' drop-down
 
+		var saveStorageVal = parseInt(getCookie("as")) ;
+
+		var i = 0 ;
+		for (i = 0 ; i < Object.keys(StorageNames).length ; i++) {
+			if (Object.keys(StorageNames)[i] == key) {
+				if ( (saveStorageVal < 1) || isNaN(saveStorageVal) )
+					setCookie("as", parseInt((i + 1) * -1)) ; // save this as the auto-select device
+				else
+					setCookie("as", parseInt(i + 1)) ; // save this as the auto-save device
+			}
+		}
 
 		var requestSender = new XMLHttpRequest() ; // set up a new request
 		requestSender.open("get", "/cgi-bin/storageInfo?" + key) ; // call my 'storageInfo' script
@@ -784,8 +795,8 @@ function useStorageLocation(key) {
 					document.getElementById("storageAvailable").innerHTML = (jsonBack.available / 1000000).toFixed(1) + " GB" ;
 				if ("used" in jsonBack) // display the used space
 					document.getElementById("storageUsed").innerHTML = (jsonBack.used / 1000000).toFixed(1) + " GB" ;
-//				if ("usedPercent" in jsonBack)
-//					document.getElementById("").style.width = jsonBack.usedPercent + "%" ;
+				if ("usedPercent" in jsonBack) // show the usage percent as a bar-graph
+					document.getElementById("storageBar").firstChild.style.width = jsonBack.usedPercent + "%" ;
 			}
 		}
 
@@ -826,10 +837,10 @@ function theme(selection) { // set a new stylesheet to use
 
 var dropDownFunctions = { "Refresh":		function(){ dataGetter("get", 'externalStorage', pageUpdate); },
 
-						"H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; },
-						"CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; },
-						"TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; },
-						"TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; },
+						"H.264 (mp4)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)"; setCookie("ff", 0) ; },
+						"CinemaDNG (raw)": function(){ document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)"; setCookie("ff", 1) ; },
+						"TIFF (images)":	function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)"; setCookie("ff", 2) ; },
+						"TIFF RAW (images)": function(){ document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)"; setCookie("ff", 3) ; },
 
 						"Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
 						"Play Mode":		function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
@@ -978,6 +989,7 @@ var lastKnownFrameEnd = 1 ;
 var lastKnownCurrentFrame = 0 ;
 var lastKnownStartFrame = 0 ;
 var lastKnownFrameLength = 1 ;
+var lastKnownState = "idle" ;
 
 
 function pageUpdate(rawData){
@@ -989,15 +1001,21 @@ function pageUpdate(rawData){
 	if (parsedData.state == "idle") { // idle (ready to record)
 		videoWindow.style.border = VideoOutlineStyle ; // set the idle outline colour
 
+		if ( (getCookie("as") > 0) && (getCookie("sr") == 1) && (lastKnownState == "recording") ) // auto-save enabled and video has not already been saved, and just finished recording
+			saveWholeVideo() ; // Auto-save the video
+
+		lastKnownState = parsedData.state ; // store previous camera state
 	}
 	else if (parsedData.state == "recording") { // recording
 		videoWindow.style.border = "3px solid #a00" ; // set the recording outline colour
 		setCookie("sr", 1) ; // new data is being recorded that has not been saved yet
 
+		lastKnownState = parsedData.state ; // store previous camera state
 	}
 	else if (parsedData.state == "blackcal") { // doing a calibration
 		videoWindow.style.border = "3px dashed white"; // set the blackCal outline color
 
+		lastKnownState = parsedData.state ; // store previous camera state
 	}
 
 
@@ -1036,6 +1054,19 @@ function pageUpdate(rawData){
 					list.innerHTML += temp ; // add the line to the list
 				}
 			}
+
+			var saveStorageVal = parseInt(getCookie("as")) ; // check if a storage device has already been selected as a default
+
+			if ( (saveStorageVal != 0) && !isNaN(saveStorageVal) ) { // if a storage device has been selected
+				if (saveStorageVal < 0)
+					saveStorageVal *= -1 ; // get absolute value
+
+				key = Object.keys(StorageNames)[saveStorageVal - 1] ; // get the key value (one less than the saved number)
+
+				if (key in StorageInfo) // if the storage device has been added
+					useStorageLocation(key) ; // use this storage device
+			}
+
 		}
 		else { // no devices connected
 			document.getElementById("storageLocation").firstChild.textContent = "Location" ; // set the drop-down to say 'Location'
@@ -1351,6 +1382,22 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 	PollCounter++ ;
 }
 
+switch (getCookie("ff")) { // get the save file format
+	case "": // no cookie set yet; ignore - if a file is saved, it will just default to H264 (mp4)
+		break ;
+	case "0": // H264 (mp4)
+		document.getElementById("saveFormat").firstChild.textContent = "H.264 (mp4)";
+		break ;
+	case "1": // DNG (raw)
+		document.getElementById("saveFormat").firstChild.textContent = "CinemaDNG (raw)";
+		break ;
+	case "2": // TIFF 12-bit
+		document.getElementById("saveFormat").firstChild.textContent = "TIFF (images)";
+		break ;
+	case "3": // TIFF 16-bit
+		document.getElementById("saveFormat").firstChild.textContent = "TIFF RAW (images)";
+		break ;
+}
 
 var intervalID = setInterval(pollOnlyUpdates, 500) ; // poll the camera for things that are not reported
 

@@ -193,6 +193,7 @@
 			<span class="instruction"> Save the entire recording automatically after finishing a recording </span>
 			<br>
 			<a id="autoSaveButton" class="button" onclick="toggler(this)">No</a>
+			<span class="instruction"> (Webpage Only)</span>
 		</div>
 
 
@@ -789,7 +790,7 @@ var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuLis
 
 						"debugToggle":			[ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
 						"displayToggleButton":	[ function(){ dataRequester("set", '{"backlightEnabled": false}', pageUpdate) ; }, function(){ dataRequester("set", '{"backlightEnabled": true}', pageUpdate) ; } ],
-						"autoSaveButton":		[ function(){ setCookie("as", 0) ; }, function() { setCookie("as", 1) ; } ],
+						"autoSaveButton":		[ function(){ if (getCookie("as") > 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 0) ; } }, function() { if (getCookie("as") < 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 1) ; } } ],
 
 					  }
 
@@ -1281,9 +1282,7 @@ switch (getCookie("mc")) {
 }
 
 
-//if (getCookie("as") == 1) {
-	stateSelecter(document.getElementById("autoSaveButton"), getCookie("as")) ;
-//}
+	stateSelecter(document.getElementById("autoSaveButton"), (getCookie("as") > 0)) ;
 
 
 /*
@@ -1296,8 +1295,8 @@ switch (getCookie("mc")) {
 	sr	"save recording"		0 when recording was saved, 1 when not saved
 	thm	"theme"					2-letter code to indicate each theme
 	wo	"warn overwrite"		"a" always warn, "n" never warn, "u" warn on unsaved recordings
-	as	"auto save"				0 to not auto save, 1 to auto save
-
+	as	"auto save"				<= 0 to not auto save, > 0 to select device to save on
+	ff	"file format"			0 
 
 */
 
