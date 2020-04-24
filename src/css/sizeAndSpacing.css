@@ -490,6 +490,24 @@ input[type="range"] {
 
 
 
+.smallPercentBar {
+	display: block;
+	width: 95%;
+	height: 10px;
+	border-radius: 8px;
+	margin-bottom: 6px;
+}
+.smallPercentBarFill {
+	position: relative;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 0;
+	height: 10px;
+	border-radius: 8px;
+}
+
+
 /******** Icons ********/
 
 

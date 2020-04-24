@@ -140,6 +140,8 @@ a.innerDropDown.active:hover {
 }
 
 
+.smallPercentBar { background: black; }
+.smallPercentBarFill { background: #3D87CB; /* pantone 2143 */ }
 
 
 /****** Page specifics *******/

@@ -127,6 +127,8 @@ a.innerDropDown.active:hover {
 }
 
 
+.smallPercentBar { background: black; }
+.smallPercentBarFill { background: #ddd; }
 
 
 

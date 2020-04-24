@@ -161,6 +161,8 @@ a.innerDropDown.active:hover {
 	background-color: var(--ActiveBG2);
 }
 
+.smallPercentBar { background: var(--DisabledBG); }
+.smallPercentBarFill { background: var(--ActiveHoverBG); }
 
 
 /****** Page specifics *******/
