@@ -351,21 +351,35 @@
 		<div id="overwrittenBox" class="horizLayout hidden">
 			You have not saved any of the previous recording. Do you want to erase it and start a new recording?
 			<br>
-			<a id="noOverwriteBtn" style="float: right;" class="button" onclick="dropDownSelect(this)">No (don't record)</a>
-			<a id="yesOverwriteBtn" style="float: right;" class="button" onclick="dropDownSelect(this)">Yes (overwrite)</a>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">No (don't record)</a>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Yes (overwrite)</a>
 		</div>
 		<div id="somethingWeirdBox" class="horizLayout hidden">
 			Something weird is happening
 		</div>
 		<div id="resNotAppliedBox" class="horizLayout hidden">
 			The resolution & framerate settings were changed, but they were not applied. Do you want to use the new settings?
-			<a id="noResNotApplied" style="float: right;" class="button" onclick="dropDownSelect(this)">Yes (apply the changed settings)</a>
-			<a id="yesResNotApplied" style="float: right;" class="button" onclick="dropDownSelect(this)">No (revert to previous settings)</a>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Yes (apply the changed settings)</a>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">No (revert to previous settings)</a>
 		</div>
 		<div id="errorWhileSavingBox" class="horizLayout hidden">
 			Cannont save the file
 			<br>
-			<a id="errorWhileSaving" style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
+		</div>
+		<div id="noRecordSegmentModeBox" class="horizLayout hidden">
+			The webpage cannot start a recording in "Segmented" mode.
+			<br>
+			You can change recording mode on the <a href="\settings.html">settings<a> page.
+			<br>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
+		</div>
+		<div id="cantApplyResBox" class="horizLayout hidden">
+			Cannot apply resolution / framerate settings.
+			<br>
+			One or more settings are outside the acceptable bounds.
+			<br>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
 		</div>
 	</div>
 </div>
@@ -378,20 +392,18 @@
 var DebugOnOff = false ;
 
 function tester1func() {
-	document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("resNotAppliedBox").classList.remove("hidden") ;
 
 }
 
 
 function tester2func() {
-	document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("errorWhileSavingBox").classList.remove("hidden") ;
+
 }
 
 
 function tester3func() {
-
-	if ("" == 0)
-		document.getElementById("debugger").innerHTML += "<br> Zero is equal to \"\""
+		// clear recorded buffer
+	dataGetter("flushRecording", '', pageUpdate) ;
 }
 
 
@@ -751,7 +763,8 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						"Yes (apply the changed settings)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("resNotAppliedBox").classList.add("hidden") ; applyResolution() ; },
 						"No (revert to previous settings)": function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("resNotAppliedBox").classList.add("hidden") ; dataGetter("get", "resolution&frameRate", pageUpdate) ; },
 
-						"Ok":				function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("errorWhileSavingBox").classList.add("hidden") ; },
+						"Ok":				function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("errorWhileSavingBox").classList.add("hidden") ; document.getElementById("noRecordSegmentModeBox").classList.add("hidden") ; document.getElementById("cantApplyResBox").classList.add("hidden") ; },
+
 						}
 
 
@@ -787,6 +800,10 @@ function applyResolution() {
 			document.getElementById("debugger").innerHTML += "Sending these resolution settings: " + parameters ;
 
 		resFRSettingsOnCam = [hRes.value, vRes.value, hOff.value, vOff.value, document.getElementById("fps").value] ;
+	}
+	else if (document.getElementById("applyButton").classList.contains("disabled")) { // button disabled
+		document.getElementById("popUpBackground").classList.remove("hidden") ; // un-hide the background
+		document.getElementById("cantApplyResBox").classList.remove("hidden") ; // un-hide the message pop-up
 	}
 	else if (DebugOnOff)
 		document.getElementById("debugger").innerHTML += "Could not send resolution settings -- one or more resolution settings outside of range" ;
@@ -1024,6 +1041,11 @@ function tryToStartRecording () {
 		document.getElementById("resNotAppliedBox").classList.remove("hidden") ; // unhide the warning
 		stateSelecter(document.getElementById("record"), 0) ; // set the record button back to inactive
 	}
+	else if (lastKnownRecordMode == "segmented") { // can't start recording from the webpage in segmented mode
+		document.getElementById("popUpBackground").classList.remove("hidden") ; // unhide the background
+		document.getElementById("noRecordSegmentModeBox").classList.remove("hidden") ; // unhide the warning
+		stateSelecter(document.getElementById("record"), 0) ; // set the record button back to inactive
+	}
 	else if ( (getCookie("sr") != 1) && (getCookie("wo") != "a") || (getCookie("wo") == "n") ) {
 		// if the video has been saved, or the user does not want a warning ever
 		dataRequester("startRecording", "{}", pageUpdate) ; // start recording
@@ -1034,12 +1056,17 @@ function tryToStartRecording () {
 		stateSelecter(document.getElementById("record"), 0) ; // set the record button back to inactive
 	}
 }
+
+var disabledFunctions = { "record":		function(){ tryToStartRecording() ; },
+
+						}
+
 					//	 key	 	 inactive		active
 var nameChange = 	{	"record": 	["<div class='recordCircle'></div>Record", "<div class='recordSquare'></div>Recording"]
 					}
 
 
-var buttonFunctions = {	"record":		[ function(){ dataRequester("stopRecording", "", pageUpdate);}, function(){ tryToStartRecording() } ],
+var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "");}, function(){ tryToStartRecording() } ],
 						"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],
 						"blackCal":		[ function(){}, function(){ dataGetter("startCalibration", 'blackCal=true', function(){}) ;} ],
 						"focusPeaking":	[ function(){ dataRequester("set", '{"focusPeakingLevel": 0}', pageUpdate) ;}, function(){ dataRequester("set", '{"focusPeakingLevel": ' + ((getCookie("fpl") == "") ? '0.2}' : getCookie("fpl") + '}') , pageUpdate) ; } ],
@@ -1059,7 +1086,10 @@ function toggler(element) { // toggle the class (active/inactive), change the na
 		leftRight = 0 ; // use the 'left' column for names / functions
 	}
 	else if (element.classList.contains("disabled")) { // button disabled
-		return ; // don't do anything
+		if (element.id in disabledFunctions) // if the key-value exists
+			disabledFunctions[element.id]() ; // run a function when the button is disabled
+		else
+			return ; // don't do anything
 	}
 	else {
 		element.classList.remove("inactive") ; // remove the "inactive" styling
@@ -1139,10 +1169,16 @@ function pageUpdate(rawData){
 	if (DebugOnOff)
 		document.getElementById("debugger").innerHTML += "<br><br>got info:" + rawData;
 
+	if ("recMode" in parsedData) {
+		lastKnownRecordMode = parsedData.recMode ; // save the record mode
+		if (parsedData.recMode == "segmented") // if in segmented mode (can't record from webpage in segmented mode)
+			document.getElementById("record").classList.add("disabled") ; // disable the record button
+	}
+
 	if (parsedData.state == "idle") { // idle (ready to record)
 		videoWindow.style.border = VideoOutlineStyle ; // set the idle outline colour
 		recButton = document.getElementById("record") ; // get the record button
-		if (lastKnownVideoState == "live")
+		if ( (lastKnownVideoState == "live") && (lastKnownRecordMode != "segmented") )
 			recButton.classList.remove("disabled") ; // take away the 'disabled' class
 		stateSelecter(recButton, 0) ; // turn off the record button
 		stateSelecter(document.getElementById("blackCal"), 0) ; // turn off the blackCal button
@@ -1171,9 +1207,6 @@ function pageUpdate(rawData){
 		document.getElementById("blackCalOverlay").classList.remove("hidden") ;
 		lastKnownState = parsedData.state ; // store previous camera state
 	}
-
-	if ("recMode" in parsedData)
-		lastKnownRecordMode = parsedData.recMode ;
 
 
 	if ("batteryChargePercent" in parsedData) {
@@ -1367,7 +1400,8 @@ function pageUpdate(rawData){
 			case "live":
 				document.getElementById("saveProgress").classList.add("hidden")
 				document.getElementById("videoStateOverlay").innerHTML = "Live Display" ;
-				document.getElementById("record").classList.remove("disabled") ; // take away the 'disabled' class
+				if (lastKnownRecordMode != "segmented") // if not in segmented record mode (can't start recording from API / webpage in segmented mode)
+					document.getElementById("record").classList.remove("disabled") ; // take away the 'disabled' class
 				break ;
 
 			case "play":

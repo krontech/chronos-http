@@ -367,7 +367,7 @@
 				<input id="segmentNum" type="number" min="1" max="500" step="1" oninput="justRunSomething(this)">
 				<br>
 				Ring Buffer:
-				<a id="disableRBButton" class="button" onclick="justRunSomething(this)">Enabled</a>
+				<a id="disableRBButton" class="button" onclick="toggler(this)">Enabled</a>
 			</div>
 			<div id="prerecordBox">
 				Prerecord Frames:
@@ -475,6 +475,7 @@ function resetAll() {
 	bigRequest += ', "powerOffWhenMainsLost": false, "powerOnWhenMainsConnected": false' ; // disable auto-power mode
 	bigRequest += ', "currentGain": 1' ; // reset analog gain
 	bigRequest += ', "wbTemperature": 5600' ; // reset white balance to default color temperature
+	bigRequest += ', "disableRingBuffer": 0' ; // ensure the ring buffer is enabled
 	bigRequest += '}' ;
 
 	dataRequester("set", bigRequest, pageUpdate) ; // apply all these settings
@@ -503,6 +504,8 @@ function tester2func() {
 
 
 function tester3func() {
+	// clear recorded buffer
+	dataGetter("flushRecording", '', pageUpdate) ;
 
 }
 
@@ -756,9 +759,10 @@ var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElem
 						"Manually":			function() { setCookie("mc", "m") ; document.getElementById("changeModeDropdown").firstChild.textContent = "Manually" ; },
 						"On Navigate":		function() { setCookie("mc", "n") ; document.getElementById("changeModeDropdown").firstChild.textContent = "On Navigation" ; },
 
-						"Normal":			function() { dataRequester("set", '{"recMode": "normal"}', pageUpdate) ; },
+						"Normal":			function() { dataRequester("set", '{"recMode": "normal", "disableRingBuffer": 0}', pageUpdate) ; },
 						"Segmented":		function() { dataRequester("set", '{"recMode": "segmented"}', pageUpdate) ; },
-						"Gated Burst":		function() { dataRequester("set", '{"recMode": "burst"}', pageUpdate) ; },
+						"Gated Burst":		function() { dataRequester("set", '{"recMode": "burst", "disableRingBuffer": 0}', pageUpdate) ; },
+
 						"Disabled":			function() { dataRequester("set", '{"powerOffWhenMainsLost": false, "powerOnWhenMainsConnected": false}', pageUpdate) ; },
 						"Turn on if AC inserted": function() { dataRequester("set", '{"powerOffWhenMainsLost": false, "powerOnWhenMainsConnected": true}', pageUpdate) ; },
 						"Turn off if AC removed": function() { dataRequester("set", '{"powerOffWhenMainsLost": true, "powerOnWhenMainsConnected": false}', pageUpdate) ; },
@@ -830,6 +834,8 @@ window.onclick = function(event) { // check where a click was: if it was outside
 					//	 key	 	 inactive		active
 var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
 					"autoSaveButton":		[ "No", "Yes" ],
+
+					"disableRBButton":		[ "Enabled", "Disabled" ],
 				}
 
 var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
@@ -837,6 +843,8 @@ var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuLis
 						"debugToggle":			[ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
 						"displayToggleButton":	[ function(){ dataRequester("set", '{"backlightEnabled": false}', pageUpdate) ; }, function(){ dataRequester("set", '{"backlightEnabled": true}', pageUpdate) ; } ],
 						"autoSaveButton":		[ function(){ if (getCookie("as") > 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 0) ; } }, function() { if (getCookie("as") < 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 1) ; } } ],
+
+						"disableRBButton":		[ function(){ dataSender("set", '{"disableRingBuffer": 0}') ; }, function() { dataSender("set", '{"disableRingBuffer": 1}') ; } ],
 
 					  }
 
@@ -1005,10 +1013,12 @@ function pageUpdate(rawData){
 	}
 
 	if ("recSegments" in parsedData) {
-
 		if (document.getElementById("segmentNum") != document.activeElement)
 			document.getElementById("segmentNum").value = parsedData.recSegments ;
 	}
+
+	if ("disableRingBuffer" in parsedData)
+		stateSelecter(document.getElementById("disableRBButton"), parsedData.disableRingBuffer) ; // set the ring buffer status to enabled or disabled
 
 
 	if ( ("powerOnWhenMainsConnected" in parsedData) && ("powerOffWhenMainsLost" in parsedData) ) {
