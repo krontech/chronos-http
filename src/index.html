@@ -153,14 +153,12 @@
 <!--		<a id="storage"> <div class="saveIcon"></div> Storage </a>
 -->
 		<a id="settings" href="settings.html"> <div class="settingsIcon"></div> Settings </a>
-		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Help / About </a>
+		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Documentation </a>
 
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
 		<div id="menuList" onmouseover="menuKeeper()" class="menuContainer menuClickOk">
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
-<!--			<a> About Camera </a>
--->
 			<a href="settings.html"> Camera Settings </a>
 <!--
 			<a> Triggers & IO </a>
@@ -168,7 +166,8 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-			<a onclick="dropDownSelect(this)">Debug Tools</a>
+<!--			<a onclick="dropDownSelect(this)">Debug Tools</a>
+-->
 		</div>
 
 	</div>
@@ -464,8 +463,8 @@ function getCookie(cname) {
 function setCookie (name, value) {
 	var expiryDate = new Date() ;
 
-//	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*30) ; // add 30 days (time is in ms)
-	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
+	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*90) ; // add 90 days (time is in ms)
+//	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
 
 	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
 }
@@ -793,7 +792,6 @@ function applyResolution() {
 		parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ) ;
 		parameters += '}}' ;
 
-//		dataSetter("set", parameters) ; // request these settings
 		dataRequester("set", parameters, maxShutter) ; // request these settings >> set shutter to max after I get a response
 
 		if (DebugOnOff)
@@ -1289,7 +1287,6 @@ function pageUpdate(rawData){
 
 	if ("exposureMin" in parsedData) {
 		document.getElementById("shutter").min = parsedData.exposureMin ;
-//		document.getElementById("exposureTime").min = (parsedData.exposureMin / 1000).toFixed(1) ;
 
 		exposureMin = parsedData.exposureMin ; // set the minimum (save for other calculations)
 	}

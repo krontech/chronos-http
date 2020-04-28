@@ -123,10 +123,15 @@
 	margin-top: -22px;
 	background-color: #a00;
 	border: 0px solid black;
+	border-radius: 5px;
 }
 
 #defaultTrigDelay { float: right; }
 
+
+#focusPeakingColorDropdown a:hover {
+	font-weight: bold;
+}
 
 </style>
 </head>
@@ -152,20 +157,21 @@
 <!--		<a id="storage"> <div class="saveIcon"></div> Storage </a>
 -->
 		<a id="settings" class="active"> <div class="settingsIcon"></div> Settings </a>
-		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Help / About </a>
+		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Documentation </a>
 
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
 		<div id="menuList" onmouseover="menuKeeper()" class="menuContainer menuClickOk">
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
-<!--			<a> About Camera </a>
 			<a> Camera Settings </a>
+<!--
 			<a> Triggers & IO </a>
 -->
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-			<a onclick="dropDownSelect(this)">Debug Tools</a>
+<!--			<a onclick="dropDownSelect(this)">Debug Tools</a>
+-->
 		</div>
 
 	</div>
@@ -200,8 +206,6 @@
 		<div class="horizLayout">
 			<b> Notify Before Recording </b>
 			<br>
-<!--			<span class="instruction"> Display a pop-up message before recording </span>
--->
 			<span class="instruction"> Ask before discarding unsaved video in RAM </span>
 			<br>
 			<div id="recordWarn" class="selectContainerHolder" onclick="">If Unsaved<div class="selectContainer">
@@ -467,7 +471,7 @@ function resetAll() {
 
 	var bigRequest = '{' ;
 	bigRequest += '"recMode": "normal"' ; // record mode to normal
-	bigRequest += ', "resolution": {"hRes": 1280, "vRes": 1024, "minFrameTime": 0.00093545}' ; // resolution to default
+//	bigRequest += ', "resolution": {"hRes": 1280, "vRes": 1024, "minFrameTime": 0.00093545}' ; // resolution to default
 	bigRequest += ', "recTrigDelay": 0' ; // trigger delay to default
 	bigRequest += ', "focusPeakingColor": "cyan"' ; // set focus peaking color to cyan
 	bigRequest += ', "focusPeakingLevel": 0' ; // set focus peaking level to default (off)
@@ -488,7 +492,6 @@ function resetAll() {
 	// to-do later:
 		// reset all IO settings to default / cleared values
 
-	// re-load page?
 }
 
 
@@ -524,22 +527,6 @@ function changeNumberOften(element) {
 		changeNumberOften.requestCount = 0 ;
 
 	boundInput(element) ; // make sure the input number is not too high or too low
-
-//	if (element.id == "preRecTimeNum") {
-//		var preRecFrames = document.getElementById("preRecFrameNum") ;
-//		element.step = (lastKnownFramePeriod / 1000000).toFixed(3) ;
-//		if ( element.valueAsNumber > (preRecFrames.valueAsNumber * lastKnownFramePeriod / 1000000).toFixed(3) ) {
-			// number was increased
-//			preRecFrames.value = (preRecFrames.valueAsNumber + 1) ; // increment the frame count, then calculate based on that
-//		}
-//		else {
-			// number was decreased
-//			preRecFrames.value = (preRecFrames.valueAsNumber - 1) ; // decrement the frame count, then calculate based on that
-//		}
-//		element.value = (preRecFrames.valueAsNumber * lastKnownFramePeriod / 1000000).toFixed(3) ;
-//		preRecFrames.value = Math.round(element.valueAsNumber * lastKnownFramePeriod / 1000000) ;
-//		boundInput(preRecFrames) ;
-//	}
 
 	if (element.id == "preRecFrameNum") {
 
@@ -628,8 +615,8 @@ function getCookie(cname) {
 function setCookie (name, value) {
 	var expiryDate = new Date() ;
 
-//	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*30) ; // add 30 days (time is in ms)
-	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
+	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*90) ; // add 90 days (time is in ms)
+//	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
 
 	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
 }
