@@ -1,6 +1,6 @@
-input[type=number], input[type=text] {
+/*input[type=number], input[type=text] {
 	padding-bottom: 9px;
-}
+} */
 
 .slider, .slider input[type=range] {
 	display: inline-block;
@@ -136,4 +136,23 @@ input[type=number], input[type=text] {
 	margin-bottom: 27px;
 	margin-left: 2%;
 	margin-left: 2%;
+}
+
+#backgroundThing {
+	margin-top: -25px;
+	width: 98%;
+}
+#postTriggerSlider {
+	background-color: transparent;
+	background-image: none;
+}
+#postTriggerSlider::-ms-track { /* style the track */
+	width: 98%;
+	height: 6px;
+	border-radius: 8px; 
+	background-color: #ddd;
+	background-image: none;
+	border: 3px solid black;
+	margin: 0px;
+	color: transparent; /* remove the tick marks */
 }

@@ -452,6 +452,16 @@ if (detectIE()) {
 	if ( (parseInt(detectIE()) <= 16) ) { // detect an older version (especially IE)
 		if (DebugOnOff)
 			document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
+			
+		var inputList = document.getElementsByTagName("input"); // get all 'input' types
+		for (var i = 0 ; i < inputList.length ; i++) {
+			if ( (inputList[i].type.toLowerCase() == "number") || (inputList[i].type.toLowerCase() == "text") )
+				inputList[i].style.paddingBottom = "9px" ; // add some padding to the bottom of number or text inputs
+		}
+		
+		document.getElementById("startMarker").addEventListener('change', function() { justRunSomething(document.getElementById("startMarker")); }) ;
+		document.getElementById("endMarker").addEventListener('change', function() { justRunSomething(document.getElementById("endMarker")); }) ;
+		document.getElementById("timeLine").addEventListener('change', function() { sliderDragged(document.getElementById("timeLine")); }) ;
 	}
 }
 

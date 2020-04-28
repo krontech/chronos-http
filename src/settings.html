@@ -108,23 +108,9 @@
 
 #colourMatrixBox { clear: left; }
 
-#postTriggerSlider {
-	background-color: #ddd;
-	background-image: none;
-	width: 98%;
-}
 
-#backgroundThing {
-	display: block;
-	box-sizing: border-box;
-/*	max-width: 374px; */
-	width: 99.5%;
-	height: 20px;
-	margin-top: -22px;
-	background-color: #a00;
-	border: 0px solid black;
-	border-radius: 5px;
-}
+
+
 
 #defaultTrigDelay { float: right; }
 
@@ -268,6 +254,12 @@
 			Display: <a id="displayToggleButton" class="button" onclick="toggler(this)">On</a>
 		</div>
 
+		<div id="refreshAllBox" class="horizLayout hidden">
+			<b> Refresh Parameters </b>
+			<br>
+			<a id="refreshButton" class="button" onclick="dropDownSelect(this)">Update</a>
+			<span class="instruction">This browser does not get alerted to changes from the camera. Use this button to update this page to match the camera</span>
+		</div>
 
 	</div>
 
@@ -542,37 +534,37 @@ function changeNumberOften(element) {
 	else {
 		if (element.id == "preRecordFrameNum") {
 			document.getElementById("preTriggerFrameNum").value = 0 ; // can't use preRecord and preTrigger together
-			document.getElementById("postTriggerFrameNum").value = parseInt(lastKnownMaxRecFrames + element.valueAsNumber) ; // postRecord is the sum of preRecord and max frames
+			document.getElementById("postTriggerFrameNum").value = parseInt(lastKnownMaxRecFrames + parseInt(element.value)) ; // postRecord is the sum of preRecord and max frames
 		}
 		else if (element.id == "preTriggerFrameNum") {
 			document.getElementById("preRecordFrameNum").value = 0 ; // can't use preRecord and preTrigger together
-			document.getElementById("postTriggerFrameNum").value = parseInt(lastKnownMaxRecFrames - element.valueAsNumber) ; // post trigger is the difference between max frames and preTrigger
+			document.getElementById("postTriggerFrameNum").value = parseInt(lastKnownMaxRecFrames - parseInt(element.value)) ; // post trigger is the difference between max frames and preTrigger
 		}
 		else if (element.id == "postTriggerFrameNum") {
-			if (element.valueAsNumber > lastKnownMaxRecFrames) { // pre-record delay is being used
-				document.getElementById("preRecordFrameNum").value = element.valueAsNumber - lastKnownMaxRecFrames ;
+			if (parseInt(element.value) > lastKnownMaxRecFrames) { // pre-record delay is being used
+				document.getElementById("preRecordFrameNum").value = parseInt(element.value) - lastKnownMaxRecFrames ;
 				document.getElementById("preTriggerFrameNum").value = 0 ; // can't use preRecord and preTrigger together
 			}
 			else {
 				document.getElementById("preRecordFrameNum").value = 0 ; // can't use preRecord and preTrigger together
-				document.getElementById("preTriggerFrameNum").value = lastKnownMaxRecFrames - element.valueAsNumber ;
+				document.getElementById("preTriggerFrameNum").value = lastKnownMaxRecFrames - parseInt(element.value) ;
 			}
 		}
 		else if (element.id == "preRecordTime") {
-			var frames = Math.round(element.valueAsNumber * lastKnownFramePeriod / 1000) ;
+			var frames = Math.round(parseInt(element.value) * lastKnownFramePeriod / 1000) ;
 			document.getElementById("postTriggerFrameNum").value = parseInt(frames + lastKnownMaxRecFrames) ;
 		}
 		else if (element.id == "preTriggerTime") {
-			var frames = Math.round(element.valueAsNumber * lastKnownFramePeriod / 1000) ;
+			var frames = Math.round(parseInt(element.value) * lastKnownFramePeriod / 1000) ;
 			document.getElementById("postTriggerFrameNum").value = parseInt(lastKnownMaxRecFrames - frames) ;
 		}
 		else if (element.id == "postTriggerTime") {
-			var frames = Math.round(element.valueAsNumber * lastKnownFramePeriod / 1000) ;
+			var frames = Math.round(parseInt(element.value) * lastKnownFramePeriod / 1000) ;
 			document.getElementById("postTriggerFrameNum").value = frames ;
 		}
 		else if (element.id == "postTriggerSlider") {
-			document.getElementById("postTriggerFrameNum").value = element.valueAsNumber - extender ;
-			document.getElementById("postTriggerFrameNum").value = element.max - element.valueAsNumber ;
+			document.getElementById("postTriggerFrameNum").value = parseInt(element.value) - extender ;
+			document.getElementById("postTriggerFrameNum").value = element.max - parseInt(element.value) ;
 			document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ;
 		}
 
@@ -631,8 +623,17 @@ if (detectIE()) {
 	if ( (parseInt(detectIE()) <= 16) ) { // detect an older version (especially IE)
 		if (DebugOnOff)
 			document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
+			
+		var inputList = document.getElementsByTagName("input"); // get all 'input' types
+		for (var i = 0 ; i < inputList.length ; i++) {
+			if ( (inputList[i].type.toLowerCase() == "number") || (inputList[i].type.toLowerCase() == "text") )
+				inputList[i].style.paddingBottom = "9px" ; // add some padding to the bottom of number or text inputs
+		}
+		
+		document.getElementById("postTriggerSlider").addEventListener('change', function() { changeNumberOften(document.getElementById("postTriggerSlider")) ; }) ;
 	}
 }
+
 
 
 function detectIE() {
@@ -768,8 +769,8 @@ function dropDownSelect (element) {
 function someOtherThing () {
 	extender += lastKnownMaxRecFrames ;
 	document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ;
-	document.getElementById("postTriggerSlider").value = document.getElementById("postTriggerSlider").valueAsNumber + lastKnownMaxRecFrames ;
-	document.getElementById("postTriggerFrameNum").value = document.getElementById("postTriggerSlider").max - document.getElementById("postTriggerSlider").valueAsNumber ;
+	document.getElementById("postTriggerSlider").value = parseInt(document.getElementById("postTriggerSlider").value) + lastKnownMaxRecFrames ;
+	document.getElementById("postTriggerFrameNum").value = document.getElementById("postTriggerSlider").max - parseInt(document.getElementById("postTriggerSlider").value) ;
 //	document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * 372 ) + "px" ;
 	document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ;
 }
@@ -1103,6 +1104,9 @@ function pageUpdate(rawData){
 			document.getElementById("postTriggerFrameNum").value = parsedData.recTrigDelay ; // set the number of frames
 
 		if (parsedData.recTrigDelay > lastKnownMaxRecFrames) { // pre-record delay is being used
+			while (parsedData.recTrigDelay > (lastKnownMaxRecFrames + extender))
+				extender += lastKnownMaxRecFrames ; // increase the pre-record time until my value fits inside
+				
 			if (document.getElementById("preRecordFrameNum") != document.activeElement)
 				document.getElementById("preRecordFrameNum").value = parsedData.recTrigDelay - lastKnownMaxRecFrames ;
 			if (document.getElementById("preTriggerFrameNum") != document.activeElement)
@@ -1118,9 +1122,9 @@ function pageUpdate(rawData){
 		if (document.getElementById("postTriggerTime") != document.activeElement)
 			document.getElementById("postTriggerTime").value = (parsedData.recTrigDelay * lastKnownFramePeriod / 1000000000).toFixed(4) ;
 		if (document.getElementById("preTriggerTime") != document.activeElement)
-			document.getElementById("preTriggerTime").value = (document.getElementById("preTriggerFrameNum").valueAsNumber * lastKnownFramePeriod / 1000000000).toFixed(4) ;
+			document.getElementById("preTriggerTime").value = (parseInt(document.getElementById("preTriggerFrameNum").value) * lastKnownFramePeriod / 1000000000).toFixed(4) ;
 		if (document.getElementById("preRecordTime") != document.activeElement)
-			document.getElementById("preRecordTime").value = (document.getElementById("preRecordFrameNum").valueAsNumber * lastKnownFramePeriod / 1000000000).toFixed(4) ;
+			document.getElementById("preRecordTime").value = (parseInt(document.getElementById("preRecordFrameNum").value) * lastKnownFramePeriod / 1000000000).toFixed(4) ;
 
 		if (document.getElementById("postTriggerSlider") != document.activeElement) { // update slider value, max, and red background
 			document.getElementById("postTriggerSlider").value = lastKnownMaxRecFrames + extender - parsedData.recTrigDelay ;

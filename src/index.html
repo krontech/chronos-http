@@ -369,7 +369,7 @@
 		<div id="noRecordSegmentModeBox" class="horizLayout hidden">
 			The webpage cannot start a recording in "Segmented" mode.
 			<br>
-			You can change recording mode on the <a href="\settings.html">settings<a> page.
+			You can change recording mode on the <a href="\settings.html">settings</a> page.
 			<br>
 			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
 		</div>
@@ -475,6 +475,19 @@ if (detectIE()) {
 		document.getElementById("debugger2").innerHTML = "MS Browser detected" ;
 	
 	document.getElementById("windozeFixer").href = "css/windozeFixes.css" ;
+	
+	if ( (parseInt(detectIE()) <= 16) ) { // detect an older version (especially IE)
+		if (DebugOnOff)
+			document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
+			
+		var inputList = document.getElementsByTagName("input"); // get all 'input' types
+		for (var i = 0 ; i < inputList.length ; i++) {
+			if ( (inputList[i].type.toLowerCase() == "number") || (inputList[i].type.toLowerCase() == "text") )
+				inputList[i].style.paddingBottom = "9px" ; // add some padding to the bottom of number or text inputs
+		}
+		
+		document.getElementById("shutter").addEventListener('change', function() { holdWhileSliding(document.getElementById("shutter")) ; } ) ;
+	}
 }
 
 
