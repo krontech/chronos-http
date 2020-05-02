@@ -109,7 +109,8 @@
 #colourMatrixBox { clear: left; }
 
 
-
+#refreshAllBox { max-width: 278px; }
+#refreshButton { float: right; }
 
 
 #defaultTrigDelay { float: right; }
@@ -117,6 +118,12 @@
 
 #focusPeakingColorDropdown a:hover {
 	font-weight: bold;
+}
+
+.disabled {
+	color: white;
+	background-color: #222;
+	text-decoration: line-through; /* cross out the apply button */
 }
 
 </style>
@@ -156,8 +163,7 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-<!--			<a onclick="dropDownSelect(this)">Debug Tools</a>
--->
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
 		</div>
 
 	</div>
@@ -254,12 +260,32 @@
 			Display: <a id="displayToggleButton" class="button" onclick="toggler(this)">On</a>
 		</div>
 
-		<div id="refreshAllBox" class="horizLayout hidden">
-			<b> Refresh Parameters </b>
+		<div id="smbStorageBox" class="horizLayout">
+			<b> Windows/SMB Network Storage </b>
 			<br>
-			<a id="refreshButton" class="button" onclick="dropDownSelect(this)">Update</a>
-			<span class="instruction">This browser does not get alerted to changes from the camera. Use this button to update this page to match the camera</span>
+			SMB Share: <input id="smbAddress" type="text" placeholder="123.45.67.89:22/Melinda">
+			<br>
+			Username: <input id="smbUName" type="text" placeholder="squidFace">
+			<br>
+			Password: <input id="smbPass" type="text" placeholder="s3cr3t">
+			<br>
+			<a id="smbUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
+			<a id="smbTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
+			<a id="smbApplyBtn" class="button" style="float: right;" onclick="justRunSomething(this)">Apply</a>
 		</div>
+		<div id="nfsStorageBox" class="horizLayout">
+			<b> Linux/NFS Network Storage </b>
+			<br>
+			Address: <input id="nfsAddress" type="text" placeholder="123.45.67.89">
+			<br>
+			Mount: <input id="nfsMount" type="text" placeholder="/drives/share">
+			<br>
+			<a id="nfsUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
+			<a id="nfsTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
+			<a id="nfsApplyBtn" class="button" style="float: right;" onclick="justRunSomething(this)">Apply</a>
+		</div>
+
+
 
 	</div>
 
@@ -375,6 +401,12 @@
 			</div>
 		</div>
 
+		<div id="refreshAllBox" class="horizLayout hidden">
+			<b> Refresh Parameters </b>
+			<br>
+			<a id="refreshButton" class="button" onclick="dropDownSelect(this)">Update</a>
+			<span class="instruction">This browser does not get alerted to changes from the camera. Use this button to update this page to match the camera</span>
+		</div>
 
 	</div>
 
@@ -429,6 +461,20 @@
 
 <br>
 <div class="matchBackground"> This page was made by Nicholas Faliszewski </div>
+
+
+<div id="popUpBackground" class="popUpBackground hidden">
+	<div id="messageWarn" class="popUpMessage">
+		<div id="netShareResultBox" class="horizLayout hidden">
+			Status of the network share requests
+			<br>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
+		</div>
+		<div id="somethingWeirdBox" class="horizLayout hidden">
+			Something weird is happening
+		</div>
+	</div>
+</div>
 
 </body>
 
@@ -756,7 +802,7 @@ var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElem
 						"Turn off if AC removed": function() { dataRequester("set", '{"powerOffWhenMainsLost": true, "powerOnWhenMainsConnected": false}', pageUpdate) ; },
 						"Both":				function() { dataRequester("set", '{"powerOffWhenMainsLost": true, "powerOnWhenMainsConnected": true}', pageUpdate) ; },
 
-
+						"Ok":				function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("netShareResultBox").classList.add("hidden") ;  dataGetter('get', 'externalStorage', pageUpdate) ; },
 
 						}
 
@@ -766,13 +812,50 @@ function dropDownSelect (element) {
 		dropDownFunctions[element.innerText]() ; // run the function
 }
 
-function someOtherThing () {
-	extender += lastKnownMaxRecFrames ;
-	document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ;
-	document.getElementById("postTriggerSlider").value = parseInt(document.getElementById("postTriggerSlider").value) + lastKnownMaxRecFrames ;
-	document.getElementById("postTriggerFrameNum").value = document.getElementById("postTriggerSlider").max - parseInt(document.getElementById("postTriggerSlider").value) ;
-//	document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * 372 ) + "px" ;
-	document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ;
+function nfsRequest(input) {
+	var address = document.getElementById("nfsAddress").value ;
+	var mount = document.getElementById("nfsMount").value ;
+
+	var requestSender = new XMLHttpRequest() ;
+	var parameters = "" ;
+
+	if (input == "unmount") // unmount the network drive
+		parameters = "nfs=unmount" ;
+	else if (input == "test") {
+		// run the test input
+		parameters = "nfs=test" ;
+	}
+	else if ( (address == "") || (mount == "") ) {
+		document.getElementById("popUpBackground").classList.remove("hidden") ;
+		document.getElementById("netShareResultBox").firstChild.textContent = "Please enter an IP address and a mount location" ;
+		document.getElementById("netShareResultBox").classList.remove("hidden") ;
+		return (0) ;
+	}
+	else {
+		parameters = "nfs=" + address + "&mount=" + mount ;
+	}
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){
+			var jsonBack = JSON.parse(requestSender.responseText) ; // convert to json
+			if ("error" in jsonBack)
+				document.getElementById("netShareResultBox").firstChild.textContent = jsonBack.error ;
+			else
+				document.getElementById("netShareResultBox").firstChild.textContent = "Success!" ;
+
+			// show the status
+			document.getElementById("popUpBackground").classList.remove("hidden") ;
+			document.getElementById("netShareResultBox").classList.remove("hidden") ;
+
+		}
+	}
+
+	requestSender.open("GET", "/cgi-bin/netShare?" + parameters) ;
+	requestSender.setRequestHeader("Content-Type", "application/json") ;
+
+
+	requestSender.send() ;
+
 }
 
 
@@ -788,9 +871,12 @@ var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{
 
 						"resetAll":				function() { resetAll() ; },
 
-						"morePreRecTime":		function() { someOtherThing() },
+						"morePreRecTime":		function() { extender += lastKnownMaxRecFrames ; document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ; document.getElementById("postTriggerSlider").value = parseInt(document.getElementById("postTriggerSlider").value) + lastKnownMaxRecFrames ; document.getElementById("postTriggerFrameNum").value = document.getElementById("postTriggerSlider").max - parseInt(document.getElementById("postTriggerSlider").value) ; document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ; },
 						"defaultTrigDelay":		function() { extender = 0 ; dataRequester("set", '{"recTrigDelay": 0}', pageUpdate) ; },
 
+						"nfsTestBtn":			function() { if (!document.getElementById("nfsTestBtn").classList.contains("disabled")) { nfsRequest("test") ; } },
+						"nfsApplyBtn":			function() { nfsRequest("mount") ; },
+						"nfsUnmountBtn":		function() { if (!document.getElementById("nfsUnmountBtn").classList.contains("disabled")) {nfsRequest("unmount") ; } },
 					 }
 
 
@@ -1130,6 +1216,17 @@ function pageUpdate(rawData){
 			document.getElementById("postTriggerSlider").value = lastKnownMaxRecFrames + extender - parsedData.recTrigDelay ;
 			document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ;
 			document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ;
+		}
+	}
+
+	if ("externalStorage" in parsedData) { // get and build a list of external storage devices on the camera
+		if ("nfs" in parsedData.externalStorage) {
+			document.getElementById("nfsUnmountBtn").classList.remove("disabled") ;
+			document.getElementById("nfsTestBtn").classList.remove("disabled") ;
+		}
+		else {
+			document.getElementById("nfsUnmountBtn").classList.add("disabled") ;
+			document.getElementById("nfsTestBtn").classList.add("disabled") ;
 		}
 	}
 }
