@@ -166,8 +166,8 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-<!--			<a onclick="dropDownSelect(this)">Debug Tools</a>
--->
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
+
 		</div>
 
 	</div>
@@ -271,7 +271,6 @@
 				<a onclick="dropDownSelect(this)"> 5250K </a> <!-- Flash -->
 				<a onclick="dropDownSelect(this)"> 4600K </a> <!-- Flourescent -->
 				<a onclick="dropDownSelect(this)"> 3200K </a> <!-- Tungsten -->
-<!--				<a onclick="dropDownSelect(this)"> Custom </a> -->
 			</div></div>
 			<br>
 			<a id="whiteBalanceButton" class="button" onclick="setCustomWhiteBalance()">Set Custom</a>
@@ -279,7 +278,6 @@
 
 		<div id="saveAsBox" class="horizLayout">
 			<b> Save Video </b>
-<!--			&emsp; -->
 			<br>
 			<div id="storageLocation" class="selectContainerHolder" onclick="">Location<div id="storageLocationInner" class="selectContainer">
 				<a onclick="dropDownSelect(this)"> No Storage Connected </a>
@@ -534,8 +532,9 @@ function detectIE() {
 
 var StorageInfo ;
 
-var StorageNames = { "sda1": "USB / SATA",
-					 "mmcblk1p1": "SD Card"
+var StorageNames = { "sda1": 		"USB / SATA",
+					"mmcblk1p1":	"SD Card",
+					"nfs":			"Network Drive",
 				 }
 
 var StorageLocation = "" ;
