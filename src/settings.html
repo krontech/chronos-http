@@ -265,9 +265,9 @@
 			<br>
 			SMB Share: <input id="smbAddress" type="text" placeholder="123.45.67.89:22/Melinda">
 			<br>
-			Username: <input id="smbUName" type="text" placeholder="squidFace">
+			Username:&ensp;<input id="smbUName" type="text" placeholder="squidFace">
 			<br>
-			Password: <input id="smbPass" type="text" placeholder="s3cr3t">
+			Password:&puncsp;&ensp;&puncsp;<input id="smbPass" type="text" placeholder="s3cr3t">
 			<br>
 			<a id="smbUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
 			<a id="smbTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
@@ -278,7 +278,7 @@
 			<br>
 			Address: <input id="nfsAddress" type="text" placeholder="123.45.67.89">
 			<br>
-			Mount: <input id="nfsMount" type="text" placeholder="/drives/share">
+			Mount:&emsp;<input id="nfsMount" type="text" placeholder="/drives/share">
 			<br>
 			<a id="nfsUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
 			<a id="nfsTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
@@ -833,15 +833,25 @@ function nfsRequest(input) {
 	}
 	else {
 		parameters = "nfs=" + address + "&mount=" + mount ;
+
+		document.getElementById("netShareResultBox").firstChild.textContent = "Attempting to connect to NFS share..." ;
+
+		// show the status
+		document.getElementById("popUpBackground").classList.remove("hidden") ;
+		document.getElementById("netShareResultBox").classList.remove("hidden") ;
 	}
 
 	requestSender.onreadystatechange = function(){ // do something with the response
 		if (this.readyState == 4 && this.status == 200){
-			var jsonBack = JSON.parse(requestSender.responseText) ; // convert to json
-			if ("error" in jsonBack)
-				document.getElementById("netShareResultBox").firstChild.textContent = jsonBack.error ;
-			else
-				document.getElementById("netShareResultBox").firstChild.textContent = "Success!" ;
+			if (requestSender.responseText == "") // got nothing back
+				document.getElementById("netShareResultBox").firstChild.textContent = "Camera could not connect" ;
+			else {
+				var jsonBack = JSON.parse(requestSender.responseText) ; // convert to json
+				if ("error" in jsonBack)
+					document.getElementById("netShareResultBox").firstChild.textContent = jsonBack.error ;
+				else
+					document.getElementById("netShareResultBox").firstChild.textContent = "Success!" ;
+			}
 
 			// show the status
 			document.getElementById("popUpBackground").classList.remove("hidden") ;
@@ -1221,6 +1231,11 @@ function pageUpdate(rawData){
 
 	if ("externalStorage" in parsedData) { // get and build a list of external storage devices on the camera
 		if ("nfs" in parsedData.externalStorage) {
+			var nfsStorage = parsedData.externalStorage.nfs.device.split(":") ;
+			if (document.getElementById("nfsAddress") != document.activeElement)
+				document.getElementById("nfsAddress").value = nfsStorage[0] ;
+			if (document.getElementById("nfsMount") != document.activeElement)
+				document.getElementById("nfsMount").value = nfsStorage[1] ;
 			document.getElementById("nfsUnmountBtn").classList.remove("disabled") ;
 			document.getElementById("nfsTestBtn").classList.remove("disabled") ;
 		}

@@ -15,7 +15,7 @@ fi
 
 backupIFS=$IFS
 IFS=" "
-while inotifywait -e close_write /tmp/mountRequest.nf ## watch this file for changes (close by another process)
+while inotifywait -e close_write /tmp/mountRequest.nf ## watch this file for changes
 do
 	dateTime=$(date)
 	echo "Actions now triggered at $dateTime"
@@ -40,13 +40,13 @@ do
 			if [[ "$pingResult" == *"Unreachable"* ]] || [[ "$pingResult" == *"100% packet loss"* ]] ## without this out, the mount command hangs for a very long time
 			then
 				echo "could not find server address; exiting"
-				echo "could not reach server address; failed" > /tmp/mountRequest.nf
+				echo "Could not reach server address; failed" > /tmp/mountRequest.nf
 				continue ## don't run the rest of this
 			fi
 
 		else
 			echo "invalid IP address: ${params[2]}"
-			echo "invalid IP address; failed" > /tmp/mountRequest.nf
+			echo "Invalid IP address; failed" > /tmp/mountRequest.nf
 			continue ## don't run the rest of this
 		fi
 
@@ -55,7 +55,7 @@ do
 			echo "valid-seeming folder location"
 		else
 			echo "invalid share folder: ${params[3]}"
-			echo "invalide share folder; failed" > /tmp/mountRequest.nf
+			echo "Invalide share folder; failed" > /tmp/mountRequest.nf
 			continue ## don't run the rest of this
 		fi
 
@@ -102,6 +102,27 @@ do
 			echo "Unmounted /media/nfs successfully" > /tmp/mountRequest.nf
 		else
 			echo "Already unmounted; failed" > /tmp/mountRequest.nf
+		fi
+	elif [[ "${params[1]}" == "test:" ]]
+	then
+		if [[ "${params[2]}" == *"nfs"* ]] && [ -d /media/nfs ] ## check if nfs was mounted already
+		then
+			touch /media/nfs/ChronosTestFile.txt ## make a test file
+			echo "Testing 1-2-3" > /media/nfs/ChronosTestFile.txt ## try writing to the file
+
+			readBack=$(cat /media/nfs/ChronosTestFile.txt) ## read the contents of the file
+
+			rm /media/nfs/ChronosTestFile.txt ## delete the file
+
+			if [[ "$readBack" == "Testing 1-2-3"* ]] ## verify that the contents were written successfully
+			then
+				echo "Tested successfully" > /tmp/mountRequest.nf
+			else
+				echo "Test failed; could not write to drive" > /tmp/mountRequest.nf
+			fi
+
+		else
+			echo "Test failed; drive not mounted" > /tmp/mountRequest.nf
 		fi
 	else
 		echo "Invalid network share type: ${params[5]}"

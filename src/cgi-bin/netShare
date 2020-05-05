@@ -31,10 +31,16 @@ then
 			exit ## did not find a mount point (or not specified correctly), so don't continue with this program
 		fi
 
-	elif [[ "${params[1]}" == "unmount" ]]
+	elif [[ "${params[1]}" == "unmount" ]] ## unmount the shared folder / drive
 	then
 #		echo "unmounting nfs location"
 		echo "please unmount: /media/nfs" > /tmp/mountRequest.nf
+
+	elif [[ "${params[1]}" == "test" ]] ## test that the shared folder / drive is writable
+	then
+#		echo "testing nfs location"
+		echo "please test: /media/nfs" > /tmp/mountRequest.nf
+
 	else
 		echo "{\"error\": \"Did not find address: ${params[1]}\"}"
 		exit ## did not find an address, so don't continue with this program
@@ -49,7 +55,6 @@ then
 	do
 		sleep 0.2 ## wait a short time between checking for completion
 		gotback=$(cat /tmp/mountRequest.nf)
-#		echo "I got this back: $gotback when tries was: $tries"
 
 		if [[ "$gotback" == *"failed"* ]]
 		then
