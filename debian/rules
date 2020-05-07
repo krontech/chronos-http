@@ -9,3 +9,11 @@
 override_dh_installinit:
 	dh_installinit --name=chronos-http chronos-http.service
 	dh_installinit --name=netDriveHelper netDriveHelper.service
+
+override_dh_systemd_enable:
+	dh_systemd_enable --name=chronos-http chronos-http.service
+	dh_systemd_enable --name=netDriveHelper netDriveHelper.service
+
+override_dh_systemd_start:
+	dh_systemd_start --name=chronos-http chronos-http.service
+	dh_systemd_start --name=netDriveHelper netDriveHelper.service

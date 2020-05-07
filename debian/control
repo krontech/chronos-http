@@ -9,7 +9,7 @@ Homepage: http://krontech.ca/
 Package: chronos-http
 Architecture: all
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${misc:Depends}, chronos-tools, lighttpd
+Depends: ${misc:Depends}, chronos-tools, lighttpd, inotify-tools
 Description: HTTP API and Web interface for the Chronos Camera
  This package provides the HTTP API service and web interface for
  the Chronos high speed camera, and is intended to integrate with
