@@ -6,3 +6,6 @@
 %:
 	dh $@ --with systemd
 
+override_dh_installinit:
+	dh_installinit --name=chronos-http chronos-http.service
+	dh_installinit --name=netDriveHelper netDriveHelper.service
