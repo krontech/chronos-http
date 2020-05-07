@@ -535,6 +535,7 @@ var StorageInfo ;
 var StorageNames = { "sda1": 		"USB / SATA",
 					"mmcblk1p1":	"SD Card",
 					"nfs":			"Network Drive",
+					"smb":			"Network Drive",
 				 }
 
 var StorageLocation = "" ;
@@ -627,15 +628,17 @@ function useStorageLocation(key) {
 
 		requestSender.onreadystatechange = function(){ // do something with the response
 			if (this.readyState == 4 && this.status == 200){ // wait for successful response
-				var jsonBack = JSON.parse(requestSender.responseText) ; // convert to json
-				if ("size" in jsonBack) // display the total storage space
-					document.getElementById("storageSize").innerHTML = (jsonBack.size / 1000000).toFixed(1) + " GB" ;
-				if ("available" in jsonBack) // display the available space
-					document.getElementById("storageAvailable").innerHTML = (jsonBack.available / 1000000).toFixed(1) + " GB" ;
-				if ("used" in jsonBack) // display the used space
-					document.getElementById("storageUsed").innerHTML = (jsonBack.used / 1000000).toFixed(1) + " GB" ;
-				if ("usedPercent" in jsonBack) // show the usage percent as a bar-graph
-					document.getElementById("storageBar").firstChild.style.width = jsonBack.usedPercent + "%" ;
+				if (requestSender.responseText[0] == "{") { // make sure I got back some json
+					var jsonBack = JSON.parse(requestSender.responseText) ; // convert to json
+					if ("size" in jsonBack) // display the total storage space
+						document.getElementById("storageSize").innerHTML = (jsonBack.size / 1000000).toFixed(1) + " GB" ;
+					if ("available" in jsonBack) // display the available space
+						document.getElementById("storageAvailable").innerHTML = (jsonBack.available / 1000000).toFixed(1) + " GB" ;
+					if ("used" in jsonBack) // display the used space
+						document.getElementById("storageUsed").innerHTML = (jsonBack.used / 1000000).toFixed(1) + " GB" ;
+					if ("usedPercent" in jsonBack) // show the usage percent as a bar-graph
+						document.getElementById("storageBar").firstChild.style.width = jsonBack.usedPercent + "%" ;
+				}
 			}
 		}
 
