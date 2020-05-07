@@ -28,7 +28,7 @@ do
 	echo "parameters are: 0: ${params[0]}, 1: ${params[1]}, 2: ${params[2]}, 3 ${params[3]}, 4: ${params[4]}, 5: ${params[5]}"
 
 	## check if I'm getting a nfs or smb mount request
-	if [[ "${params[1]}" == "mount:" ]] && [[ ${params[5]} == "/media/nfs" ]]
+	if [[ "${params[1]}" == "mount:" ]] && ([[ ${params[5]} == "/media/nfs" ]] || [[ "${params[5]}" == "/media/smb" ]])
 	then
 		## verify that the request is valid (format is: IP.Add.re.ss:/folder/location)
 		if [[ "${params[2]}" == *"."*"."*"."* ]] ## if it's a valid-seeming IP address
@@ -59,39 +59,84 @@ do
 			continue ## don't run the rest of this
 		fi
 
-		if [ -d /media/nfs ] ## check if the folder already exists
+		if [[ "${params[5]}" == "/media/nfs" ]] ## NFS mount
 		then
-			echo "folder already exists"
-
-			## check if the remote folder is already mounted
-			if [[ $(df -h) == *"nfs"* ]] ## check if an nfs share was already mounted
+			if [ -d /media/nfs ] ## check if the folder already exists
 			then
-				echo "something already mounted"
-				echo "removing previous mount"
-				umount /media/nfs ## unmount the nfs share 
+				echo "folder already exists"
+
+				## check if the remote folder is already mounted
+				if [[ $(df -h) == *"nfs"* ]] ## check if an nfs share was already mounted
+				then
+					echo "something already mounted"
+					echo "removing previous mount"
+					umount /media/nfs ## unmount the nfs share 
+				fi
+
+			else ## folder did not already exist
+				echo "making new directory"
+				mkdir /media/nfs
 			fi
+			
+		elif [[ "${params[5]}" == "/media/smb" ]] ## SMB mount
+		then
+			if [ -d /media/smb ] ## check if the folder already exists
+			then
+				echo "folder already exists"
 
-		else ## folder did not already exist
-			echo "making new directory"
-			mkdir /media/nfs
+				## check if the remote folder is already mounted
+				if [[ $(df -h) == *"smb"* ]] ## check if an smb share was already mounted
+				then
+					echo "something already mounted"
+					echo "removing previous mount"
+					umount /media/smb ## unmount the smb share 
+				fi
 
+			else ## folder did not already exist
+				echo "making new directory"
+				mkdir /media/smb
+			fi
 		fi
+			
 
 		echo "now trying to mount the folder"
-		## try to mount the network folder to the local mount point
-		mount -t "nfs4" ${params[2]}:${params[3]} /media/nfs
-
-		if [[ $(df -h) == *"nfs"* ]] ## check if the folder was mounted successfully
+		
+		if [[ "${params[5]}" == "/media/nfs" ]] ## NFS mount
 		then
-			echo "successfully mounted"
-			## notify of the success (probably write to a file)
-			echo "successfully mounted nfs" > /tmp/mountRequest.nf
-		else
-			echo "mounting failed"
-			## notify of the failure (probably write to a file)
-			echo "failed to mount nfs" > /tmp/mountRequest.nf
-		fi
+			## try to mount the network folder to the local mount point
+			mount -t "nfs4" ${params[2]}:${params[3]} /media/nfs
 
+			if [[ $(df -h) == *"nfs"* ]] ## check if the folder was mounted successfully
+			then
+				echo "successfully mounted"
+				## notify of the success (probably write to a file)
+				echo "successfully mounted nfs" > /tmp/mountRequest.nf
+			else
+				echo "mounting failed"
+				## notify of the failure (probably write to a file)
+				echo "failed to mount nfs" > /tmp/mountRequest.nf
+			fi
+		elif [[ "${params[5]}" == "/media/smb" ]] ## SMB mount
+		then
+			if [[ "${params[2]}" = "//"* ]]
+			then
+				## try to mount the network folder to the local mount point
+				mount -t "cifs" -o username="${params[6]}",password="${params[7]}",noserverino ${params[2]}${params[3]} /media/smb
+			else
+				mount -t "cifs" -o username="${params[6]}",password="${params[7]}",noserverino //${params[2]}${params[3]} /media/smb
+			fi
+
+			if [[ $(df -h) == *"smb"* ]] ## check if the folder was mounted successfully
+			then
+				echo "successfully mounted"
+				## notify of the success (probably write to a file)
+				echo "successfully mounted smb" > /tmp/mountRequest.nf
+			else
+				echo "mounting failed"
+				## notify of the failure (probably write to a file)
+				echo "failed to mount smb" > /tmp/mountRequest.nf
+			fi
+		fi
 	elif [[ "${params[1]}" == "unmount:" ]]
 	then
 		if [[ "${params[2]}" == *"nfs"* ]] && [ -d /media/nfs ] ## asking to unmount nfs and it's been mounted
@@ -100,6 +145,12 @@ do
 			echo "nfs unmounted"
 			rmdir /media/nfs
 			echo "Unmounted /media/nfs successfully" > /tmp/mountRequest.nf
+		elif [[ "${params[2]}" == *"smb"* ]] && [ -d /media/smb ] ## asking to unmount smb and it's been mounted
+		then
+			umount /media/smb
+			echo "smb unmounted"
+			rmdir /media/smb
+			echo "Unmounted /media/smb successfully" > /tmp/mountRequest.nf
 		else
 			echo "Already unmounted; failed" > /tmp/mountRequest.nf
 		fi
@@ -113,6 +164,22 @@ do
 			readBack=$(cat /media/nfs/ChronosTestFile.txt) ## read the contents of the file
 
 			rm /media/nfs/ChronosTestFile.txt ## delete the file
+
+			if [[ "$readBack" == "Testing 1-2-3"* ]] ## verify that the contents were written successfully
+			then
+				echo "Tested successfully" > /tmp/mountRequest.nf
+			else
+				echo "Test failed; could not write to drive" > /tmp/mountRequest.nf
+			fi
+			
+		elif [[ "${params[2]}" == *"smb"* ]] && [ -d /media/smb ] ## check if nfs was mounted already
+		then
+			touch /media/smb/ChronosTestFile.txt ## make a test file
+			echo "Testing 1-2-3" > /media/smb/ChronosTestFile.txt ## try writing to the file
+
+			readBack=$(cat /media/smb/ChronosTestFile.txt) ## read the contents of the file
+
+			rm /media/smb/ChronosTestFile.txt ## delete the file
 
 			if [[ "$readBack" == "Testing 1-2-3"* ]] ## verify that the contents were written successfully
 			then

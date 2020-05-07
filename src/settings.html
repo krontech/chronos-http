@@ -120,6 +120,8 @@
 	font-weight: bold;
 }
 
+#smbPass { max-width: 154px; }
+
 .disabled {
 	color: white;
 	background-color: #222;
@@ -263,11 +265,13 @@
 		<div id="smbStorageBox" class="horizLayout">
 			<b> Windows/SMB Network Storage </b>
 			<br>
-			SMB Share: <input id="smbAddress" type="text" placeholder="123.45.67.89:22/Melinda">
+			Address: <input id="smbAddress" type="text" placeholder="123.45.67.89">
+			<br>
+			Mount:&emsp;<input id="smbMount" type="text" placeHolder="sharedFolder">
 			<br>
 			Username:&ensp;<input id="smbUName" type="text" placeholder="squidFace">
 			<br>
-			Password:&puncsp;&ensp;&puncsp;<input id="smbPass" type="text" placeholder="s3cr3t">
+			Password:&puncsp;&ensp;&puncsp;<input id="smbPass" type="password" placeholder="s3cr3t"><a id="smbPassShowHide" class="button" onclick="toggler(this)">Show</a>
 			<br>
 			<a id="smbUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
 			<a id="smbTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
@@ -278,7 +282,7 @@
 			<br>
 			Address: <input id="nfsAddress" type="text" placeholder="123.45.67.89">
 			<br>
-			Mount:&emsp;<input id="nfsMount" type="text" placeholder="/drives/share">
+			Mount:&emsp;<input id="nfsMount" type="text" placeholder="drives/share">
 			<br>
 			<a id="nfsUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
 			<a id="nfsTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
@@ -812,18 +816,39 @@ function dropDownSelect (element) {
 		dropDownFunctions[element.innerText]() ; // run the function
 }
 
-function nfsRequest(input) {
-	var address = document.getElementById("nfsAddress").value ;
-	var mount = document.getElementById("nfsMount").value ;
+function netStorageRequest(command, type) {
+
+	if (type == "nfs") {
+		var address = document.getElementById("nfsAddress").value ;
+		var mount = document.getElementById("nfsMount").value ;
+	}
+	else {
+		var address = document.getElementById("smbAddress").value ;
+		var mount = document.getElementById("smbMount").value ;
+	}
 
 	var requestSender = new XMLHttpRequest() ;
 	var parameters = "" ;
 
-	if (input == "unmount") // unmount the network drive
-		parameters = "nfs=unmount" ;
-	else if (input == "test") {
-		// run the test input
-		parameters = "nfs=test" ;
+	if (command == "unmount") { // unmount the network drive
+		if (type == "nfs")
+			parameters = "nfs=unmount" ;
+		else if (type == "smb")
+			parameters = "smb=unmount" ;
+
+		document.getElementById("popUpBackground").classList.remove("hidden") ;
+		document.getElementById("netShareResultBox").firstChild.textContent = "Requesting that the shared drive be disconncted..." ;
+		document.getElementById("netShareResultBox").classList.remove("hidden") ;
+	}
+	else if (command == "test") { // run the test input
+		if (type == "nfs")
+			parameters = "nfs=test" ;
+		else if (type == "smb")
+			parameters = "smb=test" ;
+
+		document.getElementById("popUpBackground").classList.remove("hidden") ;
+		document.getElementById("netShareResultBox").firstChild.textContent = "Testing the share drive (trying to write a file and read it back)..." ;
+		document.getElementById("netShareResultBox").classList.remove("hidden") ;
 	}
 	else if ( (address == "") || (mount == "") ) {
 		document.getElementById("popUpBackground").classList.remove("hidden") ;
@@ -832,9 +857,17 @@ function nfsRequest(input) {
 		return (0) ;
 	}
 	else {
-		parameters = "nfs=" + address + "&mount=" + mount ;
-
-		document.getElementById("netShareResultBox").firstChild.textContent = "Attempting to connect to NFS share..." ;
+		if (mount[0] != "/")
+		mount = "/" + mount ; // add leading "/" if it wasn't already there
+		
+		if (type == "nfs") {
+			parameters = "nfs=" + address + "&mount=" + mount ;
+			document.getElementById("netShareResultBox").firstChild.textContent = "Attempting to connect to NFS share..." ;
+		}
+		else if (type == "smb") {
+			parameters = "smb=" + address + "&mount=" + mount + "&" + document.getElementById("smbUName").value + "=" + document.getElementById("smbPass").value ;
+			document.getElementById("netShareResultBox").firstChild.textContent = "Attempting to connect to SMB share..." ;
+		}
 
 		// show the status
 		document.getElementById("popUpBackground").classList.remove("hidden") ;
@@ -884,9 +917,13 @@ var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{
 						"morePreRecTime":		function() { extender += lastKnownMaxRecFrames ; document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ; document.getElementById("postTriggerSlider").value = parseInt(document.getElementById("postTriggerSlider").value) + lastKnownMaxRecFrames ; document.getElementById("postTriggerFrameNum").value = document.getElementById("postTriggerSlider").max - parseInt(document.getElementById("postTriggerSlider").value) ; document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ; },
 						"defaultTrigDelay":		function() { extender = 0 ; dataRequester("set", '{"recTrigDelay": 0}', pageUpdate) ; },
 
-						"nfsTestBtn":			function() { if (!document.getElementById("nfsTestBtn").classList.contains("disabled")) { nfsRequest("test") ; } },
-						"nfsApplyBtn":			function() { nfsRequest("mount") ; },
-						"nfsUnmountBtn":		function() { if (!document.getElementById("nfsUnmountBtn").classList.contains("disabled")) {nfsRequest("unmount") ; } },
+						"nfsTestBtn":			function() { if (!document.getElementById("nfsTestBtn").classList.contains("disabled")) { netStorageRequest("test", "nfs") ; } },
+						"nfsApplyBtn":			function() { netStorageRequest("mount", "nfs") ; },
+						"nfsUnmountBtn":		function() { if (!document.getElementById("nfsUnmountBtn").classList.contains("disabled")) {netStorageRequest("unmount", "nfs") ; } },
+						
+						"smbTestBtn":			function() { if (!document.getElementById("smbTestBtn").classList.contains("disabled")) { netStorageRequest("test", "smb") ; } },
+						"smbApplyBtn":			function() { netStorageRequest("mount", "smb") ; },
+						"smbUnmountBtn":		function() { if (!document.getElementById("smbUnmountBtn").classList.contains("disabled")) {netStorageRequest("unmount", "smb") ; } },
 					 }
 
 
@@ -920,6 +957,7 @@ var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
 					"autoSaveButton":		[ "No", "Yes" ],
 
 					"disableRBButton":		[ "Enabled", "Disabled" ],
+					"smbPassShowHide":		[ "Show", "Hide" ],
 				}
 
 var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
@@ -929,7 +967,7 @@ var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuLis
 						"autoSaveButton":		[ function(){ if (getCookie("as") > 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 0) ; } }, function() { if (getCookie("as") < 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 1) ; } } ],
 
 						"disableRBButton":		[ function(){ dataSender("set", '{"disableRingBuffer": 0}') ; }, function() { dataSender("set", '{"disableRingBuffer": 1}') ; } ],
-
+						"smbPassShowHide":		[ function(){ document.getElementById("smbPass").type="password" ; }, function(){ document.getElementById("smbPass").type="text" ; } ],
 					  }
 
 
@@ -1231,7 +1269,7 @@ function pageUpdate(rawData){
 
 	if ("externalStorage" in parsedData) { // get and build a list of external storage devices on the camera
 		if ("nfs" in parsedData.externalStorage) {
-			var nfsStorage = parsedData.externalStorage.nfs.device.split(":") ;
+			var nfsStorage = parsedData.externalStorage.nfs.device.split(":/") ;
 			if (document.getElementById("nfsAddress") != document.activeElement)
 				document.getElementById("nfsAddress").value = nfsStorage[0] ;
 			if (document.getElementById("nfsMount") != document.activeElement)
@@ -1242,6 +1280,19 @@ function pageUpdate(rawData){
 		else {
 			document.getElementById("nfsUnmountBtn").classList.add("disabled") ;
 			document.getElementById("nfsTestBtn").classList.add("disabled") ;
+		}
+		if ("smb" in parsedData.externalStorage) {
+			var smbStorage = parsedData.externalStorage.smb.device.split("/") ;
+			if (document.getElementById("smbAddress") != document.activeElement)
+				document.getElementById("smbAddress").value = smbStorage[2] ;
+			if (document.getElementById("smbMount") != document.activeElement)
+				document.getElementById("smbMount").value = smbStorage[3] ;
+			document.getElementById("smbUnmountBtn").classList.remove("disabled") ;
+			document.getElementById("smbTestBtn").classList.remove("disabled") ;
+		}
+		else {
+			document.getElementById("smbUnmountBtn").classList.add("disabled") ;
+			document.getElementById("smbTestBtn").classList.add("disabled") ;
 		}
 	}
 }
