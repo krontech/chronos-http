@@ -1,2 +1,3 @@
 src/* usr/share/chronos-http
 scripts/99-chronos-http.conf etc/lighttpd/conf-available
+scripts/mountNetDrive.sh var/camera/scripts

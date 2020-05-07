@@ -1,0 +1,13 @@
+[Unit]
+Description=Helper service for allowing HTTP requests to mount, test, and unmount network NFS and SMB drives
+After=chronos-http.service lighttpd.service
+Requires=chronos-http.service lighttpd.service
+
+[Service]
+ExecStart=/var/camera/scripts/mountNetDrive.sh
+StandardOutput=journal+console
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target
+
