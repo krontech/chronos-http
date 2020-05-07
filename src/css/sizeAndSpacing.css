@@ -350,7 +350,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 
-input[type=text]{
+input[type=text], input[type=password] {
 	-webkit-appearance: textfield;
 	-moz-appearance: textfield;
 	appearance: textfield;

@@ -100,7 +100,7 @@ input[type="number"]{
  /* when a number is invalid, use this color drop-shadow (outline) */
 input[type=number]:invalid{ box-shadow: 0 0 3px 3px #a00; }
 
-input[type="text"]{
+input[type="text"], input[type="password"]{
 	background-color: black;
 	color: white;
 }
