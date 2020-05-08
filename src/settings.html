@@ -23,7 +23,7 @@
 
 /*@media screen and (max-width: 3000px) {
 	.leftContainer, .rightContainer { box-shadow: 0 0 3px 3px inset white; }
-}*/
+} */
 
 
 @media screen and (min-width: 1600px) {
@@ -120,13 +120,29 @@
 	font-weight: bold;
 }
 
-#smbPass { max-width: 154px; }
+#autoPowerDropdown, #recordModeDropdown { margin-bottom: 0; }
+#focusPeakingColorDropdown { margin-bottom: 2px; }
+
+#recordModeBox, #focusPeakingBox {
+	padding-left: 9px;
+	padding-right: 9px;
+}
+
+#autoPowerBox {
+	padding-top: 7px;
+	padding-bottom: 9px;
+}
+
+#postTriggerTime { margin-bottom: 12px; }
+
+/*#smbPass { max-width: 125px; } */
 
 .disabled {
 	color: white;
 	background-color: #222;
 	text-decoration: line-through; /* cross out the apply button */
 }
+.wrapAround { clear: left; }
 
 </style>
 </head>
@@ -165,7 +181,9 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
+<!--
 			<a onclick="dropDownSelect(this)">Debug Tools</a>
+-->
 		</div>
 
 	</div>
@@ -262,31 +280,69 @@
 			Display: <a id="displayToggleButton" class="button" onclick="toggler(this)">On</a>
 		</div>
 
-		<div id="smbStorageBox" class="horizLayout">
-			<b> Windows/SMB Network Storage </b>
+
+
+		<div id="recordModeBox" class="horizLayout">
+			<b> Record Mode </b>
 			<br>
-			Address: <input id="smbAddress" type="text" placeholder="123.45.67.89">
+			<span id="recordModeDescription" class="instruction">Select how video<br> is captured</span>
 			<br>
-			Mount:&emsp;<input id="smbMount" type="text" placeHolder="sharedFolder">
-			<br>
-			Username:&ensp;<input id="smbUName" type="text" placeholder="squidFace">
-			<br>
-			Password:&puncsp;&ensp;&puncsp;<input id="smbPass" type="password" placeholder="s3cr3t"><a id="smbPassShowHide" class="button" onclick="toggler(this)">Show</a>
-			<br>
-			<a id="smbUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
-			<a id="smbTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
-			<a id="smbApplyBtn" class="button" style="float: right;" onclick="justRunSomething(this)">Apply</a>
+			<div id="recordModeDropdown" class="selectContainerHolder" onclick=""> Normal <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Normal</a>
+				<a onclick="dropDownSelect(this)">Segmented</a>
+				<a onclick="dropDownSelect(this)">Gated Burst</a>
+<!--				<a onclick="dropDownSelect(this)">Live Slow Motion</a> -->
+			</div></div>
+			<div id="segmentNumberBox">
+				Number of Segments:
+				<input id="segmentNum" type="number" min="1" max="500" step="1" oninput="justRunSomething(this)">
+				<br>
+				Ring Buffer:
+				<a id="disableRBButton" class="button" onclick="toggler(this)">Enabled</a>
+			</div>
+			<div id="prerecordBox">
+				Prerecord Frames:
+				<input id="preRecFrameNum" type="number" min="1" max="9000" step="1" oninput="changeNumberOften(this)">
+				<br>
+				Prerecord Time:
+<!--				<input id="preRecTimeNum" type="number" min="0.0000" max="900.0000" step="0.001" oninput="changeNumberOften(this)"> ms
+-->				<span id="preRecTimeNum">?? connecting</span>
+			</div>
 		</div>
-		<div id="nfsStorageBox" class="horizLayout">
-			<b> Linux/NFS Network Storage </b>
+
+		<div id="focusPeakingBox" class="horizLayout">
+			<b> Focus Peaking </b>
 			<br>
-			Address: <input id="nfsAddress" type="text" placeholder="123.45.67.89">
+			<div id="focusPeakingLevelDropdown" class="selectContainerHolder" onclick="">Level<div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Low</a>
+				<a onclick="dropDownSelect(this)">Medium</a>
+				<a onclick="dropDownSelect(this)">High</a>
+			</div></div>
 			<br>
-			Mount:&emsp;<input id="nfsMount" type="text" placeholder="drives/share">
+			<div id="focusPeakingColorDropdown" class="selectContainerHolder" onclick="">Color<div class="selectContainer">
+				<a onclick="dropDownSelect(this)" style="background-color: black; color: white;">Black</a>
+				<a onclick="dropDownSelect(this)" style="background-color: red; color: white;">Red</a>
+				<a onclick="dropDownSelect(this)" style="background-color: cyan; color: black;">Cyan</a>
+				<a onclick="dropDownSelect(this)" style="background-color: blue; color: white;">Blue</a>
+				<a onclick="dropDownSelect(this)" style="background-color: yellow; color: black;">Yellow</a>
+				<a onclick="dropDownSelect(this)" style="background-color: magenta; color white;">Magenta</a>
+				<a onclick="dropDownSelect(this)" style="background-color: white; color: black;">White</a>
+				<a onclick="dropDownSelect(this)" style="background-color: green; color: white;">Green</a>
+			</div></div>
+		</div>
+
+		<div id="autoPowerBox" class="horizLayout">
+			<b> Auto Power Mode </b>
 			<br>
-			<a id="nfsUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
-			<a id="nfsTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
-			<a id="nfsApplyBtn" class="button" style="float: right;" onclick="justRunSomething(this)">Apply</a>
+<!--			<span class="instruction"> Power on as soon as power is connected </span>
+			<br>
+-->
+			<div id="autoPowerDropdown" class="selectContainerHolder" onclick=""> Disabled <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Disabled</a>
+				<a onclick="dropDownSelect(this)">Turn on if AC inserted</a>
+				<a onclick="dropDownSelect(this)">Turn off if AC removed</a>
+				<a onclick="dropDownSelect(this)">Both</a>
+			</div></div>
 		</div>
 
 
@@ -342,68 +398,40 @@
 		</div>
 
 
-		<div class="horizLayout">
-			<b> Focus Peaking </b>
+		<div id="smbStorageBox" class="horizLayout">
+			<b> Windows/SMB Net. Storage </b>
 			<br>
-			<div id="focusPeakingLevelDropdown" class="selectContainerHolder" onclick="">Level<div class="selectContainer">
-				<a onclick="dropDownSelect(this)">Low</a>
-				<a onclick="dropDownSelect(this)">Medium</a>
-				<a onclick="dropDownSelect(this)">High</a>
-			</div></div>
+			Address: <input id="smbAddress" type="text" placeholder="123.45.67.89">
 			<br>
-			<div id="focusPeakingColorDropdown" class="selectContainerHolder" onclick="">Color<div class="selectContainer">
-				<a onclick="dropDownSelect(this)" style="background-color: black;">Black</a>
-				<a onclick="dropDownSelect(this)" style="background-color: red;">Red</a>
-				<a onclick="dropDownSelect(this)" style="background-color: cyan; color: black;">Cyan</a>
-				<a onclick="dropDownSelect(this)" style="background-color: blue;">Blue</a>
-				<a onclick="dropDownSelect(this)" style="background-color: yellow; color: black;">Yellow</a>
-				<a onclick="dropDownSelect(this)" style="background-color: magenta;">Magenta</a>
-				<a onclick="dropDownSelect(this)" style="background-color: white; color: black;">White</a>
-				<a onclick="dropDownSelect(this)" style="background-color: green;">Green</a>
-			</div></div>
-		</div>
-
-
-		<div class="horizLayout">
-			<b> Auto Power Mode </b>
+			Mount:&emsp;<input id="smbMount" type="text" placeHolder="sharedFolder">
 			<br>
-<!--			<span class="instruction"> Power on as soon as power is connected </span>
+			Username:&puncsp;<input id="smbUName" type="text" placeholder="squidFace">
 			<br>
+<!--			Password:&puncsp;<input id="smbPass" type="password" placeholder="s3cr3t"><a id="smbPassShowHide" class="button" onclick="toggler(this)">Show</a>
 -->
-			<div id="autoPowerDropdown" class="selectContainerHolder" onclick=""> Disabled <div class="selectContainer">
-				<a onclick="dropDownSelect(this)">Disabled</a>
-				<a onclick="dropDownSelect(this)">Turn on if AC inserted</a>
-				<a onclick="dropDownSelect(this)">Turn off if AC removed</a>
-				<a onclick="dropDownSelect(this)">Both</a>
-			</div></div>
-		</div>
-
-
-		<div class="horizLayout">
-			<b> Record Mode </b>
+			<a id="smbPassShowHide" class="button" onclick="toggler(this)" style="margin-left: 0;">Pasword:</a><input id="smbPass" type="password" placeholder="******">
 			<br>
-			<div id="recordModeDropdown" class="selectContainerHolder" onclick=""> Normal <div class="selectContainer">
-				<a onclick="dropDownSelect(this)">Normal</a>
-				<a onclick="dropDownSelect(this)">Segmented</a>
-				<a onclick="dropDownSelect(this)">Gated Burst</a>
-<!--				<a onclick="dropDownSelect(this)">Live Slow Motion</a> -->
-			</div></div>
-			<div id="segmentNumberBox">
-				Number of Segments:
-				<input id="segmentNum" type="number" min="1" max="500" step="1" oninput="justRunSomething(this)">
-				<br>
-				Ring Buffer:
-				<a id="disableRBButton" class="button" onclick="toggler(this)">Enabled</a>
-			</div>
-			<div id="prerecordBox">
-				Prerecord Frames:
-				<input id="preRecFrameNum" type="number" min="1" max="9000" step="1" oninput="changeNumberOften(this)">
-				<br>
-				Prerecord Time:
-<!--				<input id="preRecTimeNum" type="number" min="0.0000" max="900.0000" step="0.001" oninput="changeNumberOften(this)"> ms
--->				<span id="preRecTimeNum">?? connecting</span>
-			</div>
+			<span class="instruction">Warning: this info is not encrypted!</span>
+			<br>
+			<a id="smbUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
+			<a id="smbTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
+			<a id="smbApplyBtn" class="button" style="float: right;" onclick="justRunSomething(this)">Apply</a>
 		</div>
+		<div id="nfsStorageBox" class="horizLayout">
+			<b> Linux/NFS Network Storage </b>
+			<br>
+			Address: <input id="nfsAddress" type="text" placeholder="123.45.67.89">
+			<br>
+			Mount:&emsp;<input id="nfsMount" type="text" placeholder="drives/share">
+			<br>
+			<a id="nfsUnmountBtn" class="button" onclick="justRunSomething(this)">Unmount</a>
+			<a id="nfsTestBtn" class="button" onclick="justRunSomething(this)">Test</a>
+			<a id="nfsApplyBtn" class="button" style="float: right;" onclick="justRunSomething(this)">Apply</a>
+		</div>
+
+
+
+
 
 		<div id="refreshAllBox" class="horizLayout hidden">
 			<b> Refresh Parameters </b>
@@ -411,6 +439,7 @@
 			<a id="refreshButton" class="button" onclick="dropDownSelect(this)">Update</a>
 			<span class="instruction">This browser does not get alerted to changes from the camera. Use this button to update this page to match the camera</span>
 		</div>
+
 
 	</div>
 
@@ -957,7 +986,7 @@ var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
 					"autoSaveButton":		[ "No", "Yes" ],
 
 					"disableRBButton":		[ "Enabled", "Disabled" ],
-					"smbPassShowHide":		[ "Show", "Hide" ],
+//					"smbPassShowHide":		[ "Show", "Hide" ],
 				}
 
 var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
@@ -967,7 +996,7 @@ var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuLis
 						"autoSaveButton":		[ function(){ if (getCookie("as") > 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 0) ; } }, function() { if (getCookie("as") < 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 1) ; } } ],
 
 						"disableRBButton":		[ function(){ dataSender("set", '{"disableRingBuffer": 0}') ; }, function() { dataSender("set", '{"disableRingBuffer": 1}') ; } ],
-						"smbPassShowHide":		[ function(){ document.getElementById("smbPass").type="password" ; }, function(){ document.getElementById("smbPass").type="text" ; } ],
+						"smbPassShowHide":		[ function(){ document.getElementById("smbPass").type="password" ; document.getElementById("smbPass").placeholder="******" ; }, function(){ document.getElementById("smbPass").type="text" ; document.getElementById("smbPass").placeholder="s3cr3t" ; } ],
 					  }
 
 
@@ -1118,18 +1147,24 @@ function pageUpdate(rawData){
 				document.getElementById("recordModeDropdown").firstChild.textContent = " Normal " ;
 				document.getElementById("segmentNumberBox").classList.add("hidden") ;
 				document.getElementById("prerecordBox").classList.add("hidden") ;
+				document.getElementById("recordModeDescription").innerHTML = "Select how video<br> is captured" ;
+				document.getElementById("focusPeakingBox").classList.remove("wrapAround") ;
 				break ;
 
 			case "segmented":
 				document.getElementById("recordModeDropdown").firstChild.textContent = "Segmented" ;
 				document.getElementById("segmentNumberBox").classList.remove("hidden") ;
 				document.getElementById("prerecordBox").classList.add("hidden") ;
+				document.getElementById("recordModeDescription").innerHTML = "Select how video is captured" ;
+				document.getElementById("focusPeakingBox").classList.add("wrapAround") ;
 				break ;
 
 			case "burst":
 				document.getElementById("recordModeDropdown").firstChild.textContent = "Gated Burst" ;
 				document.getElementById("segmentNumberBox").classList.add("hidden") ;
 				document.getElementById("prerecordBox").classList.remove("hidden") ;
+				document.getElementById("recordModeDescription").innerHTML = "Select how video is captured" ;
+				document.getElementById("focusPeakingBox").classList.add("wrapAround") ;
 				break ;
 		}
 	}
