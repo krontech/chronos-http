@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8"/>
+<title>Chronos</title>
+
+
+<link rel="stylesheet" href="css/fontFile.css"> 
+
+<link rel="styleSheet" href="css/sizeAndSpacing.css">
+<link id="themeSelection" rel="styleSheet" href="css/defaultTheme.css">
+<link id="windozeFixer" rel="styleSheet" href="">
+
+<style>
+
+
+.infoText {
+	display: inline-block;
+	margin-right: 100px;
+}
+
+/******** Specific to this page ********/
+
+
+/*@media screen and (max-width: 3000px) {
+	.leftContainer, .rightContainer { box-shadow: 0 0 3px 3px inset white; }
+} */
+
+
+</style>
+</head>
+
+
+<body onclick="">
+
+	<div class="header">
+		<div class="titleImage">
+			<img id="logoImage" src="Chronos High Speed logo.png">
+		</div>
+
+		<!-- <b class="title">&nbsp;CHRONOS</b> -->
+		<div class="subTitle">by <a href="https://www.krontech.ca" target="_blank">Kron Technologies</a></div>
+	</div>
+
+ <div class="mainContainer"> 
+
+	
+	<div class="heading-bar">
+		<a id="main" href="./"> <div class="homeIcon"></div> Main </a>
+		<a id="playSave" href="PlaySave.html"> <div class="playIcon"></div> Play & Save </a>
+		<a id="settings" href="settings.html"> <div class="settingsIcon"></div> Settings </a>
+		<a id="ioNav" class="active"> <div class="saveIcon"></div> I/O Config </a>
+		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Documentation </a>
+
+		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
+		<div id="menuList" onmouseover="menuKeeper()" class="menuContainer menuClickOk">
+			<a href="/"> Record (Main) </a>
+			<a href="PlaySave.html"> Play & Save </a>
+			<a href="/settings.html"> Camera Settings </a>
+			<a href="IO.html"> I/O Configuration </a>
+			<a href="/apidoc/"> Documentation </a>
+			<a onclick="dropDownSelect(this)">Play Mode</a>
+			<a onclick="dropDownSelect(this)">Record Mode</a>
+
+			<a onclick="dropDownSelect(this)">Debug Tools</a>
+
+		</div>
+
+	</div>
+
+
+<!--	<div class="leftContainer">
+-->
+	<div id="container1" class="rightContainer">
+
+		<div id="ioMappingStopRecBox" class="horizLayout">
+			<b> Stop Recording </b>
+			<br>
+			<span class="instruction"> Cause the recording to stop </span>
+			<br>
+			Source:
+			<div id="ioMappingStopRecSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingStopRecSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingStopRecDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingStopRecInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingCombOr1Box" class="horizLayout">
+			<b> Combinatorial OR 1 </b>
+			<br>
+			<span class="instruction"> Select a connection for the 1st combinatorial OR input </span>
+			<br>
+			Source:
+			<div id="ioMappingCombOr1Source" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingCombOr1SourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingCombOr1Debounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingCombOr1Invert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingCombOr2Box" class="horizLayout">
+			<b> Combinatorial OR 2 </b>
+			<br>
+			<span class="instruction"> Select a connection for the 2nd combinatorial OR input </span>
+			<br>
+			Source:
+			<div id="ioMappingCombOr2Source" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingCombOr2SourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingCombOr2Debounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingCombOr2Invert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingCombOr3Box" class="horizLayout">
+			<b> Combinatorial OR 3 </b>
+			<br>
+			<span class="instruction"> Select a connection for the 3rd combinatorial OR input </span>
+			<br>
+			Source:
+			<div id="ioMappingCombOr3Source" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingCombOr3SourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingCombOr3Debounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingCombOr3Invert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingCombXorBox" class="horizLayout">
+			<b> Combinatorial XOR </b>
+			<br>
+			<span class="instruction"> Select a connection for the combinatorial XOR input </span>
+			<br>
+			Source:
+			<div id="ioMappingCombXorSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingCombXorSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingCombXorDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingCombXorInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingCombAndBox" class="horizLayout">
+			<b> Cominatorial AND </b>
+			<br>
+			<span class="instruction"> Choose what triggers the Cominatorial AND input </span>
+			<br>
+			Source:
+			<div id="ioMappingCombAndSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingCombAndSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingCombAndDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingCombAndInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingGateBox" class="horizLayout">
+			<b> Gate </b>
+			<br>
+			<span class="instruction"> Gate </span>
+			<br>
+			Source:
+			<div id="ioMappingGateSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingGateSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingGateDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingGateInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingToggleSetBox" class="horizLayout">
+			<b> Toggle Set </b>
+			<br>
+			<span class="instruction"> Choose what will 'Set' the toggle block </span>
+			<br>
+			Source:
+			<div id="ioMappingToggleSetSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingToggleSetSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingToggleSetDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingToggleSetInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingToggleFlipBox" class="horizLayout">
+			<b> Toggle Flip </b>
+			<br>
+			<span class="instruction"> Choose what will 'Flip' the toggle block </span>
+			<br>
+			Source:
+			<div id="ioMappingToggleFlipSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingToggleFlipSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingToggleFlipDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingToggleFlipInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingToggleClearBox" class="horizLayout">
+			<b> Toggle Clear </b>
+			<br>
+			<span class="instruction"> Choose what will 'Clear' the toggle block </span>
+			<br>
+			Source:
+			<div id="ioMappingToggleClearSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingToggleClearSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingToggleClearDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingToggleClearInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+
+		<div id="ioMappingStartRecBox" class="horizLayout">
+			<b> Start Recording </b>
+			<br>
+			<span class="instruction"> Choose what will start a recording </span>
+			<br>
+			Source:
+			<div id="ioMappingStartRecSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingStartRecSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingStartRecDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingStartRecInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingIo1Box" class="horizLayout">
+			<b> Output 1 (IO1 out) </b>
+			<br>
+			<span class="instruction"> Choose when IO1 out does something </span>
+			<br>
+			Source:
+			<div id="ioMappingIo1Source" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingIo1SourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingIo1Debounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingIo1Invert" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Drive Strength:
+			<div id="ioMappingIo1Drive" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Low (1mA)</a>
+				<a onclick="dropDownSelect(this)">High (20mA)</a>
+			</div></div>
+		</div>
+
+		<div id="ioMappingIo2Box" class="horizLayout">
+			<b> Output 2 (IO2 out) </b>
+			<br>
+			<span class="instruction"> Choose when IO2 out does something </span>
+			<br>
+			Source:
+			<div id="ioMappingIo2Source" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingIo2SourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingIo2Debounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingIo2Invert" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Drive Strength:
+			<div id="ioMappingIo2Drive" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Low (1mA)</a>
+				<a onclick="dropDownSelect(this)">High (20mA)</a>
+			</div></div>
+		</div>
+
+
+
+		<div id="ioMappingTriggerBox" class="horizLayout">
+			<b> Trigger </b>
+			<br>
+			<span class="instruction"> Choose what causes a 'Trigger' event </span>
+			<br>
+			Source:
+			<div id="ioMappingTriggerSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingTriggerSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingTriggerDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingTriggerInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+		<div id="ioMappingDelayBox" class="horizLayout">
+			<b> Delay </b>
+			<br>
+			<span class="instruction"> Choose what causes the Delay Timer to run </span>
+			<br>
+			Source:
+			<div id="ioMappingDelaySource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingDelaySourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingDelayDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingDelayInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+
+		<div id="ioMappingShutterBox" class="horizLayout">
+			<b> Shutter </b>
+			<br>
+			<span class="instruction"> Choose what affects the shutter </span>
+			<br>
+			Source:
+			<div id="ioMappingShutterSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="ioMappingShutterSourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="ioMappingShutterDebounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingShutterInvert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+
+		<div id="Box" class="horizLayout">
+			<b> -- </b>
+			<br>
+			<span class="instruction"> Blank </span>
+			<br>
+			Source:
+			<div id="Source" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<span id="SourceStatus">(True/False)</span>
+			<br>
+			Debounce:
+			<a id="Debounce" class="button" onclick="toggler(this)">False</a>
+			<br>
+			Invert:
+			<a id="Invert" class="button" onclick="toggler(this)">False</a>
+		</div>
+
+
+
+
+	</div>
+
+
+<!--
+   "config": {
+
+      "ioThresholdIo1": 2.49929,
+      "ioThresholdIo2": 2.49929,
+
+      "ioMappingCombOr2": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingCombOr3": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingStopRec": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingGate": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingCombOr1": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingCombXor": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingToggleSet": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingToggleFlip": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+
+      "ioMappingStartRec": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingIo2": { --
+         "source": "alwaysHigh",
+         "drive": 0,
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingIo1": { --
+         "source": "alwaysHigh",
+         "drive": 1,
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingTrigger": { --
+         "source": "io1",
+         "debounce": false,
+         "invert": true
+      },
+
+      "ioMappingDelay": { --
+         "source": "comb",
+         "debounce": false,
+         "invert": false
+      },
+
+
+      "ioMappingToggleClear": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingCombAnd": { --
+         "source": "alwaysHigh",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingShutter": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      }
+
+   },
+
+
+   "ioSourceStatus": {
+      "io3": false,
+      "delay": false,
+      "nextSeg": false,
+      "timingIo": true,
+      "dispFrame": false,
+      "alwaysHigh": true,
+      "comb": false,
+      "none": false,
+      "io1": true,
+      "shutter": true,
+      "toggle": true,
+      "endRec": false,
+      "recording": false,
+      "software": false,
+      "startRec": false,
+      "io2": false
+   },
+
+   "ioMapping": {
+
+      "combAnd": {
+         "source": "alwaysHigh",
+         "debounce": false,
+         "invert": false
+      },
+
+      "delay": {
+         "source": "comb",
+         "delayTime": 0,
+         "debounce": false,
+         "invert": false
+      },
+
+      "toggleSet": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "gate": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "toggleFlip": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "start": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "shutter": {
+         "shutterTriggersFrame": false,
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "combOr1": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "combOr2": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "combOr3": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "combXOr": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "trigger": {
+         "source": "io1",
+         "debounce": false,
+         "invert": true
+      },
+
+      "stop": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "toggleClear": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "io1In": {
+         "threshold": 2.49929
+      },
+
+      "io2In": {
+         "threshold": 2.49929
+      },
+
+      "io1": {
+         "source": "alwaysHigh",
+         "driveStrength": 1,
+         "debounce": false,
+         "invert": false
+      },
+
+      "io2": {
+         "source": "alwaysHigh",
+         "driveStrength": 0,
+         "debounce": false,
+         "invert": false
+      }
+
+   },
+
+
+-->
+
+
+
+
+
+	<div class="Text-bar">
+		<div id="battery" class="no-click">
+			<div id="batteryContainer" class="battery">
+				<div id="battery-level"></div>
+			</div>
+			<span id="battery%">0%</span>
+		</div>
+
+		<a id="resetAll" onclick="justRunSomething(this)">Reset All Settings<br>to Default</a>
+	</div>
+
+
+	<div id="debugBar" class="Text-bar hidden">
+		<a id="tester1" onclick="tester1func()"> tester1 </a>
+		<a id="tester2" onclick="tester2func()"> tester2 </a>
+		<a id="tester3" onclick="tester3func()"> tester3 </a>
+		<a id="debugToggle" onclick="toggler(this)"> Display Messages </a>
+		<div class="no-click"></div>
+		<a onclick='theme("default")'> Default Theme </a>
+		<a onclick='theme("monochrome")'> Mono Theme </a>
+		<a onclick='theme("darker")'> Darker Theme </a>
+		<a onclick='theme("lighter")'> Lighter Theme </a>
+		<a onclick='theme("monoDark")'> Mono Dark </a>
+		<a onclick='theme("newDefault")'> Light Theme2 </a>
+	</div>
+	<br>
+	<span id="debugger">  </span>
+
+	<span id="debugger2">  </span>
+ </div>
+
+<br>
+<div class="matchBackground"> This page was made by Nicholas Faliszewski </div>
+
+
+<div id="popUpBackground" class="popUpBackground hidden">
+	<div id="messageWarn" class="popUpMessage">
+		<div id="netShareResultBox" class="horizLayout hidden">
+			Status of the network share requests
+			<br>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
+		</div>
+		<div id="somethingWeirdBox" class="horizLayout hidden">
+			Something weird is happening
+		</div>
+	</div>
+</div>
+
+</body>
+
+<script>
+
+var DebugOnOff = true ;
+
+
+function tester1func() {
+//	dataRequester("set", '{"recPreBurst": ' + document.getElementById("preRecFrameNum").value + '}', pageUpdate) ;
+
+}
+
+function tester2func() {
+
+//	dataGetter("p", "", pageUpdate) ; // get all the data
+}
+
+
+function tester3func() {
+	// clear recorded buffer
+	dataGetter("flushRecording", '', pageUpdate) ;
+
+}
+
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+
+
+
+
+
+
+function setCookie (name, value) {
+	var expiryDate = new Date() ;
+
+	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*90) ; // add 90 days (time is in ms)
+//	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
+
+	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
+}
+
+
+if (detectIE()) {
+	if (DebugOnOff)
+		document.getElementById("debugger2").innerHTML = "MS Browser detected" ;
+	
+	document.getElementById("windozeFixer").href = "css/windozeFixes.css" ;
+	
+	if ( (parseInt(detectIE()) <= 16) ) { // detect an older version (especially IE)
+		if (DebugOnOff)
+			document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
+			
+		var inputList = document.getElementsByTagName("input"); // get all 'input' types
+		for (var i = 0 ; i < inputList.length ; i++) {
+			if ( (inputList[i].type.toLowerCase() == "number") || (inputList[i].type.toLowerCase() == "text") )
+				inputList[i].style.paddingBottom = "9px" ; // add some padding to the bottom of number or text inputs
+		}
+		
+		document.getElementById("postTriggerSlider").addEventListener('change', function() { changeNumberOften(document.getElementById("postTriggerSlider")) ; }) ;
+	}
+}
+
+
+
+function detectIE() {
+  var ua = window.navigator.userAgent;
+
+  // Test values; Uncomment to check result …
+
+  // IE 10
+  // ua = 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)';
+  
+  // IE 11
+  // ua = 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko';
+  
+  // Edge 12 (Spartan)
+  // ua = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0';
+  
+  // Edge 13
+  // ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586';
+
+  var msie = ua.indexOf('MSIE ');
+  if (msie > 0) {
+    // IE 10 or older => return version number
+    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+  }
+
+  var trident = ua.indexOf('Trident/');
+  if (trident > 0) {
+    // IE 11 => return version number
+    var rv = ua.indexOf('rv:');
+    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+  }
+
+  var edge = ua.indexOf('Edge/');
+  if (edge > 0) {
+    // Edge (IE 12+) => return version number
+    return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+  }
+
+  // other browser
+  return false;
+}
+
+
+
+function theme(selection) { // set a new stylesheet to use
+
+	if ( (selection == "default") || (selection == "monochrome") || (selection == "darker") || (selection == "lighter") || (selection == "monoDark") || (selection == "newDefault") ) {
+		document.getElementById("themeSelection").href = "/css/" + selection + "Theme.css" ;
+	}
+}
+
+var dropDownFunctions = { 
+				"None (False)":			function(parent) { parent.firstChild.textContent = "None (False)" ; },
+				"Always High (True)":	function(parent) { parent.firstChild.textContent = "Always High (True)" ; },
+				"Input 1 (IO1 in)":		function(parent) { parent.firstChild.textContent = "Input 1 (IO1 in)" ; },
+				"Input 2 (IO2 in)":		function(parent) { parent.firstChild.textContent = "Input 2 (IO2 in)" ; },
+				"Input 3 (IO3 in)":		function(parent) { parent.firstChild.textContent = "Input 3 (IO3 in)" ; },
+				"Start of Recording":	function(parent) { parent.firstChild.textContent = "Start of Recording" ; },
+				"End of Recording":		function(parent) { parent.firstChild.textContent = "End of Recording" ; },
+				"While Recording":		function(parent) { parent.firstChild.textContent = "While Recording" ; },
+				"Timing IO":			function(parent) { parent.firstChild.textContent = "Timing IO" ; },
+				"Delay Block":			function(parent) { parent.firstChild.textContent = "Delay Block" ; },
+				"Software Trigger":		function(parent) { parent.firstChild.textContent = "Software Trigger" ; },
+				"Toggle Block":			function(parent) { parent.firstChild.textContent = "Togle Block" ; },
+				"Combinatorial Block":	function(parent) { parent.firstChild.textContent = "Combinatorial Block" ; },
+				"Shutter":				function(parent) { parent.firstChild.textContent = "Shutter" ; },
+				"Next Segment":			function(parent) { parent.firstChild.textContent = "Next Segment" ; },
+				"Display Frame":		function(parent) { parent.firstChild.textContent = "Display Frame" ; },
+
+				"Ok":					function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("netShareResultBox").classList.add("hidden") ;  dataGetter('get', 'externalStorage', pageUpdate) ; },
+
+						}
+
+
+function dropDownSelect (element) {
+	if (element.innerText in dropDownFunctions) // if the key-value exists
+		dropDownFunctions[element.innerText](element.parentElement.parentElement) ; // run the function
+}
+
+
+
+var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{"recSegments": ' + value + '}', pageUpdate) ; },
+
+						"colourDefaultBtn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
+						"colourIdentityBtn":	function() { detourRequester("set", '{"colorMatrix": [1.0, 0.0, 0.0,  0.0, 1.0, 0.0,  0.0, 0.0, 1.0]}', pageUpdate) ; },
+						"colourApplyBtn":		function() { detourRequester("set", '{"colorMatrix": [' + document.getElementById("colMatrixa").value + ', ' + document.getElementById("colMatrixb").value + ', ' + document.getElementById("colMatrixc").value + ', ' + document.getElementById("colMatrixd").value + ', ' + document.getElementById("colMatrixe").value + ', ' + document.getElementById("colMatrixf").value + ', ' + document.getElementById("colMatrixg").value + ', ' + document.getElementById("colMatrixh").value + ', ' + document.getElementById("colMatrixi").value + ']}', pageUpdate) ; },
+						"colourPreset1Btn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
+						"colourPreset2Btn":		function() { detourRequester("set", '{"colorMatrix": [1.23291, 0.646729, -0.776367,  -0.321777, 1.68994, -0.380859,  -0.0612793, -0.640869,1.52563]}', pageUpdate) ; },
+
+						"whiteBalApplyBtn":		function() { detourRequester("set", '{"wbColor": [' + document.getElementById("whiteBalNuma").value + ', ' + document.getElementById("whiteBalNumb").value + ', ' + document.getElementById("whiteBalNumc").value + ']}', pageUpdate) ; },
+
+						"resetAll":				function() { resetAll() ; },
+
+						"morePreRecTime":		function() { extender += lastKnownMaxRecFrames ; document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ; document.getElementById("postTriggerSlider").value = parseInt(document.getElementById("postTriggerSlider").value) + lastKnownMaxRecFrames ; document.getElementById("postTriggerFrameNum").value = document.getElementById("postTriggerSlider").max - parseInt(document.getElementById("postTriggerSlider").value) ; document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ; },
+						"defaultTrigDelay":		function() { extender = 0 ; dataRequester("set", '{"recTrigDelay": 0}', pageUpdate) ; },
+
+						"nfsTestBtn":			function() { if (!document.getElementById("nfsTestBtn").classList.contains("disabled")) { netStorageRequest("test", "nfs") ; } },
+						"nfsApplyBtn":			function() { netStorageRequest("mount", "nfs") ; },
+						"nfsUnmountBtn":		function() { if (!document.getElementById("nfsUnmountBtn").classList.contains("disabled")) {netStorageRequest("unmount", "nfs") ; } },
+						
+						"smbTestBtn":			function() { if (!document.getElementById("smbTestBtn").classList.contains("disabled")) { netStorageRequest("test", "smb") ; } },
+						"smbApplyBtn":			function() { netStorageRequest("mount", "smb") ; },
+						"smbUnmountBtn":		function() { if (!document.getElementById("smbUnmountBtn").classList.contains("disabled")) {netStorageRequest("unmount", "smb") ; } },
+					 }
+
+
+function justRunSomething(element) {
+	if (element.id in inputFunctions) // if the key-value exists
+		inputFunctions[element.id](element.value) ; // run the function (with the value given)
+}
+
+
+
+document.getElementById("menu").onmouseenter = function(){ document.getElementById("menuList").style.display = "block" ; }
+document.getElementById("menu").onmouseleave = function() {
+	var otherMenu = document.getElementById("menuList") ;
+	setTimeout( function() {
+		if (!document.getElementById("menu").classList.contains("active"))
+			document.getElementById("menuList").style.display = "" ;
+	}, 50) ;
+}
+
+
+window.onclick = function(event) { // check where a click was: if it was outside a menu, close that menu
+	if ( !event.target.matches(".menuClickOk") && (event.target.parent == undefined || !event.target.parent.matches(".menuClickOk"))
+	&& (document.getElementById("menu").matches(".active")) ) {
+		toggler(document.getElementById("menu")) ; // toggle off the button (and close the menu)
+	}
+}
+
+
+
+var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
+					"autoSaveButton":		[ "No", "Yes" ],
+
+					"disableRBButton":		[ "Enabled", "Disabled" ],
+//					"smbPassShowHide":		[ "Show", "Hide" ],
+				}
+
+var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
+
+						"debugToggle":			[ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
+						"displayToggleButton":	[ function(){ dataRequester("set", '{"backlightEnabled": false}', pageUpdate) ; }, function(){ dataRequester("set", '{"backlightEnabled": true}', pageUpdate) ; } ],
+						"autoSaveButton":		[ function(){ if (getCookie("as") > 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 0) ; } }, function() { if (getCookie("as") < 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 1) ; } } ],
+
+						"disableRBButton":		[ function(){ dataSender("set", '{"disableRingBuffer": 0}') ; }, function() { dataSender("set", '{"disableRingBuffer": 1}') ; } ],
+						"smbPassShowHide":		[ function(){ document.getElementById("smbPass").type="password" ; document.getElementById("smbPass").placeholder="******" ; }, function(){ document.getElementById("smbPass").type="text" ; document.getElementById("smbPass").placeholder="s3cr3t" ; } ],
+					  }
+
+
+function toggler(element) { // toggle the class (active/inactive), change the name, and run a function for a toggle button/switch
+	var leftRight = 0 ;
+
+	if (element.classList.contains("active")) { // changing to 'inactive' or no state set previously
+		element.classList.remove("active") ; // remove the "active" styling
+		element.classList.add("inactive") ; // use the "inactive" styling
+		leftRight = 0 ; // use the 'left' column for names / functions
+	}
+	else if (element.classList.contains("disabled")) { // button disabled
+		return ; // don't do anything
+	}
+	else {
+		element.classList.remove("inactive") ; // remove the "inactive" styling
+		element.classList.add("active") ; // use the "active" styling
+		leftRight = 1 ; // use the 'right' column for names / functions
+	}
+
+	if (element.id in nameChange) // check if key-value exists
+		element.innerHTML = nameChange[element.id][leftRight] ; // set name to the left (inactive) or right (active) one
+
+	if (element.id in buttonFunctions) // if the key-value exists
+		buttonFunctions[element.id][leftRight]() ; // run the left (inactive) or right (active) function
+}
+
+function stateSelecter(element, state) { // this is like toggler above, but doesn't run the function ; set the class (active/inactive), change the name
+
+	if (state) { // switch to active
+		element.classList.remove("inactive") ; // remove the "inactive" styling
+		element.classList.add("active") ; // use the "active" styling
+	}
+	else { // switch to inactive
+		element.classList.remove("active") ; // remove the "active" styling
+		element.classList.add("inactive") ; // use the "inactive" styling
+	}
+
+	state *= 1 ;
+
+	if (element.id in nameChange) // check if key-value exists
+		element.innerHTML = nameChange[element.id][state] ; // set name to the left (inactive) or right (active) one
+}
+
+
+function menuKeeper() {
+	document.getElementById("menu").classList.remove("inactive");
+	document.getElementById("menu").classList.add("active");
+}
+
+
+function batteryPercent(level, charging) { // set the percentage (level) of the battery (and whether it's charging)
+	var indicator = document.getElementById("battery-level") ;
+	var text = document.getElementById("battery%") ;
+
+	if (level <= 100 && level >= 0) { // not charging (and level is ok)
+		text.innerHTML = level.toString() + "%" ;
+
+
+		if (charging) {
+			indicator.style.height = "100%" ; // just make the level full when charging
+			indicator.style.backgroundColor = "white" ; // white background while charging
+			indicator.innerHTML = '<div id="chargeIcon" class="hidden"></div>' ; // add the charging indicator
+		}
+		else {
+			indicator.style.height = level.toString() + "%" ;
+			indicator.innerHTML = '' ; // clear the charging icon
+
+			if (level <= 20)
+				indicator.style.backgroundColor = "#a00" ; // red (low)
+			else if (level <= 55)
+				indicator.style.backgroundColor = "#e7ba00" ; // yellow (less than half)
+			else
+				indicator.style.backgroundColor = "green" ; // green (fine / more than half)
+		}
+	}
+}
+
+
+var lastKnownBatteryLevel = 0 ;
+var lastKnownExternalPower = false ;
+
+
+
+
+function pageUpdate(rawData){
+	var parsedData = JSON.parse(rawData) ;
+
+	if (DebugOnOff)
+		document.getElementById("debugger").innerHTML += "<br><br>got info:" + rawData ;
+
+	if ("batteryChargePercent" in parsedData) {
+		lastKnownBatteryLevel = Math.round(parsedData.batteryChargePercent) ; // set the last known battery percent value
+		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
+	}
+
+	if ("externalPower" in parsedData) {
+		lastKnownExternalPower = parsedData.externalPower ; // set the last known power connection
+		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
+	}
+}
+
+
+
+function dataRequester(method, parameter, callMeMaybe) {
+	var requestSender = new XMLHttpRequest() ; // set up a new request
+	requestSender.open("POST", "/control/" + method, true) ; // use "post", and use the /control/ method
+	requestSender.setRequestHeader("Content-Type", "application/json") ; // use json format
+	requestSender.withCredentials = true ;
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){ // wait for successful response
+			callMeMaybe(requestSender.responseText) ; // call the callback function with the response text
+		}
+	}
+
+	requestSender.send(parameter) ;
+}
+
+
+function dataSender(method, parameter){
+	var requestSender = new XMLHttpRequest() ;
+	requestSender.open("POST", "/control/" + method, true) ;
+	requestSender.setRequestHeader("Content-Type", "application/json") ;
+	requestSender.withCredentials = true ;
+	
+	requestSender.send(parameter) ;
+}
+
+function dataGetter(method, parameter, callMeMaybe){
+	var requestSender = new XMLHttpRequest() ;
+	requestSender.open("GET", "/control/" + method + ( (parameter !== "") ? "?" + parameter : "")) ;
+	requestSender.setRequestHeader("Content-Type", "application/json") ;
+
+	requestSender.onreadystatechange = function(){ // do something with the response
+		if (this.readyState == 4 && this.status == 200){
+			callMeMaybe(requestSender.responseText) ; // call this function to deal with the input and update the page
+			 // callback function, passing in the string we got back
+		}
+	}
+
+	requestSender.send(parameter) ;
+}
+
+
+
+var useServerSentEvents = true;
+
+if (typeof(EventSource) != "undefined") {
+	const evtSource = new EventSource("/control/subscribe");
+
+	evtSource.onmessage = function(event) {
+		if (DebugOnOff)
+			document.getElementById("debugger").innerHTML = "onmessage:" + event.data;
+	}
+	evtSource.addEventListener("notify", function(event) {pageUpdate(event.data);}, false);
+	evtSource.addEventListener("complete", function(event) { pageUpdate(event.data) ; if (DebugOnOff) document.getElementById("debugger").innerHTML = "got complete:" + event.data; }, false);
+}
+else {
+	useServerSentEvents = false;
+document.getElementById("refreshAllBox").classList.remove("hidden") ;
+}
+
+dataGetter("p", "", pageUpdate) ; // get all the data on startup
+
+
+
+var PollCounter = 1 ;
+function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
+
+	if (PollCounter % 2 == 0) { // every 1 second
+
+	}
+
+	if (PollCounter % 30 == 0) { // every 15-ish seconds
+		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
+	}
+
+
+	if (!useServerSentEvents) { // no server-sent events; ask for updates
+
+		if (PollCounter % 31 == 0)
+			dataGetter('get', 'externalPower', pageUpdate) ; // check for external power connection
+
+	}
+
+	PollCounter++ ;
+}
+
+
+
+/* check cookies */
+
+switch (getCookie("thm")) {
+	case "":
+		setCookie("thm", "dt") ;
+	case "dt":
+		theme("default") ;
+		break ;
+
+	case "mo":
+		theme("monochrome") ;
+		break ;
+
+	case "dk":
+		theme("darker") ;
+		break ;
+
+	case "lt":
+		theme("lighter") ;
+		break ;
+
+	case "md":
+		theme("monoDark") ;
+		break ;
+
+	case "l2":
+		theme("newDefault") ;
+		break ;
+}
+
+
+
+
+/*
+	Cookie Descriptions:
+
+	id	name / description
+	---|-----------------------|
+	fpl	"focus peaking level"	number from 0 to 1
+	mc	"mode change"			"n" to change mode on navigation, "m" to change mode manually
+	sr	"save recording"		0 when recording was saved, 1 when not saved
+	thm	"theme"					2-letter code to indicate each theme
+	wo	"warn overwrite"		"a" always warn, "n" never warn, "u" warn on unsaved recordings
+	as	"auto save"				<= 0 to not auto save, > 0 to select device to save on
+	ff	"file format"			0: H264, 1: DNG, 2: Tiff12, 3: Tiff16(Raw)
+
+*/
+
+
+var intervalID = setInterval(pollOnlyUpdates, 500) ; // poll the camera for things that are not reported
+
+
+
+
+
+</script>
+</html>
+
+
+
