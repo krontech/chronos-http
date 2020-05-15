@@ -168,9 +168,8 @@
 	<div class="heading-bar">
 		<a id="main" href="./"> <div class="homeIcon"></div> Main </a>
 		<a id="playSave" class="active"> <div class="playIcon"></div> Play & Save </a>
-<!--		<a id="storage"> <div class="saveIcon"></div> Storage </a>
--->
 		<a id="settings" href="settings.html"> <div class="settingsIcon"></div> Settings </a>
+		<a id="ioNav" href="IO.html"> <div class="saveIcon"></div> I/O Config </a>
 		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Documentation </a>
 
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>
@@ -178,9 +177,7 @@
 			<a href="/"> Record (Main) </a>
 			<a href="PlaySave.html"> Play & Save </a>
 			<a href="settings.html"> Camera Settings </a>
-<!--
-			<a> Triggers & IO </a>
--->
+			<a href="IO.html"> I/O Configuration </a>
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
@@ -269,7 +266,7 @@
 			<b> Play Speed </b>
 			<input type="number" id="playBackRateNum" min="0" max="1920" step="1" value="60" onChange="boundInput(this)"> fps
 			<br>
-			<span class="instruction">Note that the image displayed on this page only updates once per second</span>
+			<span class="instruction">Note that the image displayed on this page only updates a few times per second</span>
 		</div>
 
 		<div id="storageDeviceBox" class="horizLayout">
@@ -1358,31 +1355,30 @@ dataGetter("p", "", pageUpdate) ; // get all the data on startup
 var PollCounter = 1 ;
 function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
 
-	if (PollCounter % 2 == 0) { // every 1 second
-		if (lastKnownVideoState != "filesave")
-			img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
+	if (lastKnownVideoState != "filesave")
+		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
 
+	if (PollCounter % 4 == 0) // every 1 second
 		dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
-	}
 
-	if (PollCounter % 30 == 0) { // every 15 seconds
+	if (PollCounter % 60 == 0) { // every 15 seconds
 		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
 	}
 
-	if (PollCounter % 120 == 0) { // every 60 seconds
+	if (PollCounter % 240 == 0) { // every 60 seconds
 		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
 	}
 
 
 	if (!useServerSentEvents) { // no server-sent events; ask for updates
-		if (PollCounter % 3 == 0)
+		if (PollCounter % 6 == 0)
 			dataGetter('get', 'state', pageUpdate) ; // check for a change in state
 
-		if (PollCounter % 5 == 0) {
+		if (PollCounter % 10 == 0) {
 			dataGetter('get', 'videoState', pageUpdate) ; // check for video state changes
 		}
 
-		if (PollCounter % 31 == 0)
+		if (PollCounter % 65 == 0)
 			dataGetter('get', 'externalPower', pageUpdate) ; // check for external power connection
 
 	}
@@ -1408,7 +1404,7 @@ switch (getCookie("ff")) { // get the save file format
 		break ;
 }
 
-var intervalID = setInterval(pollOnlyUpdates, 500) ; // poll the camera for things that are not reported
+var intervalID = setInterval(pollOnlyUpdates, 250) ; // poll the camera for things that are not reported
 
 
 
