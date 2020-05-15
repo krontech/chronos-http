@@ -1292,10 +1292,10 @@ function pageUpdate(rawData){
 	}
 
 
-//	if ("frameRate" in parsedData) { // show the frame rate of the camera
-//		document.getElementById("fps").value = parseFloat(parsedData.frameRate).toFixed(2) ;
-//		resFRSettingsOnCam[4] = document.getElementById("fps").value ; // store the settings recieved from the camera
-//	}
+	if ("frameRate" in parsedData) { // show the frame rate of the camera
+		document.getElementById("fps").value = parseFloat(parsedData.frameRate).toFixed(2) ;
+		resFRSettingsOnCam[4] = document.getElementById("fps").value ; // store the settings recieved from the camera
+	}
 
 	if ("framePeriod" in parsedData) { // get the frame period (save for other calculations)
 		framePeriod = parsedData.framePeriod ;
