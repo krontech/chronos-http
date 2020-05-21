@@ -25,6 +25,29 @@
 	.leftContainer, .rightContainer { box-shadow: 0 0 3px 3px inset white; }
 } */
 
+@media screen and (min-width: 1600px) {
+	.leftContainer, .rightContainer { max-width: 1000px; }
+	#container1 { margin-bottom: 6px; }
+}
+
+.ioStatus.true {
+	display: inline-block;
+	height: 0;
+	width: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 16px solid green;
+}
+
+.ioStatus.false {
+	display: inline-block;
+	height: 0;
+	width: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 16px solid #A00;
+}
+
 
 </style>
 </head>
@@ -70,10 +93,142 @@
 
 <!--	<div class="leftContainer">
 -->
+
+	<div class="rightContainer">
+		<div id="inputList" class="Text-bar">
+			<div class="no-click">
+				<span>Simple Configuration</span>
+			</div>
+		</div>
+
+		<div class="horizLayout">
+			<b> Input Status </b>
+			<br>
+			Always High (True): <div id="alwaysHighSourceStatus" class="ioStatus none"></div>
+			<br>
+			None (False): <div id="noneSourceStatus" class="ioStatus none"></div>
+			<br>
+			Input 1 (IO1): <div id="io1SourceStatus" class="ioStatus none"></div>
+			<br>
+			Input 2 (IO2): <div id="io2SourceStatus" class="ioStatus none"></div>
+			<br>
+			Input 3 (IO3): <div id="io3SourceStatus" class="ioStatus none"></div>
+			<br>
+			Delay Block: <div id="delaySourceStatus" class="ioStatus none"></div>
+			<br>
+			Next Segment: <div id="nextSegSourceStatus" class="ioStatus none"></div>
+			<br>
+			Timing IO: <div id="timingIoSourceStatus" class="ioStatus none"></div>
+			<br>
+			Display Frame: <div id="dispFrameSourceStatus" class="ioStatus none"></div>
+			<br>
+			Combinatorial Block: <div id="combSourceStatus" class="ioStatus none"></div>
+			<br>
+			Shutter: <div id="shutterSourceStatus" class="ioStatus none"></div>
+			<br>
+			Toggle Block: <div id="toggleSourceStatus" class="ioStatus none"></div>
+			<br>
+			End Recording: <div id="endRecSourceStatus" class="ioStatus none"></div>
+			<br>
+			Recording: <div id="recordingSourceStatus" class="ioStatus none"></div>
+			<br>
+			Start Recording: <div id="startRecSourceStatus" class="ioStatus none"></div>
+			<br>
+			Software Trigger: <div id="softwareSourceStatus" class="ioStatus none"></div>
+		</div>
+<!--
+//      "alwaysHigh": true,
+//      "none": false,
+//      "io1": true,
+//      "io2": false
+//      "io3": false,
+
+//      "delay": false,
+//      "nextSeg": false,
+//      "timingIo": true,
+//      "dispFrame": false,
+
+//      "comb": false,
+//      "shutter": true,
+//      "toggle": true,
+
+//      "endRec": false,
+//      "recording": false,
+//      "software": false,
+//      "startRec": false,
+-->
+
+<!--
+   "ioSourceStatus": {
+      "io3": false,
+      "delay": false,
+      "nextSeg": false,
+      "timingIo": true,
+      "dispFrame": false,
+      "alwaysHigh": true,
+      "comb": false,
+      "none": false,
+      "io1": true,
+      "shutter": true,
+      "toggle": true,
+      "endRec": false,
+      "recording": false,
+      "software": false,
+      "startRec": false,
+      "io2": false
+   },
+
+   "ioOutputStatus": {
+      "gate": false,
+      "delay": false,
+      "start": false,
+      "comb": false,
+      "shutter": false,
+      "toggle": true,
+      "stop": false,
+      "io1": true,
+      "io2": true
+
+   },
+-->
+
+		<div class="horizLayout">
+			<b> Output Status </b>
+			<br>
+			Gate: <div id="gateOutputStatus" class="ioStatus none"></div>
+			<br>
+			Delay: <div id="delayOutputStatus" class="ioStatus none"></div>
+			<br>
+			Start Recording: <div id="startOutputStatus" class="ioStatus none"></div>
+			<br>
+			Combinatorial Block: <div id="combOutputStatus" class="ioStatus none"></div>
+			<br>
+			Shutter: <div id="shutterOutputStatus" class="ioStatus none"></div>
+			<br>
+			Toggle Block: <div id="toggleOutputStatus" class="ioStatus none"></div>
+			<br>
+			Stop Recording: <div id="stopOutputStatus" class="ioStatus none"></div>
+			<br>
+			Output 1 (IO1): <div id="io1OutputStatus" class="ioStatus none"></div>
+			<br>
+			Output 2 (IO2): <div id="io2OutputStatus" class="ioStatus none"></div>
+		</div>
+
+
+	</div>
+
 	<div id="container1" class="rightContainer">
+
+		<div class="Text-bar">
+			<div class="no-click">
+				<span>Advanced Configuration</span>
+			</div>
+		</div>
+
 
 		<div id="ioMappingStopRecBox" class="horizLayout">
 			<b> Stop Recording </b>
+<!--			<div id="ioMappingStopRecOutput" class="ioStatus none"></div> -->
 			<br>
 			<span class="instruction"> Cause the recording to stop </span>
 			<br>
@@ -96,13 +251,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingStopRecSourceStatus">(True/False)</span>
+			<span id="ioMappingStopRecSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingStopRecDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingStopRecDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingStopRecInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingStopRecInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingCombOr1Box" class="horizLayout">
@@ -129,13 +284,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingCombOr1SourceStatus">(True/False)</span>
+			<span id="ioMappingCombOr1SourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingCombOr1Debounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombOr1Debounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingCombOr1Invert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombOr1Invert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingCombOr2Box" class="horizLayout">
@@ -162,13 +317,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingCombOr2SourceStatus">(True/False)</span>
+			<span id="ioMappingCombOr2SourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingCombOr2Debounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombOr2Debounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingCombOr2Invert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombOr2Invert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingCombOr3Box" class="horizLayout">
@@ -195,13 +350,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingCombOr3SourceStatus">(True/False)</span>
+			<span id="ioMappingCombOr3SourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingCombOr3Debounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombOr3Debounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingCombOr3Invert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombOr3Invert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingCombXorBox" class="horizLayout">
@@ -228,13 +383,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingCombXorSourceStatus">(True/False)</span>
+			<span id="ioMappingCombXorSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingCombXorDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombXorDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingCombXorInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombXorInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingCombAndBox" class="horizLayout">
@@ -261,13 +416,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingCombAndSourceStatus">(True/False)</span>
+			<span id="ioMappingCombAndSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingCombAndDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombAndDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingCombAndInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingCombAndInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingGateBox" class="horizLayout">
@@ -294,13 +449,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingGateSourceStatus">(True/False)</span>
+			<span id="ioMappingGateSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingGateDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingGateDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingGateInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingGateInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingToggleSetBox" class="horizLayout">
@@ -327,13 +482,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingToggleSetSourceStatus">(True/False)</span>
+			<span id="ioMappingToggleSetSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingToggleSetDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingToggleSetDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingToggleSetInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingToggleSetInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingToggleFlipBox" class="horizLayout">
@@ -360,13 +515,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingToggleFlipSourceStatus">(True/False)</span>
+			<span id="ioMappingToggleFlipSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingToggleFlipDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingToggleFlipDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingToggleFlipInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingToggleFlipInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingToggleClearBox" class="horizLayout">
@@ -393,13 +548,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingToggleClearSourceStatus">(True/False)</span>
+			<span id="ioMappingToggleClearSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingToggleClearDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingToggleClearDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingToggleClearInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingToggleClearInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 
@@ -427,13 +582,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingStartRecSourceStatus">(True/False)</span>
+			<span id="ioMappingStartRecSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingStartRecDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingStartRecDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingStartRecInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingStartRecInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingIo1Box" class="horizLayout">
@@ -460,16 +615,17 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingIo1SourceStatus">(True/False)</span>
+			<span id="ioMappingIo1SourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingIo1Debounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingIo1Debounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingIo1Invert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingIo1Invert" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Drive Strength:
 			<div id="ioMappingIo1Drive" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Off</a>
 				<a onclick="dropDownSelect(this)">Low (1mA)</a>
 				<a onclick="dropDownSelect(this)">High (20mA)</a>
 			</div></div>
@@ -499,16 +655,17 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingIo2SourceStatus">(True/False)</span>
+			<span id="ioMappingIo2SourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingIo2Debounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingIo2Debounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingIo2Invert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingIo2Invert" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Drive Strength:
 			<div id="ioMappingIo2Drive" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Off</a>
 				<a onclick="dropDownSelect(this)">Low (1mA)</a>
 				<a onclick="dropDownSelect(this)">High (20mA)</a>
 			</div></div>
@@ -540,13 +697,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingTriggerSourceStatus">(True/False)</span>
+			<span id="ioMappingTriggerSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingTriggerDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingTriggerDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingTriggerInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingTriggerInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 		<div id="ioMappingDelayBox" class="horizLayout">
@@ -573,13 +730,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingDelaySourceStatus">(True/False)</span>
+			<span id="ioMappingDelaySourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingDelayDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingDelayDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingDelayInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingDelayInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 
@@ -607,13 +764,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="ioMappingShutterSourceStatus">(True/False)</span>
+			<span id="ioMappingShutterSourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="ioMappingShutterDebounce" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingShutterDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
 			Invert:
-			<a id="ioMappingShutterInvert" class="button" onclick="toggler(this)">False</a>
+			<a id="ioMappingShutterInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
 
@@ -641,13 +798,13 @@
 				<a onclick="dropDownSelect(this)">Next Segment</a>
 				<a onclick="dropDownSelect(this)">Display Frame</a>
 			</div></div>
-			<span id="SourceStatus">(True/False)</span>
+			<span id="SourceStatus" class="ioInputStatus">(True/False)</span>
 			<br>
 			Debounce:
-			<a id="Debounce" class="button" onclick="toggler(this)">False</a>
+			<a id="Debounce" class="button" onclick="sendIoRequest(this)">False</a>
 			<br>
 			Invert:
-			<a id="Invert" class="button" onclick="toggler(this)">False</a>
+			<a id="Invert" class="button" onclick="sendIoRequest(this)">False</a>
 		</div>
 
 
@@ -784,6 +941,20 @@
       "io2": false
    },
 
+   "ioOutputStatus": {
+      "gate": false,
+      "delay": false,
+      "start": false,
+      "comb": false,
+      "shutter": false,
+      "toggle": true,
+      "stop": false,
+      "io1": true,
+      "io2": true
+
+   },
+
+
    "ioMapping": {
 
       "combAnd": {
@@ -910,8 +1081,6 @@
 			</div>
 			<span id="battery%">0%</span>
 		</div>
-
-		<a id="resetAll" onclick="justRunSomething(this)">Reset All Settings<br>to Default</a>
 	</div>
 
 
@@ -1078,23 +1247,150 @@ function theme(selection) { // set a new stylesheet to use
 	}
 }
 
+
+function sendIoRequest (parent) {
+	var sliceAmount = 0 ;
+	switch (parent.id.slice(-5)) {
+		case "Drive": // Drive
+			sliceAmount = -5 ;
+			break ;
+		case "nvert": // Invert
+			sliceAmount = -6 ;
+			break ;
+		case "ounce": // Debounce
+			sliceAmount = -8 ;
+			break ;
+		case "ource": // Source
+		default:
+			sliceAmount = -6 ;
+			break ;
+	}
+
+	var baseName = parent.id.slice(0, sliceAmount) ;
+
+	var debounce = "false" ;
+	if (document.getElementById(baseName + "Debounce").classList.contains("active"))
+		debounce = "true" ;
+
+	var invert = "false" ;
+	if (document.getElementById(baseName + "Invert").classList.contains("active"))
+		invert = "true" ;
+
+	var source="" ;
+	switch (document.getElementById(baseName + "Source").firstChild.textContent) {
+		case "None (False)":
+			source = "none" ;
+			break ;
+		case "Always High (True)":
+			source = "alwaysHigh" ;
+			break ;
+		case "Input 1 (IO1 in)":
+			source = "io1" ;
+			break ;	
+		case "Input 2 (IO2 in)":
+			source = "io2" ;
+			break ;
+		case "Input 3 (IO3 in)":
+			source = "io3" ;
+			break ;
+		case "Start of Recording":
+			source = "startRec" ;
+			break ;
+		case "End of Recording":
+			source = "endRec" ;
+			break ;
+		case "While Recording":
+			source = "recording" ;
+			break ;
+		case "Timing IO":
+			source = "timingIo" ;
+			break ;
+		case "Delay Block":
+			source = "delay" ;
+			break ;
+		case "Software Trigger":
+			source = "software" ;
+			break ;
+		case "Toggle Block":
+			source = "toggle" ;
+			break ;
+		case "Combinatorial Block":
+			source = "comb" ;
+			break ;
+		case "Shutter":
+			source = "shutter" ;
+			break ;
+		case "Next Segment":
+			source = "nextSeg" ;
+			break ;
+		case "Display Frame":
+			source = "dispFrame" ;
+			break ;
+	}
+
+	var request = '{"' + baseName + '": {"source": "' + source + '", "debounce": ' + debounce + ', "invert": ' + invert ;
+
+	if ( (baseName == "ioMappingIo1") || (baseName == "ioMappingIo2") ) {
+		request += ', "drive": ' ;
+		switch (document.getElementById(baseName + "Drive").firstChild.textContent) {
+			case "Low (1mA)":
+				request += "1" ;
+				break ;
+			case "High (20mA)":
+				request += "2" ;
+				break ;
+			default:
+				request += "0" ;
+		}
+	}
+
+	request += '}}' ;
+
+	dataRequester("set", request, pageUpdate) ; // send the request
+}
+
+function debounceOrInvert(element) { // similar to toggle function, but specific to ioMapping* objects
+	var leftRight = 0 ;
+
+	if (element.classList.contains("active")) { // changing to 'inactive' or no state set previously
+		element.classList.remove("active") ; // remove the "active" styling
+		element.classList.add("inactive") ; // use the "inactive" styling
+		element.innerHTML = "False" ;
+	}
+	else if (element.classList.contains("disabled")) { // button disabled
+		return ; // don't do anything
+	}
+	else {
+		element.classList.remove("inactive") ; // remove the "inactive" styling
+		element.classList.add("active") ; // use the "active" styling
+		element.innerHTML = "True" ;
+	}
+
+	sendIoRequest(element) ; // make and send a request for an IO change
+}
+
+
 var dropDownFunctions = { 
-				"None (False)":			function(parent) { parent.firstChild.textContent = "None (False)" ; },
-				"Always High (True)":	function(parent) { parent.firstChild.textContent = "Always High (True)" ; },
-				"Input 1 (IO1 in)":		function(parent) { parent.firstChild.textContent = "Input 1 (IO1 in)" ; },
-				"Input 2 (IO2 in)":		function(parent) { parent.firstChild.textContent = "Input 2 (IO2 in)" ; },
-				"Input 3 (IO3 in)":		function(parent) { parent.firstChild.textContent = "Input 3 (IO3 in)" ; },
-				"Start of Recording":	function(parent) { parent.firstChild.textContent = "Start of Recording" ; },
-				"End of Recording":		function(parent) { parent.firstChild.textContent = "End of Recording" ; },
-				"While Recording":		function(parent) { parent.firstChild.textContent = "While Recording" ; },
-				"Timing IO":			function(parent) { parent.firstChild.textContent = "Timing IO" ; },
-				"Delay Block":			function(parent) { parent.firstChild.textContent = "Delay Block" ; },
-				"Software Trigger":		function(parent) { parent.firstChild.textContent = "Software Trigger" ; },
-				"Toggle Block":			function(parent) { parent.firstChild.textContent = "Togle Block" ; },
-				"Combinatorial Block":	function(parent) { parent.firstChild.textContent = "Combinatorial Block" ; },
-				"Shutter":				function(parent) { parent.firstChild.textContent = "Shutter" ; },
-				"Next Segment":			function(parent) { parent.firstChild.textContent = "Next Segment" ; },
-				"Display Frame":		function(parent) { parent.firstChild.textContent = "Display Frame" ; },
+				"None (False)":			function(parent) { parent.firstChild.textContent = "None (False)" ; sendIoRequest(parent) ; },
+				"Always High (True)":	function(parent) { parent.firstChild.textContent = "Always High (True)" ; sendIoRequest(parent) ; },
+				"Input 1 (IO1 in)":		function(parent) { parent.firstChild.textContent = "Input 1 (IO1 in)" ; sendIoRequest(parent) ; },
+				"Input 2 (IO2 in)":		function(parent) { parent.firstChild.textContent = "Input 2 (IO2 in)" ; sendIoRequest(parent) ; },
+				"Input 3 (IO3 in)":		function(parent) { parent.firstChild.textContent = "Input 3 (IO3 in)" ; sendIoRequest(parent) ; },
+				"Start of Recording":	function(parent) { parent.firstChild.textContent = "Start of Recording" ; sendIoRequest(parent) ; },
+				"End of Recording":		function(parent) { parent.firstChild.textContent = "End of Recording" ; sendIoRequest(parent) ; },
+				"While Recording":		function(parent) { parent.firstChild.textContent = "While Recording" ; sendIoRequest(parent) ; },
+				"Timing IO":			function(parent) { parent.firstChild.textContent = "Timing IO" ; sendIoRequest(parent) ; },
+				"Delay Block":			function(parent) { parent.firstChild.textContent = "Delay Block" ; sendIoRequest(parent) ; },
+				"Software Trigger":		function(parent) { parent.firstChild.textContent = "Software Trigger" ; sendIoRequest(parent) ; },
+				"Toggle Block":			function(parent) { parent.firstChild.textContent = "Togle Block" ; sendIoRequest(parent) ; },
+				"Combinatorial Block":	function(parent) { parent.firstChild.textContent = "Combinatorial Block" ; sendIoRequest(parent) ; },
+				"Shutter":				function(parent) { parent.firstChild.textContent = "Shutter" ; sendIoRequest(parent) ; },
+				"Next Segment":			function(parent) { parent.firstChild.textContent = "Next Segment" ; sendIoRequest(parent) ; },
+				"Display Frame":		function(parent) { parent.firstChild.textContent = "Display Frame" ; sendIoRequest(parent) ; },
+
+				"Off":					function(parent) { parent.firstChild.textContent = "Off" ; sendIoRequest(parent) ; },
+				"Low (1mA)":			function(parent) { parent.firstChild.textContent = "Low (1mA)" ; sendIoRequest(parent) ; },
+				"High (20mA)":			function(parent) { parent.firstChild.textContent = "High (20mA)" ; sendIoRequest(parent) ; },
 
 				"Ok":					function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("netShareResultBox").classList.add("hidden") ;  dataGetter('get', 'externalStorage', pageUpdate) ; },
 
@@ -1117,19 +1413,6 @@ var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{
 						"colourPreset2Btn":		function() { detourRequester("set", '{"colorMatrix": [1.23291, 0.646729, -0.776367,  -0.321777, 1.68994, -0.380859,  -0.0612793, -0.640869,1.52563]}', pageUpdate) ; },
 
 						"whiteBalApplyBtn":		function() { detourRequester("set", '{"wbColor": [' + document.getElementById("whiteBalNuma").value + ', ' + document.getElementById("whiteBalNumb").value + ', ' + document.getElementById("whiteBalNumc").value + ']}', pageUpdate) ; },
-
-						"resetAll":				function() { resetAll() ; },
-
-						"morePreRecTime":		function() { extender += lastKnownMaxRecFrames ; document.getElementById("postTriggerSlider").max = lastKnownMaxRecFrames + extender ; document.getElementById("postTriggerSlider").value = parseInt(document.getElementById("postTriggerSlider").value) + lastKnownMaxRecFrames ; document.getElementById("postTriggerFrameNum").value = document.getElementById("postTriggerSlider").max - parseInt(document.getElementById("postTriggerSlider").value) ; document.getElementById("backgroundThing").style.borderLeftWidth = ( extender / (extender + lastKnownMaxRecFrames) * document.getElementById("postTriggerSlider").offsetWidth ) + "px" ; },
-						"defaultTrigDelay":		function() { extender = 0 ; dataRequester("set", '{"recTrigDelay": 0}', pageUpdate) ; },
-
-						"nfsTestBtn":			function() { if (!document.getElementById("nfsTestBtn").classList.contains("disabled")) { netStorageRequest("test", "nfs") ; } },
-						"nfsApplyBtn":			function() { netStorageRequest("mount", "nfs") ; },
-						"nfsUnmountBtn":		function() { if (!document.getElementById("nfsUnmountBtn").classList.contains("disabled")) {netStorageRequest("unmount", "nfs") ; } },
-						
-						"smbTestBtn":			function() { if (!document.getElementById("smbTestBtn").classList.contains("disabled")) { netStorageRequest("test", "smb") ; } },
-						"smbApplyBtn":			function() { netStorageRequest("mount", "smb") ; },
-						"smbUnmountBtn":		function() { if (!document.getElementById("smbUnmountBtn").classList.contains("disabled")) {netStorageRequest("unmount", "smb") ; } },
 					 }
 
 
@@ -1159,11 +1442,39 @@ window.onclick = function(event) { // check where a click was: if it was outside
 
 
 
-var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
-					"autoSaveButton":		[ "No", "Yes" ],
-
-					"disableRBButton":		[ "Enabled", "Disabled" ],
-//					"smbPassShowHide":		[ "Show", "Hide" ],
+var nameChange = {
+					"ioMappingStopRecDebounce":		[ "False", "True"],
+					"ioMappingStopRecInvert":		[ "False", "True"],
+					"ioMappingCombOr1Debounce":		[ "False", "True"],
+					"ioMappingCombOr1Invert":		[ "False", "True"],
+					"ioMappingCombOr2Debounce":		[ "False", "True"],
+					"ioMappingCombOr2Invert":		[ "False", "True"],
+					"ioMappingCombOr3Debounce":		[ "False", "True"],
+					"ioMappingCombOr3Invert":		[ "False", "True"],
+					"ioMappingCombXorDebounce":		[ "False", "True"],
+					"ioMappingCombXorInvert":		[ "False", "True"],
+					"ioMappingCombAndDebounce":		[ "False", "True"],
+					"ioMappingCombAndInvert":		[ "False", "True"],
+					"ioMappingGateDebounce":		[ "False", "True"],
+					"ioMappingGateInvert":			[ "False", "True"],
+					"ioMappingToggleSetDebounce":	[ "False", "True"],
+					"ioMappingToggleSetInvert":		[ "False", "True"],
+					"ioMappingToggleFlipDebounce":	[ "False", "True"],
+					"ioMappingToggleFlipInvert":	[ "False", "True"],
+					"ioMappingToggleClearDebounce":	[ "False", "True"],
+					"ioMappingToggleClearInvert":	[ "False", "True"],
+					"ioMappingStartRecDebounce":	[ "False", "True"],
+					"ioMappingStartRecInvert":		[ "False", "True"],
+					"ioMappingIo1Debounce":			[ "False", "True"],
+					"ioMappingIo1Invert":			[ "False", "True"],
+					"ioMappingIo2Debounce":			[ "False", "True"],
+					"ioMappingIo2Invert":			[ "False", "True"],
+					"ioMappingTriggerDebounce":		[ "False", "True"],
+					"ioMappingTriggerInvert":		[ "False", "True"],
+					"ioMappingDelayDebounce":		[ "False", "True"],
+					"ioMappingDelayInvert":			[ "False", "True"],
+					"ioMappingShutterDebounce":		[ "False", "True"],
+					"ioMappingShutterInvert":		[ "False", "True"],
 				}
 
 var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
@@ -1174,6 +1485,7 @@ var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuLis
 
 						"disableRBButton":		[ function(){ dataSender("set", '{"disableRingBuffer": 0}') ; }, function() { dataSender("set", '{"disableRingBuffer": 1}') ; } ],
 						"smbPassShowHide":		[ function(){ document.getElementById("smbPass").type="password" ; document.getElementById("smbPass").placeholder="******" ; }, function(){ document.getElementById("smbPass").type="text" ; document.getElementById("smbPass").placeholder="s3cr3t" ; } ],
+
 					  }
 
 
@@ -1198,7 +1510,7 @@ function toggler(element) { // toggle the class (active/inactive), change the na
 		element.innerHTML = nameChange[element.id][leftRight] ; // set name to the left (inactive) or right (active) one
 
 	if (element.id in buttonFunctions) // if the key-value exists
-		buttonFunctions[element.id][leftRight]() ; // run the left (inactive) or right (active) function
+		buttonFunctions[element.id][leftRight](element) ; // run the left (inactive) or right (active) function
 }
 
 function stateSelecter(element, state) { // this is like toggler above, but doesn't run the function ; set the class (active/inactive), change the name
@@ -1256,7 +1568,59 @@ function batteryPercent(level, charging) { // set the percentage (level) of the 
 var lastKnownBatteryLevel = 0 ;
 var lastKnownExternalPower = false ;
 
+function driveName(value) {
+	switch (value) {
+		case 1:
+			return "Low (1mA)" ;
+		case 2:
+			return "High (20mA)" ;
+		case 0:
+			return "Off" ;
 
+		default:
+			return "Unkown (" + value + ")" ;
+	}
+}
+
+function sourceName(source) {
+	switch (source) {
+		case "none":
+			return "None (False)" ;
+		case "alwaysHigh":
+			return "Always High (True)" ;
+		case "io1":
+			return "Input 1 (IO1 in)" ;
+		case "io2":
+			return "Input 2 (IO2 in)" ;
+		case "io3":
+			return "Input 3 (IO3 in)" ;
+		case "startRec":
+			return "Start of Recording" ;
+		case "endRec":
+			return "End of Recording" ;
+		case "recording":
+			return "While Recording" ;
+		case "timingIo":
+			return "Timing IO" ;
+		case "delay":
+			return "Delay Block" ;
+		case "software":
+			return "Software Trigger" ;
+		case "toggle":
+			return "Toggle Block" ;
+		case "comb":
+			return "Combinatorial Block" ;
+		case "shutter":
+			return "Shutter" ;
+		case "nextSeg":
+			return "Next Segment" ;
+		case "dispFrame":
+			return "Display Frame" ;
+
+		default:
+			return "Unknown" ;
+	}
+}
 
 
 function pageUpdate(rawData){
@@ -1274,6 +1638,328 @@ function pageUpdate(rawData){
 		lastKnownExternalPower = parsedData.externalPower ; // set the last known power connection
 		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
 	}
+
+
+	if ("ioSourceStatus" in parsedData) {
+
+//		document.getElementById("alwaysHighSourceStatus").classList.add("true") ;
+//		document.getElementById("noneSourceStatus").classList.add("false") ;
+
+
+		document.getElementById("alwaysHighSourceStatus").classList.replace(document.getElementById("alwaysHighSourceStatus").classList[1], parsedData.ioSourceStatus.alwaysHigh) ;
+		document.getElementById("noneSourceStatus").classList.replace(document.getElementById("noneSourceStatus").classList[1], parsedData.ioSourceStatus.none) ;
+		document.getElementById("io1SourceStatus").classList.replace(document.getElementById("io1SourceStatus").classList[1], parsedData.ioSourceStatus.io1) ;
+		document.getElementById("io2SourceStatus").classList.replace(document.getElementById("io2SourceStatus").classList[1], parsedData.ioSourceStatus.io2) ;
+		document.getElementById("io3SourceStatus").classList.replace(document.getElementById("io3SourceStatus").classList[1], parsedData.ioSourceStatus.io3) ;
+
+		document.getElementById("delaySourceStatus").classList.replace(document.getElementById("delaySourceStatus").classList[1], parsedData.ioSourceStatus.delay) ;
+		document.getElementById("nextSegSourceStatus").classList.replace(document.getElementById("nextSegSourceStatus").classList[1], parsedData.ioSourceStatus.nextSeg) ;
+		document.getElementById("timingIoSourceStatus").classList.replace(document.getElementById("timingIoSourceStatus").classList[1], parsedData.ioSourceStatus.timingIo) ;
+		document.getElementById("dispFrameSourceStatus").classList.replace(document.getElementById("dispFrameSourceStatus").classList[1], parsedData.ioSourceStatus.dispFrame) ;
+		document.getElementById("combSourceStatus").classList.replace(document.getElementById("combSourceStatus").classList[1], parsedData.ioSourceStatus.comb) ;
+		document.getElementById("shutterSourceStatus").classList.replace(document.getElementById("shutterSourceStatus").classList[1], parsedData.ioSourceStatus.shutter) ;
+		document.getElementById("toggleSourceStatus").classList.replace(document.getElementById("toggleSourceStatus").classList[1], parsedData.ioSourceStatus.toggle) ;
+
+		document.getElementById("endRecSourceStatus").classList.replace(document.getElementById("endRecSourceStatus").classList[1], parsedData.ioSourceStatus.endRec) ;
+		document.getElementById("recordingSourceStatus").classList.replace(document.getElementById("recordingSourceStatus").classList[1], parsedData.ioSourceStatus.recording) ;
+		document.getElementById("startRecSourceStatus").classList.replace(document.getElementById("startRecSourceStatus").classList[1], parsedData.ioSourceStatus.software) ;
+		document.getElementById("softwareSourceStatus").classList.replace(document.getElementById("softwareSourceStatus").classList[1], parsedData.ioSourceStatus.startRec) ;
+
+//      "alwaysHigh": true,
+//      "none": false,
+//      "io1": true,
+//      "io2": false
+//      "io3": false,
+
+//      "delay": false,
+//      "nextSeg": false,
+//      "timingIo": true,
+//      "dispFrame": false,
+
+//      "comb": false,
+//      "shutter": true,
+//      "toggle": true,
+//      "endRec": false,
+//      "recording": false,
+//      "software": false,
+//      "startRec": false,
+
+		var allInputs = document.getElementsByClassName("ioInputStatus") ;
+
+		for (var i = 0 ; i < allInputs.length; i++) {
+			switch (allInputs[i].previousElementSibling.firstChild.textContent) {
+				case "None (False)":
+					allInputs[i].textContent = parsedData.ioSourceStatus.none ;
+					break ;
+				case "Always High (True)":
+					allInputs[i].textContent = parsedData.ioSourceStatus.alwaysHigh ;
+					break ;
+				case "Input 1 (IO1 in)":
+					allInputs[i].textContent = parsedData.ioSourceStatus.io1 ;
+					break ;	
+				case "Input 2 (IO2 in)":
+					allInputs[i].textContent = parsedData.ioSourceStatus.io2 ;
+					break ;
+				case "Input 3 (IO3 in)":
+					allInputs[i].textContent = parsedData.ioSourceStatus.io3 ;
+					break ;
+				case "Start of Recording":
+					allInputs[i].textContent = parsedData.ioSourceStatus.startRec ;
+					break ;
+				case "End of Recording":
+					allInputs[i].textContent = parsedData.ioSourceStatus.endRec ;
+					break ;
+				case "While Recording":
+					allInputs[i].textContent = parsedData.ioSourceStatus.recording ;
+					break ;
+				case "Timing IO":
+					allInputs[i].textContent = parsedData.ioSourceStatus.timingIo ;
+					break ;
+				case "Delay Block":
+					allInputs[i].textContent = parsedData.ioSourceStatus.delay ;
+					break ;
+				case "Software Trigger":
+					allInputs[i].textContent = parsedData.ioSourceStatus.software ;
+					break ;
+				case "Toggle Block":
+					allInputs[i].textContent = parsedData.ioSourceStatus.toggle ;
+					break ;
+				case "Combinatorial Block":
+					allInputs[i].textContent = parsedData.ioSourceStatus.comb ;
+					break ;
+				case "Shutter":
+					allInputs[i].textContent = parsedData.ioSourceStatus.shutter ;
+					break ;
+				case "Next Segment":
+					allInputs[i].textContent = parsedData.ioSourceStatus.nextSeg ;
+					break ;
+				case "Display Frame":
+					allInputs[i].textContent = parsedData.ioSourceStatus.dispFrame ;
+					break ;
+			}
+		}
+
+	}
+
+	if ("ioOutputStatus" in parsedData) {
+//      "gate": false,
+//      "delay": false,
+//      "start": false,
+//      "comb": false,
+//      "shutter": false,
+//      "toggle": true,
+//      "stop": false,
+//      "io1": true,
+//      "io2": true
+
+		document.getElementById("gateOutputStatus").classList.add(parsedData.ioOutputStatus.gate) ;
+		document.getElementById("delayOutputStatus").classList.add(parsedData.ioOutputStatus.delay) ;
+		document.getElementById("startOutputStatus").classList.add(parsedData.ioOutputStatus.start) ;
+		document.getElementById("combOutputStatus").classList.add(parsedData.ioOutputStatus.comb) ;
+		document.getElementById("shutterOutputStatus").classList.add(parsedData.ioOutputStatus.shutter) ;
+		document.getElementById("toggleOutputStatus").classList.add(parsedData.ioOutputStatus.toggle) ;
+		document.getElementById("stopOutputStatus").classList.add(parsedData.ioOutputStatus.stop) ;
+		document.getElementById("io1OutputStatus").classList.add(parsedData.ioOutputStatus.io1) ;
+		document.getElementById("io2OutputStatus").classList.add(parsedData.ioOutputStatus.io2) ;
+
+//		document.getElementById("ioMappingStopRecOutput").classList.replace(document.getElementById("ioMappingStopRecOutput").classList[1], parsedData.ioOutputStatus.stop) ;
+	}
+
+	if ("ioThresholdIo1" in parsedData) {
+//		document.getElementById("").value = parsedData.ioThresholdIo1 ;
+	}
+	if ("ioThresholdIo2" in parsedData) {
+//		document.getElementById("").value = parsedData.ioThresholdIo2 ;
+	}
+
+	if ("ioMappingStopRec" in parsedData) {
+		document.getElementById("ioMappingStopRecSource").firstChild.textContent = sourceName(parsedData.ioMappingStopRec.source) ;
+		stateSelecter(document.getElementById("ioMappingStopRecDebounce"), parsedData.ioMappingStopRec.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingStopRecInvert"), parsedData.ioMappingStopRec.invert) ;
+	}
+	if ("ioMappingCombOr1" in parsedData) {
+		document.getElementById("ioMappingCombOr1Source").firstChild.textContent = sourceName(parsedData.ioMappingCombOr1.source) ;
+		stateSelecter(document.getElementById("ioMappingCombOr1Debounce"), parsedData.ioMappingCombOr1.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingCombOr1Invert"), parsedData.ioMappingCombOr1.invert) ;
+	}
+	if ("ioMappingCombOr2" in parsedData) {
+		document.getElementById("ioMappingCombOr2Source").firstChild.textContent = sourceName(parsedData.ioMappingCombOr2.source) ;
+		stateSelecter(document.getElementById("ioMappingCombOr2Debounce"), parsedData.ioMappingCombOr2.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingCombOr2Invert"), parsedData.ioMappingCombOr2.invert) ;
+	}
+	if ("ioMappingCombOr3" in parsedData) {
+		document.getElementById("ioMappingCombOr3Source").firstChild.textContent = sourceName(parsedData.ioMappingCombOr3.source) ;
+		stateSelecter(document.getElementById("ioMappingCombOr3Debounce"), parsedData.ioMappingCombOr3.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingCombOr3Invert"), parsedData.ioMappingCombOr3.invert) ;
+	}
+
+
+	if ("ioMappingCombXor" in parsedData) {
+		document.getElementById("ioMappingCombXorSource").firstChild.textContent = sourceName(parsedData.ioMappingCombXor.source) ;
+		stateSelecter(document.getElementById("ioMappingCombXorDebounce"), parsedData.ioMappingCombXor.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingCombXorInvert"), parsedData.ioMappingCombXor.invert) ;
+	}
+	if ("ioMappingCombAnd" in parsedData) {
+		document.getElementById("ioMappingCombAndSource").firstChild.textContent = sourceName(parsedData.ioMappingCombAnd.source) ;
+		stateSelecter(document.getElementById("ioMappingCombAndDebounce"), parsedData.ioMappingCombAnd.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingCombAndInvert"), parsedData.ioMappingCombAnd.invert) ;
+	}
+	if ("ioMappingGate" in parsedData) {
+		document.getElementById("ioMappingGateSource").firstChild.textContent = sourceName(parsedData.ioMappingGate.source) ;
+		stateSelecter(document.getElementById("ioMappingGateDebounce"), parsedData.ioMappingGate.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingGateInvert"), parsedData.ioMappingGate.invert) ;
+	}
+
+
+	if ("ioMappingToggleSet" in parsedData) {
+		document.getElementById("ioMappingToggleSetSource").firstChild.textContent = sourceName(parsedData.ioMappingToggleSet.source) ;
+		stateSelecter(document.getElementById("ioMappingToggleSetDebounce"), parsedData.ioMappingToggleSet.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingToggleSetInvert"), parsedData.ioMappingToggleSet.invert) ;
+	}
+	if ("ioMappingToggleFlip" in parsedData) {
+		document.getElementById("ioMappingToggleFlipSource").firstChild.textContent = sourceName(parsedData.ioMappingToggleFlip.source) ;
+		stateSelecter(document.getElementById("ioMappingToggleFlipDebounce"), parsedData.ioMappingToggleFlip.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingToggleFlipInvert"), parsedData.ioMappingToggleFlip.invert) ;
+	}
+	if ("ioMappingToggleClear" in parsedData) {
+		document.getElementById("ioMappingToggleClearSource").firstChild.textContent = sourceName(parsedData.ioMappingToggleClear.source) ;
+		stateSelecter(document.getElementById("ioMappingToggleClearDebounce"), parsedData.ioMappingToggleClear.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingToggleClearInvert"), parsedData.ioMappingToggleClear.invert) ;
+	}
+
+
+	if ("ioMappingStartRec" in parsedData) {
+		document.getElementById("ioMappingStartRecSource").firstChild.textContent = sourceName(parsedData.ioMappingStartRec.source) ;
+		stateSelecter(document.getElementById("ioMappingStartRecDebounce"), parsedData.ioMappingStartRec.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingStartRecInvert"), parsedData.ioMappingStartRec.invert) ;
+	}
+	if ("ioMappingIo1" in parsedData) {
+		document.getElementById("ioMappingIo1Source").firstChild.textContent = sourceName(parsedData.ioMappingIo1.source) ;
+		stateSelecter(document.getElementById("ioMappingIo1Debounce"), parsedData.ioMappingIo1.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingIo1Invert"), parsedData.ioMappingIo1.invert) ;
+		document.getElementById("ioMappingIo1Drive").firstChild.textContent = driveName(parsedData.ioMappingIo1.drive) ;
+	}
+	if ("ioMappingIo2" in parsedData) {
+		document.getElementById("ioMappingIo2Source").firstChild.textContent = sourceName(parsedData.ioMappingIo2.source) ;
+		stateSelecter(document.getElementById("ioMappingIo2Debounce"), parsedData.ioMappingIo2.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingIo2Invert"), parsedData.ioMappingIo2.invert) ;
+		document.getElementById("ioMappingIo2Drive").firstChild.textContent = driveName(parsedData.ioMappingIo2.drive) ;
+	}
+
+
+	if ("ioMappingTrigger" in parsedData) {
+		document.getElementById("ioMappingTriggerSource").firstChild.textContent = sourceName(parsedData.ioMappingTrigger.source) ;
+		stateSelecter(document.getElementById("ioMappingTriggerDebounce"), parsedData.ioMappingTrigger.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingTriggerInvert"), parsedData.ioMappingTrigger.invert) ;
+	}
+	if ("ioMappingDelay" in parsedData) {
+		document.getElementById("ioMappingDelaySource").firstChild.textContent = sourceName(parsedData.ioMappingDelay.source) ;
+		stateSelecter(document.getElementById("ioMappingDelayDebounce"), parsedData.ioMappingDelay.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingDelayInvert"), parsedData.ioMappingDelay.invert) ;
+	}
+	if ("ioMappingShutter" in parsedData) {
+		document.getElementById("ioMappingShutterSource").firstChild.textContent = sourceName(parsedData.ioMappingShutter.source) ;
+		stateSelecter(document.getElementById("ioMappingShutterDebounce"), parsedData.ioMappingShutter.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingShutterInvert"), parsedData.ioMappingShutter.invert) ;
+	}
+/*
+      "ioMappingCombOr3": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingStopRec": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingGate": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingCombOr1": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingCombXor": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingToggleSet": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingToggleFlip": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+
+      "ioMappingStartRec": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingIo2": { --
+         "source": "alwaysHigh",
+         "drive": 0,
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingIo1": { --
+         "source": "alwaysHigh",
+         "drive": 1,
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingTrigger": { --
+         "source": "io1",
+         "debounce": false,
+         "invert": true
+      },
+
+      "ioMappingDelay": { --
+         "source": "comb",
+         "debounce": false,
+         "invert": false
+      },
+
+
+      "ioMappingToggleClear": { --
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingCombAnd": { --
+         "source": "alwaysHigh",
+         "debounce": false,
+         "invert": false
+      },
+
+      "ioMappingShutter": {
+         "source": "none",
+         "debounce": false,
+         "invert": false
+      }
+
+   },
+*/
+
 }
 
 
@@ -1344,6 +2030,9 @@ dataGetter("p", "", pageUpdate) ; // get all the data on startup
 var PollCounter = 1 ;
 function pollOnlyUpdates() { // some information I can only get if I ask for it, so that's what I do here
 
+	dataGetter('get', 'ioSourceStatus', pageUpdate) ;
+	dataGetter('get', 'ioOutputStatus', pageUpdate) ;
+
 	if (PollCounter % 2 == 0) { // every 1 second
 
 	}
@@ -1354,7 +2043,6 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 
 
 	if (!useServerSentEvents) { // no server-sent events; ask for updates
-
 		if (PollCounter % 31 == 0)
 			dataGetter('get', 'externalPower', pageUpdate) ; // check for external power connection
 
