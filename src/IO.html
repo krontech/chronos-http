@@ -30,13 +30,28 @@
 	#container1 { margin-bottom: 6px; }
 }
 
+#combinatorialIconBox {
+	width: 788px;
+	max-width: 800px;
+}
+
+#simpleConfigText {
+	margin-left: 10px;
+	width: 270px;
+}
+
+#advancedConfigText {
+	margin-left: 10px;
+	width: 300px;
+}
+
 .ioStatus.true {
 	display: inline-block;
 	height: 0;
 	width: 0;
 	border-left: 10px solid transparent;
 	border-right: 10px solid transparent;
-	border-bottom: 16px solid green;
+	border-bottom: 16px solid #0067B9; /* pantone 2144 */
 }
 
 .ioStatus.false {
@@ -46,6 +61,182 @@
 	border-left: 10px solid transparent;
 	border-right: 10px solid transparent;
 	border-top: 16px solid #A00;
+}
+
+
+.combBlock {
+	position: relative;
+	top: -196px;
+	left: 236px;
+	height: 0;
+	width: 0;
+}
+
+.linesIn {
+	background: transparent;
+	height: 52px;
+	width: 60px;
+
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+}
+.linesIn:before {
+	content: '';
+	display: block;
+	background: transparent;
+	margin-top: 23px;
+	height: 86px;
+	width: 128px;
+
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+	border-right: 5px solid white;
+}
+.linesIn:after {
+	content: '';
+	display: block;
+	background: transparent;
+	margin-top: 11px;
+	height: 43px;
+	width: 220px;
+
+	border-right: 5px solid white;
+	border-bottom: 5px solid white;
+}
+
+
+.linesOut {
+	height: 15px;
+	width: 20px;
+	margin-left: 221px;
+	margin-top: -15px;
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+}
+.linesOut:before {
+	content: '';
+	display: block;
+	position: relative;
+	left: -4px;
+	top: -16px;
+	height: 47px;
+	width: 23px;
+	border-radius: 50%;
+	border-right: 6px solid white;
+}
+.linesOut:after {
+	content: '';
+	display: block;
+	height: 5px;
+	width: 30px;
+	background-color: white;
+	position: relative;
+	top: -43px;
+	left: 69px
+}
+
+.orGateIcon {
+	height: 40px;
+	width: 80px;
+	margin-left: 26px;
+	margin-top: -71px;
+	background-color: white;
+	border-radius: 0;
+	border-top-right-radius: 60px 40px;
+	border-bottom-left-radius: 12px 40px;
+}
+.orGateIcon:before {
+	content: '';
+	height: 40px;
+	width: 80px;
+	background-color: white;
+	border-radius: 0;
+	border-bottom-right-radius: 60px 40px;
+	display: block;
+	position: relative;
+	top: 40px;
+	border-top-left-radius: 12px 40px;
+}
+.orGateIcon:after {
+	content: '';
+	display: block;
+	position: relative;
+	top: -25px;
+	left: 67px;
+	height: 0;
+	width: 0;
+	background: transparent;
+	border-top: 25px solid transparent;
+	border-bottom: 25px solid transparent;
+	border-left: 24px solid white;
+}
+
+.andGateIcon {
+	height: 42px;
+	width: 60px;
+	background-color: white;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	margin-top: 23px;
+	margin-left: 148px;
+}
+.andGateIcon:before {
+	content: '';
+	display: block;
+	position: relative;
+	top: 8px;
+	left: -20px;
+	height: 15px;
+	width: 20px;
+	background: black;
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+}
+.andGateIcon:after {
+	content: '';
+	display: block;
+	position: relative;
+	top: -7px;
+	right: -59px;
+	height: 41px;
+	width: 14px;
+	background: transparent;
+	border-top: 5px solid white;
+	border-right: 5px solid white;
+}
+
+.xorGateIcon {
+	height: 25px;
+	width: 45px;
+	margin-left: 246px;
+	margin-top: 8px;
+	background-color: white;
+	border-radius: 0;
+	border-top-right-radius: 35px 25px;
+	border-bottom-left-radius: 8px 25px;
+}
+.xorGateIcon:before {
+	content: '';
+	height: 25px;
+	width: 45px;
+	background-color: white;
+	border-radius: 0;
+	border-bottom-right-radius: 35px 25px;
+	display: block;
+	position: relative;
+	top: 20px;
+	border-top-left-radius: 8px 25px;
+}
+.xorGateIcon:after {
+	content: '';
+	display: block;
+	position: relative;
+	top: -12.5px;
+	left: 40px;
+	background: transparent;
+	border-left: 8px solid white;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
 }
 
 
@@ -95,11 +286,90 @@
 -->
 
 	<div class="rightContainer">
-		<div id="inputList" class="Text-bar">
-			<div class="no-click">
+		<div class="Text-bar">
+			<div id="simpleConfigText" class="no-click">
 				<span>Simple Configuration</span>
 			</div>
 		</div>
+
+
+		<div class="horizLayout">
+			<b> IO1 (BNC)</b> <div id="IO1Status" class="ioStatus none"></div>
+			<br>
+			Threshold:
+			<input id="IO1Threshold" type="number" min="0.0" max="5.0" step="0.1" oninput="changeNumberOften(this)">
+			<br>
+			Action:
+			<div id="IO1Action" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (Do Nothing)</a>
+				<a onclick="dropDownSelect(this)">Record End Trigger</a>
+				<a onclick="dropDownSelect(this)">Exposure Trigger</a>
+				<a onclick="dropDownSelect(this)">Shutter Gating</a>
+				<a onclick="dropDownSelect(this)">Frame Sync. Output</a>
+			</div></div>
+			<br>
+			Debounce:
+			<a id="IO1Debounce" class="button" onclick="justRunSomething(this)">False</a>
+			<br>
+			Invert:
+			<a id="IO1Invert" class="button" onclick="justRunSomething(this)">False</a>
+			<br>
+			Pull-up:
+			<div id="IO1Drive" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (off)</a>
+				<a onclick="dropDownSelect(this)">1mA</a>
+				<a onclick="dropDownSelect(this)">20mA</a>
+			</div></div>
+		</div>
+
+		<div class="horizLayout">
+			<b> IO2</b> <div id="IO2Status" class="ioStatus none"></div>
+			<br>
+			Threshold:
+			<input id="IO2Threshold" type="number" min="0.0" max="5.0" step="0.1" oninput="changeNumberOften(this)">
+			<br>
+			Action:
+			<div id="IO2Action" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (Do Nothing)</a>
+				<a onclick="dropDownSelect(this)">Record End Trigger</a>
+				<a onclick="dropDownSelect(this)">Exposure Trigger</a>
+				<a onclick="dropDownSelect(this)">Shutter Gating</a>
+				<a onclick="dropDownSelect(this)">Frame Sync. Output</a>
+			</div></div>
+			<br>
+			Debounce:
+			<a id="IO2Debounce" class="button" onclick="justRunSomething(this)">False</a>
+			<br>
+			Invert:
+			<a id="IO2Invert" class="button" onclick="justRunSomething(this)">False</a>
+			<br>
+			Pull-up:
+			<div id="IO2Drive" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (off)</a>
+				<a onclick="dropDownSelect(this)">20mA</a>
+			</div></div>
+		</div>
+
+		<div class="horizLayout">
+			<b> Input 3 (Isolated)</b> <div id="IO3Status" class="ioStatus none"></div>
+			<br>
+			Action:
+			<div id="IO3Action" class="selectContainerHolder" onclick="">None (Do Nothing)<div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (Do Nothing)</a>
+				<a onclick="dropDownSelect(this)">Record End Trigger</a>
+				<a onclick="dropDownSelect(this)">Exposure Trigger</a>
+				<a onclick="dropDownSelect(this)">Shutter Gating</a>
+			</div></div>
+			<br>
+			Debounce:
+			<a id="IO3Debounce" class="button" onclick="justRunSomething(this)">False</a>
+			<br>
+			Invert:
+			<a id="IO3Invert" class="button" onclick="justRunSomething(this)">False</a>
+		</div>
+
+
+
 
 		<div class="horizLayout">
 			<b> Input Status </b>
@@ -217,14 +487,23 @@
 
 	</div>
 
+	<div class="Text-bar">
+		<div id="battery" class="no-click">
+			<div id="batteryContainer" class="battery">
+				<div id="battery-level"></div>
+			</div>
+			<span id="battery%">0%</span>
+		</div>
+	</div>
+
+
 	<div id="container1" class="rightContainer">
 
 		<div class="Text-bar">
-			<div class="no-click">
+			<div id="advancedConfigText" class="no-click">
 				<span>Advanced Configuration</span>
 			</div>
 		</div>
-
 
 		<div id="ioMappingStopRecBox" class="horizLayout">
 			<b> Stop Recording </b>
@@ -1071,17 +1350,26 @@
 -->
 
 
-
-
-
-	<div class="Text-bar">
-		<div id="battery" class="no-click">
-			<div id="batteryContainer" class="battery">
-				<div id="battery-level"></div>
-			</div>
-			<span id="battery%">0%</span>
+	<div id="combinatorialIconBox" class="horizLayout">
+		<b> Combinatorial Block </b>
+		<br>
+		<br>
+		Combinatorial OR1<br>
+		Combinatorial OR2<br>
+		Combinatorial OR3<br>
+		<br>
+		Combinatorial AND &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Combinatorial Out<br>
+		<br>
+		Combinatorial XOR
+		<div class="combBlock">
+			<div class="linesIn"></div>
+			<div class="orGateIcon"></div>
+			<div class="andGateIcon"></div>
+			<div class="xorGateIcon"></div>
+			<div class="linesOut"></div>
 		</div>
 	</div>
+
 
 
 	<div id="debugBar" class="Text-bar hidden">
@@ -1124,7 +1412,7 @@
 
 <script>
 
-var DebugOnOff = true ;
+var DebugOnOff = false ;
 
 
 function tester1func() {
@@ -1135,12 +1423,16 @@ function tester1func() {
 function tester2func() {
 
 //	dataGetter("p", "", pageUpdate) ; // get all the data
+
+	dataRequester("set", '{"ioMappingIo1": {"source": "none", "debounce": false, "invert": false}}', pageUpdate) ;
 }
 
 
 function tester3func() {
 	// clear recorded buffer
-	dataGetter("flushRecording", '', pageUpdate) ;
+//	dataGetter("flushRecording", '', pageUpdate) ;
+
+	dataRequester("set", '{"ioMappingIo1": {"source": "alwaysHigh", "debounce": True, "invert": True}}', pageUpdate) ;
 
 }
 
@@ -1349,6 +1641,158 @@ function sendIoRequest (parent) {
 	dataRequester("set", request, pageUpdate) ; // send the request
 }
 
+function simpleModeWrite() {
+	// get the 'action' of each port
+	var io1Action = document.getElementById("IO1Action").firstChild.textContent ;
+	var io2Action = document.getElementById("IO2Action").firstChild.textContent ;
+	var io3Action = document.getElementById("IO3Action").firstChild.textContent ;
+
+	var preRequest = '{ "ioMappingCombOr1": { "source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": { "source": "none", "debounce": false, "invert": false}, "ioMappingCombOr3": { "source": "none", "debounce": false, "invert": false} }' ;
+
+	var request = "{" ;
+
+	switch (io1Action) {
+		case "None (Do Nothing)":
+			request += '"ioMappingIo1": {"source": "alwaysHigh", "debounce": ' + document.getElementById("IO1Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() ;
+			request += ', "drive": ' + ((document.getElementById("IO1Drive").firstChild.textContent == "1mA") ? 1 : (document.getElementById("IO1Drive").firstChild.textContent == "20mA") ? 2 : 0) + "}" ;
+			request += ', "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}' ;
+			break ;
+
+		case "Record End Trigger":
+			if ( (io2Action == "Record End Trigger") || (io3Action == "Record End Trigger") ) {
+				request += '"ioMappingIo1": {"source": "alwaysHigh", "debounce": false, "invert": false, "drive": ' + ((document.getElementById("IO1Drive").firstChild.textContent == "1mA") ? 1 : (document.getElementById("IO1Drive").firstChild.textContent == "20mA") ? 2 : 0) + "}" ;
+				request += ', "ioMappingCombOr1": {"source": "io1", "debounce": ' + document.getElementById("IO1Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+				request += ', "ioMappingTrigger": {"source": "comb", "debounce": false, "invert": false"}' ;
+			}
+			else
+				request += '"ioMappingTrigger": {"source": "io1", "debounce": ' + document.getElementById("IO1Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+			break ;
+
+		case "Exposure Trigger":
+			if ( (io2Action == "Exposure Trigger") || (io3Action == "Exposure Trigger") ) {
+				request += '"ioMappingIo1": {"source": "alwaysHigh", "debounce": false, "invert": false, "drive": ' + ((document.getElementById("IO1Drive").firstChild.textContent == "1mA") ? 1 : (document.getElementById("IO1Drive").firstChild.textContent == "20mA") ? 2 : 0) + "}" ;
+				request += ', "ioMappingCombOr1": {"source": "io1", "debounce": ' + document.getElementById("IO1Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+				request += ', "ioMappingShutter": {"source": "comb", "debounce": false, "invert": false"}' ;
+			}
+			else
+				request += '"ioMappingShutter": {"source": "io1", "debounce": ' + document.getElementById("IO1Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+			request += ', "exposureMode": "frameTrigger"' ;
+			break ;
+
+		case "Shutter Gating":
+			if ( (io2Action == "Exposure Trigger") || (io3Action == "Exposure Trigger") ) {
+				request += '"ioMappingIo1": {"source": "alwaysHigh", "debounce": false, "invert": false, "drive": ' + ((document.getElementById("IO1Drive").firstChild.textContent == "1mA") ? 1 : (document.getElementById("IO1Drive").firstChild.textContent == "20mA") ? 2 : 0) + "}" ;
+				request += ', "ioMappingCombOr1": {"source": "io1", "debounce": ' + document.getElementById("IO1Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+				request += ', "ioMappingShutter": {"source": "comb", "debounce": false, "invert": false"}' ;
+			}
+			else
+				request += '"ioMappingShutter": {"source": "io1", "debounce": ' + document.getElementById("IO1Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+			request += ', "exposureMode": "shutterGating"' ;
+			break ;
+
+		case "Frame Sync. Output":
+			request += '"ioMappingIo1": {"source": "timingIo", "debounce": false, "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+			request += ', "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}' ;
+			break ;
+	}
+
+
+//	request += '}' ;
+//	dataRequester("set", request, pageUpdate) ; // split this up because otherwise the request gets way too long
+
+//	request = '{' ; // reset the request
+
+
+	switch (io2Action) {
+		case "None (Do Nothing)":
+			request += ', "ioMappingIo2": {"source": "alwaysHigh", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() ;
+			request += ', "drive": ' + ((document.getElementById("IO2Drive").firstChild.textContent == "20mA") ? 1 : 0) + "}" ;
+			request += ', "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}' ;
+			break ;
+
+		case "Record End Trigger":
+			if ( (io1Action == "Record End Trigger") || (io3Action == "Record End Trigger") ) {
+				request += ', "ioMappingIo2": {"source": "alwaysHigh", "debounce": false, "invert": false, "drive": ' + ((document.getElementById("IO2Drive").firstChild.textContent == "20mA") ? 1 : 0) + "}" ;
+				request += ', "ioMappingCombOr2": {"source": "io2", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() + '}' ;
+			}
+			else
+				request += '"ioMappingTrigger": {"source": "io2", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() + '}' ;
+			break ;
+
+		case "Exposure Trigger":
+			if ( (io1Action == "Exposure Trigger") || (io3Action == "Exposure Trigger") ) {
+				request += ', "ioMappingIo2": {"source": "alwaysHigh", "debounce": false, "invert": false, "drive": ' + ((document.getElementById("IO2Drive").firstChild.textContent == "20mA") ? 1 : 0) + "}" ;
+				request += ', "ioMappingCombOr2": {"source": "io2", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() + '}' ;
+			}
+			else
+				request += ', "ioMappingShutter": {"source": "io2", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() + '}' ;
+			request += ', "exposureMode": "frameTrigger"' ;
+			break ;
+
+		case "Shutter Gating":
+			if ( (io1Action == "Exposure Trigger") || (io3Action == "Exposure Trigger") ) {
+				request += ', "ioMappingIo2": {"source": "alwaysHigh", "debounce": false, "invert": false, "drive": ' + ((document.getElementById("IO2Drive").firstChild.textContent == "20mA") ? 1 : 0) + "}" ;
+				request += ', "ioMappingCombOr2", {"source": "io2", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() + '}' ;
+			}
+			else
+				request += ', "ioMappingShutter": {"source": "io2", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() + '}' ;
+			request += ', "exposureMode": "shutterGating"' ;
+			break ;
+
+		case "Frame Sync. Output":
+			request += ', "ioMappingIo2": {"source": "timingIo", "debounce": false, "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() + '}' ;
+			request += ', "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}' ;
+			break ;
+	}
+
+//	request += '}' ;
+//	dataRequester("set", request, pageUpdate) ; // split this up because otherwise the request gets way too long
+
+//	request = '{' ; // reset the request
+
+
+	switch (io3Action) {
+		case "None (Do Nothing)":
+			request += ', "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}' ;
+			break ;
+
+		case "Record End Trigger":
+			if ( (io1Action == "Record End Trigger") || (io2Action == "Record End Trigger") ) {
+				request += ', "ioMappingCombOr3": {"source": "io3", "debounce": ' + document.getElementById("IO3Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO3Invert").textContent.toLowerCase() + '}' ;
+				request += ', "ioMappingTrigger": {"source": "comb", "debounce": false, "invert": false"}' ;
+			}
+			else
+				request += ', "ioMappingTrigger": {"source": "io3", "debounce": ' + document.getElementById("IO3Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO3Invert").textContent.toLowerCase() + '}' ;
+			break ;
+
+		case "Exposure Trigger":
+			if ( (io1Action == "Exposure Trigger") || (io2Action == "Exposure Trigger") ) {
+				request += ', "ioMappingCombOr3": {"source": "io3", "debounce": ' + document.getElementById("IO3Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO3Invert").textContent.toLowerCase() + '}' ;
+				request += ', "ioMappingShutter": {"source": "comb", "debounce": false, "invert": false"}' ;
+			}
+			else
+				request += '"ioMappingShutter": {"source": "io3", "debounce": ' + document.getElementById("IO3Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO1Invert").textContent.toLowerCase() + '}' ;
+			request += ', "exposureMode": "frameTrigger"' ;
+			break ;
+
+		case "Shutter Gating":
+			if ( (io1Action == "Exposure Trigger") || (io2Action == "Exposure Trigger") ) {
+				request += ', "ioMappingCombOr3": {"source": "io3", "debounce": ' + document.getElementById("IO3Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO3Invert").textContent.toLowerCase() + '}' ;
+				request += ', "ioMappingShutter": {"source": "comb", "debounce": false, "invert": false"}' ;
+			}
+			else
+				request += ', "ioMappingShutter": {"source": "io3", "debounce": ' + document.getElementById("IO3Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO3Invert").textContent.toLowerCase() + '}' ;
+			request += ', "exposureMode": "shutterGating"' ;
+			break ;
+	}
+
+	request += '}' ;
+
+	document.getElementById("debugger2").innerHTML += "<br><br>" + "This is the \"simple mode\" request: " + request ;
+
+	dataRequester ("set", request, pageUpdate) ;
+}
+
 function debounceOrInvert(element) { // similar to toggle function, but specific to ioMapping* objects
 	var leftRight = 0 ;
 
@@ -1370,7 +1814,18 @@ function debounceOrInvert(element) { // similar to toggle function, but specific
 }
 
 
-var dropDownFunctions = { 
+var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElementById("debugBar") ; if (item.classList.contains("hidden")) { item.classList.remove("hidden") ; } else { item.classList.add("hidden") ; } },
+
+				"None (Do Nothing)":	function(parent) { parent.firstChild.textContent = "None (Do Nothing)" ; simpleModeWrite() ; },
+				"Record End Trigger":	function(parent) { parent.firstChild.textContent = "Record End Trigger" ; simpleModeWrite() ; },
+				"Exposure Trigger":		function(parent) { parent.firstChild.textContent = "Exposure Trigger" ; simpleModeWrite() ; },
+				"Shutter Gating":		function(parent) { parent.firstChild.textContent = "Shutter Gating" ; simpleModeWrite() ; },
+				"Frame Sync. Output":	function(parent) { parent.firstChild.textContent = "Frame Sync. Output" ; simpleModeWrite() ; },
+
+				"None (off)":			function(parent) { parent.firstChild.textContent = "None (off)" ; simpleModeWrite() ; },
+				"1mA":					function(parent) { parent.firstChild.textContent = "1mA" ; simpleModeWrite() ; },
+				"20mA":					function(parent) { parent.firstChild.textContent = "20mA" ; simpleModeWrite() ; },
+
 				"None (False)":			function(parent) { parent.firstChild.textContent = "None (False)" ; sendIoRequest(parent) ; },
 				"Always High (True)":	function(parent) { parent.firstChild.textContent = "Always High (True)" ; sendIoRequest(parent) ; },
 				"Input 1 (IO1 in)":		function(parent) { parent.firstChild.textContent = "Input 1 (IO1 in)" ; sendIoRequest(parent) ; },
@@ -1404,15 +1859,12 @@ function dropDownSelect (element) {
 
 
 
-var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{"recSegments": ' + value + '}', pageUpdate) ; },
-
-						"colourDefaultBtn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
-						"colourIdentityBtn":	function() { detourRequester("set", '{"colorMatrix": [1.0, 0.0, 0.0,  0.0, 1.0, 0.0,  0.0, 0.0, 1.0]}', pageUpdate) ; },
-						"colourApplyBtn":		function() { detourRequester("set", '{"colorMatrix": [' + document.getElementById("colMatrixa").value + ', ' + document.getElementById("colMatrixb").value + ', ' + document.getElementById("colMatrixc").value + ', ' + document.getElementById("colMatrixd").value + ', ' + document.getElementById("colMatrixe").value + ', ' + document.getElementById("colMatrixf").value + ', ' + document.getElementById("colMatrixg").value + ', ' + document.getElementById("colMatrixh").value + ', ' + document.getElementById("colMatrixi").value + ']}', pageUpdate) ; },
-						"colourPreset1Btn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
-						"colourPreset2Btn":		function() { detourRequester("set", '{"colorMatrix": [1.23291, 0.646729, -0.776367,  -0.321777, 1.68994, -0.380859,  -0.0612793, -0.640869,1.52563]}', pageUpdate) ; },
-
-						"whiteBalApplyBtn":		function() { detourRequester("set", '{"wbColor": [' + document.getElementById("whiteBalNuma").value + ', ' + document.getElementById("whiteBalNumb").value + ', ' + document.getElementById("whiteBalNumc").value + ']}', pageUpdate) ; },
+var inputFunctions = { "IO1Debounce":			function() { document.getElementById("IO1Debounce").innerHTML = ((document.getElementById("IO1Debounce").innerHTML == "False") ? "True" : "False") ; simpleModeWrite() ; },
+				"IO1Invert":			function() { document.getElementById("IO1Invert").innerHTML = ((document.getElementById("IO1Invert").innerHTML == "False") ? "True" : "False") ; simpleModeWrite() ; },
+				"IO2Debounce":			function() { document.getElementById("IO2Debounce").innerHTML = ((document.getElementById("IO2Debounce").innerHTML == "False") ? "True" : "False") ; simpleModeWrite() ; },
+				"IO2Invert":			function() { document.getElementById("IO2Invert").innerHTML = ((document.getElementById("IO2Invert").innerHTML == "False") ? "True" : "False") ; simpleModeWrite() ; },
+				"IO3Debounce":			function() { document.getElementById("IO3Debounce").innerHTML = ((document.getElementById("IO3Debounce").innerHTML == "False") ? "True" : "False") ; simpleModeWrite() ; },
+				"IO3Invert":			function() { document.getElementById("IO3Invert").innerHTML = ((document.getElementById("IO3Invert").innerHTML == "False") ? "True" : "False") ; simpleModeWrite() ; },
 					 }
 
 
@@ -1565,9 +2017,6 @@ function batteryPercent(level, charging) { // set the percentage (level) of the 
 }
 
 
-var lastKnownBatteryLevel = 0 ;
-var lastKnownExternalPower = false ;
-
 function driveName(value) {
 	switch (value) {
 		case 1:
@@ -1623,6 +2072,10 @@ function sourceName(source) {
 }
 
 
+var lastKnownExposureMode = "" ;
+var lastKnownBatteryLevel = 0 ;
+var lastKnownExternalPower = false ;
+
 function pageUpdate(rawData){
 	var parsedData = JSON.parse(rawData) ;
 
@@ -1639,12 +2092,15 @@ function pageUpdate(rawData){
 		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
 	}
 
+	if ("exposureMode" in parsedData)
+		lastKnownExposureMode = parsedData.exposureMode ;
 
-	if ("ioSourceStatus" in parsedData) {
+	if ("ioSourceStatus" in parsedData) { // these are all the 'inputs' that can be selected
 
-//		document.getElementById("alwaysHighSourceStatus").classList.add("true") ;
-//		document.getElementById("noneSourceStatus").classList.add("false") ;
 
+		document.getElementById("IO1Status").classList.replace(document.getElementById("IO1Status").classList[1], parsedData.ioSourceStatus.io1) ;
+		document.getElementById("IO2Status").classList.replace(document.getElementById("IO2Status").classList[1], parsedData.ioSourceStatus.io2) ;
+		document.getElementById("IO3Status").classList.replace(document.getElementById("IO3Status").classList[1], parsedData.ioSourceStatus.io3) ;
 
 		document.getElementById("alwaysHighSourceStatus").classList.replace(document.getElementById("alwaysHighSourceStatus").classList[1], parsedData.ioSourceStatus.alwaysHigh) ;
 		document.getElementById("noneSourceStatus").classList.replace(document.getElementById("noneSourceStatus").classList[1], parsedData.ioSourceStatus.none) ;
@@ -1741,7 +2197,7 @@ function pageUpdate(rawData){
 
 	}
 
-	if ("ioOutputStatus" in parsedData) {
+	if ("ioOutputStatus" in parsedData) { // these are all the 'outputs' which are reported back
 //      "gate": false,
 //      "delay": false,
 //      "start": false,
@@ -1766,11 +2222,52 @@ function pageUpdate(rawData){
 	}
 
 	if ("ioThresholdIo1" in parsedData) {
+		if (document.getElementById("IO1Threshold") != document.activeElement)
+			document.getElementById("IO1Threshold").value = parsedData.ioThresholdIo1.toFixed(1) ;
 //		document.getElementById("").value = parsedData.ioThresholdIo1 ;
 	}
 	if ("ioThresholdIo2" in parsedData) {
+		if (document.getElementById("IO2Threshold") != document.activeElement)
+			document.getElementById("IO2Threshold").value = parsedData.ioThresholdIo2.toFixed(1) ;
 //		document.getElementById("").value = parsedData.ioThresholdIo2 ;
 	}
+
+	if ("ioMappingIo1" in parsedData) {
+		if (parsedData.ioMappingIo1.source == "timingIo") { // using timing IO (frame sync output)
+			document.getElementById("IO1Action").firstChild.textContent = "Frame Sync. Output" ;
+			document.getElementById("IO1Debounce").innerHTML = ((parsedData.ioMappingIo1.debounce) ? "True" : "False") ;
+			document.getElementById("IO1Invert").innerHTML = ((parsedData.ioMappingIo1.invert) ? "True" : "False") ;
+			document.getElementById("IO1Drive").classList.add("disabled") ;
+		}
+		else
+			document.getElementById("IO1Action").firstChild.textContent = "None (Do Nothing)" ;
+
+		document.getElementById("IO1Drive").firstChild.textContent = ((parsedData.ioMappingIo1.drive == 0) ? "None (off)" : (parsedData.ioMappingIo1.drive == 1) ? "1mA" : "20mA") ;
+
+		document.getElementById("ioMappingIo1Source").firstChild.textContent = sourceName(parsedData.ioMappingIo1.source) ;
+		stateSelecter(document.getElementById("ioMappingIo1Debounce"), parsedData.ioMappingIo1.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingIo1Invert"), parsedData.ioMappingIo1.invert) ;
+		document.getElementById("ioMappingIo1Drive").firstChild.textContent = driveName(parsedData.ioMappingIo1.drive) ;
+	}
+
+	if ("ioMappingIo2" in parsedData) {
+		if (parsedData.ioMappingIo2.source == "timingIo") { // using timing IO (frame sync output)
+			document.getElementById("IO2Action").firstChild.textContent = "Frame Sync. Output" ;
+			document.getElementById("IO2Debounce").innerHTML = ((parsedData.ioMappingIo2.debounce) ? "True" : "False") ;
+			document.getElementById("IO2Invert").innerHTML = ((parsedData.ioMappingIo2.invert) ? "True" : "False") ;
+			document.getElementById("IO2Drive").classList.add("disabled") ;
+		}
+		else
+			document.getElementById("IO2Action").firstChild.textContent = "None (Do Nothing)" ;
+
+		document.getElementById("IO2Drive").firstChild.textContent = ((parsedData.ioMappingIo2.drive == 0) ? "None (off)" : "20mA") ;
+
+		document.getElementById("ioMappingIo2Source").firstChild.textContent = sourceName(parsedData.ioMappingIo2.source) ;
+		stateSelecter(document.getElementById("ioMappingIo2Debounce"), parsedData.ioMappingIo2.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingIo2Invert"), parsedData.ioMappingIo2.invert) ;
+		document.getElementById("ioMappingIo2Drive").firstChild.textContent = driveName(parsedData.ioMappingIo2.drive) ;
+	}
+
 
 	if ("ioMappingStopRec" in parsedData) {
 		document.getElementById("ioMappingStopRecSource").firstChild.textContent = sourceName(parsedData.ioMappingStopRec.source) ;
@@ -1778,16 +2275,29 @@ function pageUpdate(rawData){
 		stateSelecter(document.getElementById("ioMappingStopRecInvert"), parsedData.ioMappingStopRec.invert) ;
 	}
 	if ("ioMappingCombOr1" in parsedData) {
+		if (parsedData.ioMappingCombOr1.source == "io1") { // if using simple configuration, this should work
+			document.getElementById("IO1Debounce").innerHTML = ((parsedData.ioMappingCombOr1.debounce) ? "True" : "False") ;
+			document.getElementById("IO1Invert").innerHTML = ((parsedData.ioMappingCombOr1.invert) ? "True" : "False") ;
+		}
 		document.getElementById("ioMappingCombOr1Source").firstChild.textContent = sourceName(parsedData.ioMappingCombOr1.source) ;
 		stateSelecter(document.getElementById("ioMappingCombOr1Debounce"), parsedData.ioMappingCombOr1.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingCombOr1Invert"), parsedData.ioMappingCombOr1.invert) ;
 	}
 	if ("ioMappingCombOr2" in parsedData) {
+		if (parsedData.ioMappingCombOr2.source == "io2") { // if using simple configuration, this should work
+			document.getElementById("IO2Debounce").innerHTML = ((parsedData.ioMappingCombOr2.debounce) ? "True" : "False") ;
+			document.getElementById("IO2Invert").innerHTML = ((parsedData.ioMappingCombOr2.invert) ? "True" : "False") ;
+		}
 		document.getElementById("ioMappingCombOr2Source").firstChild.textContent = sourceName(parsedData.ioMappingCombOr2.source) ;
 		stateSelecter(document.getElementById("ioMappingCombOr2Debounce"), parsedData.ioMappingCombOr2.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingCombOr2Invert"), parsedData.ioMappingCombOr2.invert) ;
 	}
-	if ("ioMappingCombOr3" in parsedData) {
+	if ("ioMappingCombOr3" in parsedData) { // if using simple configuration, this should work
+		if (parsedData.ioMappingCombOr3.source == "io3") {
+			document.getElementById("IO3Debounce").innerHTML = ((parsedData.ioMappingCombOr3.debounce) ? "True" : "False") ;
+			document.getElementById("IO3Invert").innerHTML = ((parsedData.ioMappingCombOr3.invert) ? "True" : "False") ;
+		}
+
 		document.getElementById("ioMappingCombOr3Source").firstChild.textContent = sourceName(parsedData.ioMappingCombOr3.source) ;
 		stateSelecter(document.getElementById("ioMappingCombOr3Debounce"), parsedData.ioMappingCombOr3.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingCombOr3Invert"), parsedData.ioMappingCombOr3.invert) ;
@@ -1804,11 +2314,7 @@ function pageUpdate(rawData){
 		stateSelecter(document.getElementById("ioMappingCombAndDebounce"), parsedData.ioMappingCombAnd.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingCombAndInvert"), parsedData.ioMappingCombAnd.invert) ;
 	}
-	if ("ioMappingGate" in parsedData) {
-		document.getElementById("ioMappingGateSource").firstChild.textContent = sourceName(parsedData.ioMappingGate.source) ;
-		stateSelecter(document.getElementById("ioMappingGateDebounce"), parsedData.ioMappingGate.debounce) ; // set the debounce state
-		stateSelecter(document.getElementById("ioMappingGateInvert"), parsedData.ioMappingGate.invert) ;
-	}
+
 
 
 	if ("ioMappingToggleSet" in parsedData) {
@@ -1827,37 +2333,74 @@ function pageUpdate(rawData){
 		stateSelecter(document.getElementById("ioMappingToggleClearInvert"), parsedData.ioMappingToggleClear.invert) ;
 	}
 
+	if ("ioMappingDelay" in parsedData) {
+		document.getElementById("ioMappingDelaySource").firstChild.textContent = sourceName(parsedData.ioMappingDelay.source) ;
+		stateSelecter(document.getElementById("ioMappingDelayDebounce"), parsedData.ioMappingDelay.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingDelayInvert"), parsedData.ioMappingDelay.invert) ;
+	}
 
 	if ("ioMappingStartRec" in parsedData) {
 		document.getElementById("ioMappingStartRecSource").firstChild.textContent = sourceName(parsedData.ioMappingStartRec.source) ;
 		stateSelecter(document.getElementById("ioMappingStartRecDebounce"), parsedData.ioMappingStartRec.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingStartRecInvert"), parsedData.ioMappingStartRec.invert) ;
 	}
-	if ("ioMappingIo1" in parsedData) {
-		document.getElementById("ioMappingIo1Source").firstChild.textContent = sourceName(parsedData.ioMappingIo1.source) ;
-		stateSelecter(document.getElementById("ioMappingIo1Debounce"), parsedData.ioMappingIo1.debounce) ; // set the debounce state
-		stateSelecter(document.getElementById("ioMappingIo1Invert"), parsedData.ioMappingIo1.invert) ;
-		document.getElementById("ioMappingIo1Drive").firstChild.textContent = driveName(parsedData.ioMappingIo1.drive) ;
-	}
-	if ("ioMappingIo2" in parsedData) {
-		document.getElementById("ioMappingIo2Source").firstChild.textContent = sourceName(parsedData.ioMappingIo2.source) ;
-		stateSelecter(document.getElementById("ioMappingIo2Debounce"), parsedData.ioMappingIo2.debounce) ; // set the debounce state
-		stateSelecter(document.getElementById("ioMappingIo2Invert"), parsedData.ioMappingIo2.invert) ;
-		document.getElementById("ioMappingIo2Drive").firstChild.textContent = driveName(parsedData.ioMappingIo2.drive) ;
+
+	if ("ioMappingGate" in parsedData) {
+		document.getElementById("ioMappingGateSource").firstChild.textContent = sourceName(parsedData.ioMappingGate.source) ;
+		stateSelecter(document.getElementById("ioMappingGateDebounce"), parsedData.ioMappingGate.debounce) ; // set the debounce state
+		stateSelecter(document.getElementById("ioMappingGateInvert"), parsedData.ioMappingGate.invert) ;
 	}
 
 
 	if ("ioMappingTrigger" in parsedData) {
+		switch(parsedData.ioMappingTrigger.source) {
+			case "io1": // 'end trigger' is triggered by IO1
+				document.getElementById("IO1Action").firstChild.textContent = "Record End Trigger" ;
+				break ;
+			case "io2": // 'end trigger' is triggered by IO2
+				document.getElementById("IO2Action").firstChild.textContent = "Record End Trigger" ;
+				break ;
+			case "io3": // 'end trigger' is triggered by IO3
+				document.getElementById("IO3Action").firstChild.textContent = "Record End Trigger" ;
+				break ;
+
+			case "comb": // 'end trigger' may be triggered by multiple IOs
+				if (document.getElementById("ioMappingCombOr1Source").firstChild.textContent == "Input 1 (IO1 in)") // using input 1
+					document.getElementById("IO1Action").firstChild.textContent = "Record End Trigger" ;
+				if (document.getElementById("ioMappingCombOr2Source").firstChild.textContent == "Input 2 (IO2 in)") // using input 2
+					document.getElementById("IO2Action").firstChild.textContent = "Record End Trigger" ;
+				if (document.getElementById("ioMappingCombOr3Source").firstChild.textContent == "Input 3 (IO3 in)") // using input 3
+					document.getElementById("IO3Action").firstChild.textContent = "Record End Trigger" ;
+				break ;
+		}
 		document.getElementById("ioMappingTriggerSource").firstChild.textContent = sourceName(parsedData.ioMappingTrigger.source) ;
 		stateSelecter(document.getElementById("ioMappingTriggerDebounce"), parsedData.ioMappingTrigger.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingTriggerInvert"), parsedData.ioMappingTrigger.invert) ;
 	}
-	if ("ioMappingDelay" in parsedData) {
-		document.getElementById("ioMappingDelaySource").firstChild.textContent = sourceName(parsedData.ioMappingDelay.source) ;
-		stateSelecter(document.getElementById("ioMappingDelayDebounce"), parsedData.ioMappingDelay.debounce) ; // set the debounce state
-		stateSelecter(document.getElementById("ioMappingDelayInvert"), parsedData.ioMappingDelay.invert) ;
-	}
+
+
 	if ("ioMappingShutter" in parsedData) {
+		var modeName = ((lastKnownExposureMode == "shutterGating") ? "Shutter Gating" : "Exposure Trigger") ;
+		switch(parsedData.ioMappingShutter.source) {
+			case "io1": // 'exposure trigger' is triggered by IO1
+				document.getElementById("IO1Action").firstChild.textContent = modeName ;
+				break ;
+			case "io2": // 'exposure trigger' is triggered by IO2
+				document.getElementById("IO2Action").firstChild.textContent = modeName ;
+				break ;
+			case "io3": // 'exposure trigger' is triggered by IO3
+				document.getElementById("IO3Action").firstChild.textContent = modeName ;
+				break ;
+
+			case "comb": // 'exposure trigger' may be triggered by multiple IOs
+				if (document.getElementById("ioMappingCombOr1Source").firstChild.textContent == "Input 1 (IO1 in)") // using input 1
+					document.getElementById("IO1Action").firstChild.textContent = modeName ;
+				if (document.getElementById("ioMappingCombOr2Source").firstChild.textContent == "Input 2 (IO2 in)") // using input 2
+					document.getElementById("IO2Action").firstChild.textContent = modeName ;
+				if (document.getElementById("ioMappingCombOr3Source").firstChild.textContent == "Input 3 (IO3 in)") // using input 3
+					document.getElementById("IO3Action").firstChild.textContent = modeName ;
+				break ;
+		}
 		document.getElementById("ioMappingShutterSource").firstChild.textContent = sourceName(parsedData.ioMappingShutter.source) ;
 		stateSelecter(document.getElementById("ioMappingShutterDebounce"), parsedData.ioMappingShutter.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingShutterInvert"), parsedData.ioMappingShutter.invert) ;
