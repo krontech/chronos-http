@@ -201,27 +201,30 @@ a.innerDropDown.active:hover {
 }
 .playIcon {	border-left-color: white; }
 .homeIcon:after { border-bottom-color: white; }
-
+.ioIcon, .ioIcon:before, .ioIcon:after { border-color: white; }
 
  /* Icon masking color (inactive) */
 .saveIcon:after { border-top-color: #222; }
+.ioIcon, .ioIcon:before, .ioIcon:after { background-color: #222; }
 
  /* Icon masking color (hover) */
 a:hover .saveIcon:after { border-top-color: #333; }
+a:hover .ioIcon, a:hover .ioIcon:before, a:hover .ioIcon:after { background-color: #333; }
 
 
   /* Icon colors (active) */
 .active .homeIcon, .active .saveIcon, .active .settingsIcon, .active .settingsIcon:before { background-color: black; }
 .active .homeIcon:after { border-bottom-color: black; }
 .active .playIcon { border-left-color: black; }
+.active .ioIcon, .active .ioIcon:before, .active .ioIcon:after { border-color: black; }
 
  /* Icon masking colors (active) */
 .active .saveIcon:after { border-top-color: white; }
-.active .settingsIcon:after { background-color: white; }
+.active .settingsIcon:after, .active .ioIcon, .active .ioIcon:before, .active .ioIcon:after { background-color: white; }
 
  /* Icon masking colors (active, hover) */
 .active:hover .saveIcon:after { border-top-color: #aaa; }
-.active:hover .settingsIcon:after { background-color: #aaa; }
+.active:hover .settingsIcon:after, .active:hover .ioIcon, .active:hover .ioIcon:before, .active:hover .ioIcon:after { background-color: #aaa; }
 
 
 a.innerDropDown:before { /* folder drop-down triangle inside drop-down */
@@ -234,11 +237,30 @@ a.innerDropDown.active:before {
 }
 
 
+.ioStatus.true { border-bottom-color: white; }
+.ioStatus.false { border-top-color: black; }
 
 
 
+.linesIn, .linesIn:before, .linesOut, .andGateIcon:before, .andGateIcon:after {
+	border-top-color: white;
+}
+.linesIn, .linesIn:before, .linesIn:after, .linesOut, .andGateIcon:before {
+	border-bottom-color: white;
+}
+.linesIn:before, .linesIn:after, .linesOut:before, .andGateIcon:after {
+	border-right-color: white;
+}
+.orGateIcon:after, .xorGateIcon:after {
+	border-left-color: white;
+}
+.linesOut:after, .orGateIcon, .orGateIcon:before, .andGateIcon, .xorGateIcon, .xorGateIcon:before {
+	background-color: white;
+}
 
-
+.andGateIcon:before {
+	background-color: #222;
+}
 
 
 

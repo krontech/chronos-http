@@ -228,6 +228,7 @@ a.innerDropDown.active:hover {
 	background-color: var(--TextColor);
 }
 
+
  /* menu Icon active color */
 .active .menuIcon, .active .menuIcon:before, .active .menuIcon:after{
 	background-color: var(--PageBG);
@@ -240,14 +241,16 @@ a.innerDropDown.active:hover {
 }
 .playIcon {	border-left-color: var(--TextColor); }
 .homeIcon:after { border-bottom-color: var(--TextColor); }
+.ioIcon, .ioIcon:before, .ioIcon:after { border-color: var(--TextColor); }
 
 
  /* Icon masking color (inactive) */
 .saveIcon:after { border-top-color: var(--ToolBG); }
+.ioIcon, .ioIcon:before, .ioIcon:after { background-color: var(--ToolBG); }
 
  /* Icon masking color (hover) */
 a:hover .saveIcon:after { border-top-color: var(--HoverBG); }
-
+a:hover .ioIcon, a:hover .ioIcon:before, a:hover .ioIcon:after { background-color: var(--HoverBG); }
 
 
 
@@ -257,6 +260,7 @@ a:hover .saveIcon:after { border-top-color: var(--HoverBG); }
 .active .homeIcon { background-color: var(--TextColor2); }
 .active .homeIcon:after { border-bottom-color: var(--TextColor2); }
 .active .playIcon { border-left-color: var(--TextColor2); }
+.active .ioIcon, .active .ioIcon:before, .active .ioIcon:after { border-color: var(--TextColor2); }
 
  /* Icon masking colors (active) */
 .active .saveIcon { background-color: var(--HoverBG); }
@@ -270,14 +274,15 @@ a:hover .saveIcon:after { border-top-color: var(--HoverBG); }
 .active .homeIcon, .active .saveIcon, .active .settingsIcon, .active .settingsIcon:before { background-color: var(--TextColor2); }
 .active .homeIcon:after { border-bottom-color: var(--TextColor2); }
 .active .playIcon { border-left-color: var(--TextColor2); }
+.active .ioIcon, .active .ioIcon:before, .active .ioIcon:after { border-color: var(--TextColor2); }
 
  /* Icon masking colors (active) */
 .active .saveIcon:after { border-top-color: var(--HoverBG); }
-.active .settingsIcon:after { background-color: var(--ActiveBG); }
+.active .settingsIcon:after, .active .ioIcon, .active .ioIcon:before, .active .ioIcon:after { background-color: var(--ActiveBG); }
 
  /* Icon masking colors (active, hover) */
 .active:hover .saveIcon:after { border-top-color: var(--ActiveHoverBG); }
-.active:hover .settingsIcon:after { background-color: var(--ActiveHoverBG); }
+.active:hover .settingsIcon:after, .active:hover .ioIcon, .active:hover .ioIcon:before, .active:hover .ioIcon:after { background-color: var(--ActiveHoverBG); }
 
 
 a.innerDropDown:before { /* folder drop-down triangle inside drop-down */
@@ -290,9 +295,29 @@ a.innerDropDown.active:before {
 }
 
 
+.ioStatus.true { border-bottom-color: var(--ActiveBG); }
+.ioStatus.false { border-top-color: #A00; }
 
 
+.linesIn, .linesIn:before, .linesOut, .andGateIcon:before, .andGateIcon:after {
+	border-top-color: var(--TextColor);
+}
+.linesIn, .linesIn:before, .linesIn:after, .linesOut, .andGateIcon:before {
+	border-bottom-color: var(--TextColor);
+}
+.linesIn:before, .linesIn:after, .linesOut:before, .andGateIcon:after {
+	border-right-color: var(--TextColor);
+}
+.orGateIcon:after, .xorGateIcon:after {
+	border-left-color: var(--TextColor);
+}
+.linesOut:after, .orGateIcon, .orGateIcon:before, .andGateIcon, .xorGateIcon, .xorGateIcon:before {
+	background-color: var(--TextColor);
+}
 
+.andGateIcon:before {
+	background-color: var(--ToolBG);
+}
 
 
 

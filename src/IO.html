@@ -13,11 +13,6 @@
 <style>
 
 
-.infoText {
-	display: inline-block;
-	margin-right: 100px;
-}
-
 /******** Specific to this page ********/
 
 
@@ -28,6 +23,37 @@
 @media screen and (min-width: 1260px) {
 /*	.leftContainer, .rightContainer { max-width: 1000px; } */
 	#container1 { max-width: 1230px; }
+}
+
+@media screen and (max-width: 1142px) { /* change formatting when screen size is narrower than this */
+	#ioNav { display: none; } /* hide the IO config button */
+}
+
+@media screen and (max-width: 950px) { /* change formatting when screen size is narrower than this */
+	#help { display: none; } /* hide the help button */
+
+	body { margin: 0; }
+}
+
+@media screen and (max-width: 705px) { /* change formatting when screen size is narrower than this */
+	.subTitle { display: none; }
+}
+
+@media screen and (max-width: 665px) { /* change formatting when screen size is narrower than this */
+	#settings { display: none; }
+}
+
+@media screen and (max-width: 500px) { /* change formatting when screen size is narrower than this */
+	#playSave { display: none; } /* hide the PlaySave button */
+}
+
+@media screen and (max-width: 455px) { /* change formatting when screen size is narrower than this */
+	.titleImage img { width: 100%; height: auto; }
+}
+
+@media screen and (max-width: 365px) { /* change formatting when screen size is narrower than this */
+	#main { display: none; } /* hide the main button */
+	#menu { width: 90%; }
 }
 
 #batteryBar { margin-bottom: 2px; }
@@ -48,240 +74,10 @@
 	width: 300px;
 }
 
-.ioStatus.true {
-	display: inline-block;
-	height: 0;
-	width: 0;
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 16px solid #0067B9; /* pantone 2144 */
-}
+#ioMappingDelayTime { margin-top: 9px; }
 
-.ioStatus.false {
-	display: inline-block;
-	height: 0;
-	width: 0;
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 16px solid #A00;
-}
+#ioMappingDelayBox, #inputStatusBox { clear: left; }
 
-
-.combBlock {
-	position: relative;
-	top: -196px;
-	left: 262px;
-	height: 0;
-	width: 0;
-}
-
-.linesIn {
-	background: transparent;
-	height: 52px;
-	width: 60px;
-
-	border-top: 5px solid white;
-	border-bottom: 5px solid white;
-}
-.linesIn:before {
-	content: '';
-	display: block;
-	background: transparent;
-	margin-top: 23px;
-	height: 86px;
-	width: 128px;
-
-	border-top: 5px solid white;
-	border-bottom: 5px solid white;
-	border-right: 5px solid white;
-}
-.linesIn:after {
-	content: '';
-	display: block;
-	background: transparent;
-	margin-top: 11px;
-	height: 43px;
-	width: 220px;
-
-	border-right: 5px solid white;
-	border-bottom: 5px solid white;
-}
-
-
-.linesOut {
-	height: 15px;
-	width: 20px;
-	margin-left: 221px;
-	margin-top: -15px;
-	border-top: 5px solid white;
-	border-bottom: 5px solid white;
-}
-.linesOut:before {
-	content: '';
-	display: block;
-	position: relative;
-	left: -4px;
-	top: -16px;
-	height: 47px;
-	width: 23px;
-	border-radius: 50%;
-	border-right: 6px solid white;
-}
-.linesOut:after {
-	content: '';
-	display: block;
-	height: 5px;
-	width: 30px;
-	background-color: white;
-	position: relative;
-	top: -43px;
-	left: 69px
-}
-
-.orGateIcon {
-	height: 40px;
-	width: 80px;
-	margin-left: 26px;
-	margin-top: -71px;
-	background-color: white;
-	border-radius: 0;
-	border-top-right-radius: 60px 40px;
-	border-bottom-left-radius: 12px 40px;
-}
-.orGateIcon:before {
-	content: '';
-	height: 40px;
-	width: 80px;
-	background-color: white;
-	border-radius: 0;
-	border-bottom-right-radius: 60px 40px;
-	display: block;
-	position: relative;
-	top: 40px;
-	border-top-left-radius: 12px 40px;
-}
-.orGateIcon:after {
-	content: '';
-	display: block;
-	position: relative;
-	top: -25px;
-	left: 67px;
-	height: 0;
-	width: 0;
-	background: transparent;
-	border-top: 25px solid transparent;
-	border-bottom: 25px solid transparent;
-	border-left: 24px solid white;
-}
-
-.andGateIcon {
-	height: 42px;
-	width: 60px;
-	background-color: white;
-	border-top-right-radius: 20px;
-	border-bottom-right-radius: 20px;
-	margin-top: 23px;
-	margin-left: 148px;
-}
-.andGateIcon:before {
-	content: '';
-	display: block;
-	position: relative;
-	top: 8px;
-	left: -20px;
-	height: 15px;
-	width: 20px;
-	background: black;
-	border-top: 5px solid white;
-	border-bottom: 5px solid white;
-}
-.andGateIcon:after {
-	content: '';
-	display: block;
-	position: relative;
-	top: -7px;
-	right: -59px;
-	height: 41px;
-	width: 14px;
-	background: transparent;
-	border-top: 5px solid white;
-	border-right: 5px solid white;
-}
-
-.xorGateIcon {
-	height: 25px;
-	width: 45px;
-	margin-left: 246px;
-	margin-top: 8px;
-	background-color: white;
-	border-radius: 0;
-	border-top-right-radius: 35px 25px;
-	border-bottom-left-radius: 8px 25px;
-}
-.xorGateIcon:before {
-	content: '';
-	height: 25px;
-	width: 45px;
-	background-color: white;
-	border-radius: 0;
-	border-bottom-right-radius: 35px 25px;
-	display: block;
-	position: relative;
-	top: 20px;
-	border-top-left-radius: 8px 25px;
-}
-.xorGateIcon:after {
-	content: '';
-	display: block;
-	position: relative;
-	top: -12.5px;
-	left: 40px;
-	background: transparent;
-	border-left: 8px solid white;
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-}
-
-
-
-.ioIcon {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 0;
-	margin-bottom: 4px;
-	height: 8px;
-	width: 24px;
-	background-color: #0067B9; /* pantone 2144 */
-	transition: all 0.3s ease;
-	border-top: 5px solid white;
-	border-bottom: 5px solid white;
-}
-.ioIcon:before {
-	content: '';
-	display: block;
-	width: 5px;
-	height: 5px;
-	border: 4px solid white;
-	border-radius: 10px;
-	background-color: #0067B9; /* pantone 2144 */
-	position: relative;
-	bottom: -4px;
-	left: -2;
-	transition: all 0.3s ease;
-}
-.ioIcon:after {
-	content: '';
-	display: block;
-	width: 5px;
-	height: 5px;
-	border: 4px solid white;
-	border-radius: 10px;
-	background-color: #0067B9; /* pantone 2144 */
-	position: relative;
-	top: -22px;
-	right: -13px;
-	transition: all 0.3s ease;
-}
 
 
 </style>
@@ -318,9 +114,9 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
-
+<!--
 			<a onclick="dropDownSelect(this)">Debug Tools</a>
-
+-->
 		</div>
 
 	</div>
@@ -875,25 +671,30 @@
 
 -->
 
-		<div id="combinatorialIconBox" class="horizLayout">
-			<b> Combinatorial Block </b>
-			<br>
-			<br>
-			Combinatorial OR1 <div id="combOr1Icon" class="ioStatus none"></div><br>
-			Combinatorial OR2 <div id="combOr2Icon" class="ioStatus none"></div><br>
-			Combinatorial OR3 <div id="combOr3Icon" class="ioStatus none"></div><br>
-			<br>
-			Combinatorial AND <div id="combAndIcon" class="ioStatus none"></div>&ensp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Combinatorial Out <div id="combOutIcon" class="ioStatus none"></div><br>
-			<br>
-			Combinatorial XOR <div id="combXorIcon" class="ioStatus none"></div>
-			<div class="combBlock">
-				<div class="linesIn"></div>
-				<div class="orGateIcon"></div>
-				<div class="andGateIcon"></div>
-				<div class="xorGateIcon"></div>
-				<div class="linesOut"></div>
-			</div>
+	</div>
+
+
+	<div id="combinatorialIconBox" class="horizLayout">
+		<b> Combinatorial Block </b>
+		<br>
+		<br>
+		Combinatorial OR1 <div id="combOr1Icon" class="ioStatus none"></div><br>
+		Combinatorial OR2 <div id="combOr2Icon" class="ioStatus none"></div><br>
+		Combinatorial OR3 <div id="combOr3Icon" class="ioStatus none"></div><br>
+		<br>
+		Combinatorial AND <div id="combAndIcon" class="ioStatus none"></div>&ensp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Combinatorial Out <div id="combOutIcon" class="ioStatus none"></div><br>
+		<br>
+		Combinatorial XOR <div id="combXorIcon" class="ioStatus none"></div>
+		<div class="combBlock">
+			<div class="linesIn"></div>
+			<div class="orGateIcon"></div>
+			<div class="andGateIcon"></div>
+			<div class="xorGateIcon"></div>
+			<div class="linesOut"></div>
 		</div>
+	</div>
+
+	<div id="container3" class="rightContainer">
 
 		<div id="ioMappingCombOr1Box" class="horizLayout">
 			<b> Combinatorial OR 1 </b> <div id="ioMappingCombOr1Status" class="ioStatus none"></div>
@@ -1063,7 +864,7 @@
 
 
 
-		<div class="horizLayout">
+		<div id="inputStatusBox" class="horizLayout">
 			<b> Input Status </b>
 			<br>
 			Always High (True): <div id="alwaysHighSourceStatus" class="ioStatus none"></div>
@@ -1099,7 +900,7 @@
 			Software Trigger: <div id="softwareSourceStatus" class="ioStatus none"></div>
 		</div>
 
-		<div class="horizLayout">
+		<div id="outputStatusBox" class="horizLayout">
 			<b> Output Status </b>
 			<br>
 			Gate: <div id="gateOutputStatus" class="ioStatus none"></div>

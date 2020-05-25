@@ -91,19 +91,21 @@
 	#analogGainBox { min-height: 83px }
 }
 
-@media screen and (max-width: 1111px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 1142px) { /* change formatting when screen size is narrower than this */
 	#main { display: none; } /* hide the main button */
 
 }
 
-@media screen and (max-width: 940px) { /* change formatting when screen size is narrower than this */
+@media screen and (max-width: 1004px) { /* change formatting when screen size is narrower than this */
 	#help { display: none; } /* hide the help button */
+}
 
+@media screen and (max-width: 940px) { /* change formatting when screen size is narrower than this */
 	body { margin: 0; }
 }
 
-@media screen and (max-width: 705px) { /* change formatting when screen size is narrower than this */
-	#storage { display: none; } /* hide the storage button */
+@media screen and (max-width: 715px) { /* change formatting when screen size is narrower than this */
+	#ioNav { display: none; } /* hide the IO config button */
 
 	.subTitle { display: none; }
 }
@@ -153,7 +155,7 @@
 		<a id="main" class="active"> <div class="homeIcon"></div> Main </a>
 		<a id="playSave" href="PlaySave.html"> <div class="playIcon"></div> Play & Save </a>
 		<a id="settings" href="settings.html"> <div class="settingsIcon"></div> Settings </a>
-		<a id="ioNav" href="IO.html"> <div class="saveIcon"></div> I/O Config </a>
+		<a id="ioNav" href="IO.html"> <div class="ioIcon"></div> I/O Config </a>
 		<a id="help" href="/apidoc/"> <div class="helpIcon">?</div> Documentation </a>
 
 		<a id="menu" onclick="toggler(this)" class="menuClickOk"> <div class="menuIcon"></div> Menu </a>

@@ -698,6 +698,44 @@ a:hover .saveIcon:after { border-top-color: #777; }
 
 
 
+.ioIcon {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 0;
+	margin-bottom: 2px;
+	height: 6px;
+	width: 17px;
+	background-color: #333;
+	transition: all 0.3s ease;
+	border-top: 4px solid white;
+	border-bottom: 4px solid white;
+}
+.ioIcon:before {
+	content: '';
+	display: block;
+	width: 5px;
+	height: 5px;
+	border: 3px solid white;
+	border-radius: 10px;
+	background-color: #333;
+	position: relative;
+	bottom: -3px;
+	left: -1px;
+	transition: all 0.3s ease;
+}
+.ioIcon:after {
+	content: '';
+	display: block;
+	width: 5px;
+	height: 5px;
+	border: 3px solid white;
+	border-radius: 10px;
+	background-color: #333;
+	position: relative;
+	top: -19px;
+	right: -7px;
+	transition: all 0.3s ease;
+}
 
 .settingsIcon {
 	display: inline-block;
@@ -803,6 +841,27 @@ a.innerDropDown.active:before {
 	top: 18px;
 	left: 7px;
 }
+
+
+.ioStatus.true {
+	display: inline-block;
+	height: 0;
+	width: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 16px solid white;
+}
+
+.ioStatus.false {
+	display: inline-block;
+	height: 0;
+	width: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 16px solid black;
+}
+
+
 
 
 
@@ -917,4 +976,181 @@ a.innerDropDown.active:before {
 	box-shadow: 0 0 10px 10px black;
 	z-index: 90;
 	min-width: 260px;
+}
+
+
+
+.combBlock {
+	position: relative;
+	top: -196px;
+	left: 262px;
+	height: 0;
+	width: 0;
+}
+
+.linesIn {
+	background: transparent;
+	height: 52px;
+	width: 60px;
+
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+}
+.linesIn:before {
+	content: '';
+	display: block;
+	background: transparent;
+	margin-top: 23px;
+	height: 86px;
+	width: 128px;
+
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+	border-right: 5px solid white;
+}
+.linesIn:after {
+	content: '';
+	display: block;
+	background: transparent;
+	margin-top: 11px;
+	height: 43px;
+	width: 220px;
+
+	border-right: 5px solid white;
+	border-bottom: 5px solid white;
+}
+
+
+.linesOut {
+	height: 15px;
+	width: 20px;
+	margin-left: 221px;
+	margin-top: -15px;
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+}
+.linesOut:before {
+	content: '';
+	display: block;
+	position: relative;
+	left: -4px;
+	top: -16px;
+	height: 47px;
+	width: 23px;
+	border-radius: 50%;
+	border-right: 6px solid white;
+}
+.linesOut:after {
+	content: '';
+	display: block;
+	height: 5px;
+	width: 30px;
+	background-color: white;
+	position: relative;
+	top: -43px;
+	left: 69px
+}
+
+.orGateIcon {
+	height: 40px;
+	width: 80px;
+	margin-left: 26px;
+	margin-top: -71px;
+	background-color: white;
+	border-radius: 0;
+	border-top-right-radius: 60px 40px;
+	border-bottom-left-radius: 12px 40px;
+}
+.orGateIcon:before {
+	content: '';
+	height: 40px;
+	width: 80px;
+	background-color: white;
+	border-radius: 0;
+	border-bottom-right-radius: 60px 40px;
+	display: block;
+	position: relative;
+	top: 40px;
+	border-top-left-radius: 12px 40px;
+}
+.orGateIcon:after {
+	content: '';
+	display: block;
+	position: relative;
+	top: -25px;
+	left: 67px;
+	height: 0;
+	width: 0;
+	background: transparent;
+	border-top: 25px solid transparent;
+	border-bottom: 25px solid transparent;
+	border-left: 24px solid white;
+}
+
+.andGateIcon {
+	height: 42px;
+	width: 60px;
+	background-color: white;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	margin-top: 23px;
+	margin-left: 148px;
+}
+.andGateIcon:before {
+	content: '';
+	display: block;
+	position: relative;
+	top: 8px;
+	left: -20px;
+	height: 15px;
+	width: 20px;
+	background: black;
+	border-top: 5px solid white;
+	border-bottom: 5px solid white;
+}
+.andGateIcon:after {
+	content: '';
+	display: block;
+	position: relative;
+	top: -7px;
+	right: -59px;
+	height: 41px;
+	width: 14px;
+	background: transparent;
+	border-top: 5px solid white;
+	border-right: 5px solid white;
+}
+
+.xorGateIcon {
+	height: 25px;
+	width: 45px;
+	margin-left: 246px;
+	margin-top: 8px;
+	background-color: white;
+	border-radius: 0;
+	border-top-right-radius: 35px 25px;
+	border-bottom-left-radius: 8px 25px;
+}
+.xorGateIcon:before {
+	content: '';
+	height: 25px;
+	width: 45px;
+	background-color: white;
+	border-radius: 0;
+	border-bottom-right-radius: 35px 25px;
+	display: block;
+	position: relative;
+	top: 20px;
+	border-top-left-radius: 8px 25px;
+}
+.xorGateIcon:after {
+	content: '';
+	display: block;
+	position: relative;
+	top: -12.5px;
+	left: 40px;
+	background: transparent;
+	border-left: 8px solid white;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
 }
