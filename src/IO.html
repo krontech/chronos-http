@@ -78,6 +78,12 @@
 
 #ioMappingDelayBox, #inputStatusBox { clear: left; }
 
+#legendContainer {
+	display: inline-block;
+	float: right;	
+}
+
+#legendTrue, #legendFalse { width: 220px; }
 
 
 </style>
@@ -122,14 +128,13 @@
 	</div>
 
 
-<!--	<div class="leftContainer">
--->
-
 	<div class="Text-bar">
 		<div id="simpleConfigText" class="no-click">
 			<span>Simple Configuration</span>
 		</div>
 	</div>
+
+
 	<div id="container1" class="rightContainer">
 
 		<div class="horizLayout">
@@ -231,6 +236,20 @@
 				<div id="battery-level"></div>
 			</div>
 			<span id="battery%">0%</span>
+		</div>
+
+		<div id="legendContainer">
+			<div class="no-click">
+				Legend:
+			</div>
+			<div id="legendTrue" class="no-click">
+				<div class="ioStatus true"></div>
+				True/High/On
+			</div>
+			<div id="legendFalse" class="no-click">
+				<div class="ioStatus false"></div>
+				False/Low/Off
+			</div>
 		</div>
 	</div>
 
@@ -829,9 +848,9 @@
 		</div>
 
 		<div id="ioMappingCombAndBox" class="horizLayout">
-			<b> Cominatorial AND </b> <div id="ioMappingCombAndStatus" class="ioStatus none"></div>
+			<b> Combinatorial AND </b> <div id="ioMappingCombAndStatus" class="ioStatus none"></div>
 			<br>
-			<span class="instruction"> Choose what triggers the Cominatorial AND input </span>
+			<span class="instruction"> Choose what triggers the Combinatorial AND input </span>
 			<br>
 			Source:
 			<div id="ioMappingCombAndSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
@@ -1698,8 +1717,8 @@ var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElem
 
 				"Ok":					function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("netShareResultBox").classList.add("hidden") ;  dataGetter('get', 'externalStorage', pageUpdate) ; },
 
-				"BNC Cable (Button) >> End Recording": function() { document.getElementById("presetList").firstChild.textContent = "BNC Cable (Button) >> End Recording" ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) ; },
-				"Reset All to Defaults": function() { document.getElementById("presetList").firstChild.textContent = "Reset All to Defaults" ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "none", "debounce": false, "invert": false}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) },
+				"BNC Cable (Button) >> End Recording": function() { document.getElementById("presetList").firstChild.textContent = "BNC Cable (Button) >> End Recording" ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) ; },
+				"Reset All to Defaults": function() { document.getElementById("presetList").firstChild.textContent = "Reset All to Defaults" ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "none", "debounce": false, "invert": false}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) },
 
 						}
 
