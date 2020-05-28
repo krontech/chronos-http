@@ -409,8 +409,10 @@ switch (getCookie("thm")) {
 		break ;
 }
 
-if (getCookie("mc") == "n") {
-	dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ;
+if (getCookie("mc") != "m") {
+//	dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ;
+
+	setTimeout( function() { if (lastKnownState != "recording") { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; } }, 750) ;
 }
 
 
@@ -585,7 +587,7 @@ var inputFunctions = {	"startMarker":		function(value){ document.getElementById(
 						"frameStepB":		function(){ document.getElementById("timeLine").stepDown() ; sliderDragged(document.getElementById("timeLine")) ; },
 						"frameStepF":		function(){ document.getElementById("timeLine").stepUp() ; sliderDragged(document.getElementById("timeLine")) ; },
 
-						"overlayPlayModeButton": function() { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
+						"overlayPlayModeButton": function() { if (lastKnownState == "recording") {dataSender("stopRecording", "");} dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; },
 
 						"currentFrameNum":	function(value){ boundInput(document.getElementById("currentFrameNum")) ; document.getElementById("timeLine").value = value ; sliderDragged(document.getElementById("timeLine")) ; },
 						"startFrameNum":	function(value){ boundInput(document.getElementById("startFrameNum")) ; document.getElementById("startMarker").value = value ; markerFill() ; setFrameLength() ; },

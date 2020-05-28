@@ -435,7 +435,7 @@ switch (getCookie("thm")) {
 		break ;
 }
 
-if (getCookie("mc") == "n") {
+if (getCookie("mc") != "m") {
 	setTimeout( function() { dataRequester("startLivedisplay", "{}", pageUpdate) ; }, 350) ;
 }
 
