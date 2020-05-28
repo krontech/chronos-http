@@ -76,7 +76,7 @@
 
 #ioMappingDelayTime { margin-top: 9px; }
 
-#ioMappingDelayBox, #inputStatusBox { clear: left; }
+#ioMappingShutterBox, #inputStatusBox { clear: left; }
 
 #legendContainer {
 	display: inline-block;
@@ -221,7 +221,8 @@
 -->
 			<br>
 			<div id="presetList" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
-				<a onclick="dropDownSelect(this)">BNC Cable (Button) >> End Recording</a>
+				<a onclick="dropDownSelect(this)">BNC Trigger Button >> End Recording</a>
+				<a onclick="dropDownSelect(this)">BNC Trigger Button >> Toggle Recording</a>
 				<a onclick="dropDownSelect(this)">Reset All to Defaults</a>
 			</div></div>
 		</div>
@@ -367,41 +368,7 @@
 		</div>
 
 
-		<div id="ioMappingShutterBox" class="horizLayout">
-			<b> Shutter </b> <div id="ioMappingShutterStatus" class="ioStatus none"></div>
-			<br>
-			<span class="instruction"> Choose what affects the shutter </span>
-			<br>
-			Source:
-			<div id="ioMappingShutterSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
-				<a onclick="dropDownSelect(this)">None (False)</a>
-				<a onclick="dropDownSelect(this)">Always High (True)</a>
-				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
-				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
-				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
-				<a onclick="dropDownSelect(this)">Start of Recording</a>
-				<a onclick="dropDownSelect(this)">End of Recording</a>
-				<a onclick="dropDownSelect(this)">While Recording</a>
-				<a onclick="dropDownSelect(this)">Timing IO</a>
-				<a onclick="dropDownSelect(this)">Delay Block</a>
-				<a onclick="dropDownSelect(this)">Software Trigger</a>
-				<a onclick="dropDownSelect(this)">Toggle Block</a>
-				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
-				<a onclick="dropDownSelect(this)">Shutter</a>
-				<a onclick="dropDownSelect(this)">Next Segment</a>
-				<a onclick="dropDownSelect(this)">Display Frame</a>
-			</div></div>
-			<div id="ioMappingShutterSourceStatus" class="ioStatus none ioInputStatus"></div>
-			<br>
-			Debounce:
-			<a id="ioMappingShutterDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
-			<br>
-			Invert:
-			<a id="ioMappingShutterInvert" class="button" onclick="debounceOrInvert(this)">False</a>
-		</div>
-
-
-		<div id="ioMappingGateBox" class="horizLayout">
+<!--		<div id="ioMappingGateBox" class="horizLayout">
 			<b> Gate </b> <div id="ioMappingGateStatus" class="ioStatus none"></div>
 			<br>
 			<span class="instruction"> Gate </span>
@@ -433,6 +400,7 @@
 			Invert:
 			<a id="ioMappingGateInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
+-->
 
 		<div id="ioMappingToggleSetBox" class="horizLayout">
 			<b> Toggle </b> <div id="ioMappingToggleSetStatus" class="ioStatus none"></div> <b> Set</b>
@@ -533,7 +501,44 @@
 			<a id="ioMappingToggleClearInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 		</div>
 
-
+		<div id="ioMappingShutterBox" class="horizLayout">
+			<b> Shutter </b> <div id="ioMappingShutterStatus" class="ioStatus none"></div>
+			<br>
+			<span class="instruction"> Choose what affects the shutter </span>
+			<br>
+			Source:
+			<div id="ioMappingShutterSource" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">None (False)</a>
+				<a onclick="dropDownSelect(this)">Always High (True)</a>
+				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
+				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
+				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
+				<a onclick="dropDownSelect(this)">Start of Recording</a>
+				<a onclick="dropDownSelect(this)">End of Recording</a>
+				<a onclick="dropDownSelect(this)">While Recording</a>
+				<a onclick="dropDownSelect(this)">Timing IO</a>
+				<a onclick="dropDownSelect(this)">Delay Block</a>
+				<a onclick="dropDownSelect(this)">Software Trigger</a>
+				<a onclick="dropDownSelect(this)">Toggle Block</a>
+				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
+				<a onclick="dropDownSelect(this)">Shutter</a>
+				<a onclick="dropDownSelect(this)">Next Segment</a>
+				<a onclick="dropDownSelect(this)">Display Frame</a>
+			</div></div>
+			<div id="ioMappingShutterSourceStatus" class="ioStatus none ioInputStatus"></div>
+			<br>
+			Debounce:
+			<a id="ioMappingShutterDebounce" class="button" onclick="debounceOrInvert(this)">False</a>
+			<br>
+			Invert:
+			<a id="ioMappingShutterInvert" class="button" onclick="debounceOrInvert(this)">False</a>
+			<br>
+			Mode:
+			<div id="exposureModeSelection" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
+				<a onclick="dropDownSelect(this)">Shutter Gating</a>
+				<a onclick="dropDownSelect(this)">Frame Trigger</a>
+			</div></div>
+		</div>
 
 		<div id="ioMappingDelayBox" class="horizLayout">
 			<b> Delay </b> <div id="ioMappingDelayStatus" class="ioStatus none"></div>
@@ -650,45 +655,6 @@
 				<a onclick="dropDownSelect(this)">High (20mA)</a>
 			</div></div>
 		</div>
-
-
-
-<!--
-		<div id="Box" class="horizLayout">
-			<b> -- </b>
-			<br>
-			<span class="instruction"> Blank </span>
-			<br>
-			Source:
-			<div id="Source" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
-				<a onclick="dropDownSelect(this)">None (False)</a>
-				<a onclick="dropDownSelect(this)">Always High (True)</a>
-				<a onclick="dropDownSelect(this)">Input 1 (IO1 in)</a>
-				<a onclick="dropDownSelect(this)">Input 2 (IO2 in)</a>
-				<a onclick="dropDownSelect(this)">Input 3 (IO3 in)</a>
-				<a onclick="dropDownSelect(this)">Start of Recording</a>
-				<a onclick="dropDownSelect(this)">End of Recording</a>
-				<a onclick="dropDownSelect(this)">While Recording</a>
-				<a onclick="dropDownSelect(this)">Timing IO</a>
-				<a onclick="dropDownSelect(this)">Delay Block</a>
-				<a onclick="dropDownSelect(this)">Software Trigger</a>
-				<a onclick="dropDownSelect(this)">Toggle Block</a>
-				<a onclick="dropDownSelect(this)">Combinatorial Block</a>
-				<a onclick="dropDownSelect(this)">Shutter</a>
-				<a onclick="dropDownSelect(this)">Next Segment</a>
-				<a onclick="dropDownSelect(this)">Display Frame</a>
-			</div></div>
-			<span id="SourceStatus" class="ioInputStatus">(True/False)</span>
-			<br>
-			Debounce:
-			<a id="Debounce" class="button" onclick="sendIoRequest(this)">False</a>
-			<br>
-			Invert:
-			<a id="Invert" class="button" onclick="sendIoRequest(this)">False</a>
-		</div>
-
-
--->
 
 	</div>
 
@@ -921,8 +887,9 @@
 
 		<div id="outputStatusBox" class="horizLayout">
 			<b> Output Status </b>
-			<br>
+<!--			<br>
 			Gate: <div id="gateOutputStatus" class="ioStatus none"></div>
+-->
 			<br>
 			Delay: <div id="delayOutputStatus" class="ioStatus none"></div>
 			<br>
@@ -941,267 +908,7 @@
 			Output 2 (IO2): <div id="io2OutputStatus" class="ioStatus none"></div>
 		</div>
 
-
 	</div>
-
-
-<!--
-   "config": {
-
-      "ioThresholdIo1": 2.49929,
-      "ioThresholdIo2": 2.49929,
-
-      "ioMappingCombOr2": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingCombOr3": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingStopRec": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingGate": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingCombOr1": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingCombXor": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingToggleSet": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingToggleFlip": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-
-      "ioMappingStartRec": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingIo2": { --
-         "source": "alwaysHigh",
-         "drive": 0,
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingIo1": { --
-         "source": "alwaysHigh",
-         "drive": 1,
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingTrigger": { --
-         "source": "io1",
-         "debounce": false,
-         "invert": true
-      },
-
-      "ioMappingDelay": { --
-         "source": "comb",
-         "debounce": false,
-         "invert": false
-      },
-
-
-      "ioMappingToggleClear": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingCombAnd": { --
-         "source": "alwaysHigh",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingShutter": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      }
-
-   },
-
-
-   "ioSourceStatus": {
-      "io3": false,
-      "delay": false,
-      "nextSeg": false,
-      "timingIo": true,
-      "dispFrame": false,
-      "alwaysHigh": true,
-      "comb": false,
-      "none": false,
-      "io1": true,
-      "shutter": true,
-      "toggle": true,
-      "endRec": false,
-      "recording": false,
-      "software": false,
-      "startRec": false,
-      "io2": false
-   },
-
-   "ioOutputStatus": {
-      "gate": false,
-      "delay": false,
-      "start": false,
-      "comb": false,
-      "shutter": false,
-      "toggle": true,
-      "stop": false,
-      "io1": true,
-      "io2": true
-
-   },
-
-
-   "ioMapping": {
-
-      "combAnd": {
-         "source": "alwaysHigh",
-         "debounce": false,
-         "invert": false
-      },
-
-      "delay": {
-         "source": "comb",
-         "delayTime": 0,
-         "debounce": false,
-         "invert": false
-      },
-
-      "toggleSet": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "gate": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "toggleFlip": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "start": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "shutter": {
-         "shutterTriggersFrame": false,
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "combOr1": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "combOr2": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "combOr3": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "combXOr": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "trigger": {
-         "source": "io1",
-         "debounce": false,
-         "invert": true
-      },
-
-      "stop": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "toggleClear": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "io1In": {
-         "threshold": 2.49929
-      },
-
-      "io2In": {
-         "threshold": 2.49929
-      },
-
-      "io1": {
-         "source": "alwaysHigh",
-         "driveStrength": 1,
-         "debounce": false,
-         "invert": false
-      },
-
-      "io2": {
-         "source": "alwaysHigh",
-         "driveStrength": 0,
-         "debounce": false,
-         "invert": false
-      }
-
-   },
-
-
--->
-
 
 
 	<div id="debugBar" class="Text-bar hidden">
@@ -1229,8 +936,9 @@
 
 <div id="popUpBackground" class="popUpBackground hidden">
 	<div id="messageWarn" class="popUpMessage">
-		<div id="netShareResultBox" class="horizLayout hidden">
-			Status of the network share requests
+		<div id="ioRecordToggleBox" class="horizLayout hidden">
+			Caution: using this mode will <i>not</i> protect your footage being overwritten.
+			If you start a new recording before saving the previous one, your footage will be lost.
 			<br>
 			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
 		</div>
@@ -1565,12 +1273,6 @@ function simpleModeWrite() {
 	}
 
 
-//	request += '}' ;
-//	dataRequester("set", request, pageUpdate) ; // split this up because otherwise the request gets way too long
-
-//	request = '{' ; // reset the request
-
-
 	switch (io2Action) {
 		case "None (Do Nothing)":
 			request += ', "ioMappingIo2": {"source": "alwaysHigh", "debounce": ' + document.getElementById("IO2Debounce").textContent.toLowerCase() + ', "invert": ' + document.getElementById("IO2Invert").textContent.toLowerCase() ;
@@ -1612,11 +1314,6 @@ function simpleModeWrite() {
 			request += ', "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}' ;
 			break ;
 	}
-
-//	request += '}' ;
-//	dataRequester("set", request, pageUpdate) ; // split this up because otherwise the request gets way too long
-
-//	request = '{' ; // reset the request
 
 
 	switch (io3Action) {
@@ -1715,36 +1412,16 @@ var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElem
 				"Low (1mA)":			function(parent) { parent.firstChild.textContent = "Low (1mA)" ; sendIoRequest(parent) ; },
 				"High (20mA)":			function(parent) { parent.firstChild.textContent = "High (20mA)" ; sendIoRequest(parent) ; },
 
-				"Ok":					function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("netShareResultBox").classList.add("hidden") ;  dataGetter('get', 'externalStorage', pageUpdate) ; },
+				"Shutter Gating":		function(parent) { parent.firstChild.textContent = "Shutter Gating" ; dataRequester('set', '{"exposureMode": "shutterGating"}', pageUpdate) ; },
+				"Frame Trigger":		function(parent) { parent.firstChild.textContent = "Frame Trigger" ; dataRequester('set', '{"exposureMode": "frameTrigger"}', pageUpdate) ; },
 
-				"BNC Cable (Button) >> End Recording": function() { document.getElementById("presetList").firstChild.textContent = "BNC Cable (Button) >> End Recording" ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) ; },
-				"Reset All to Defaults": function() { document.getElementById("presetList").firstChild.textContent = "Reset All to Defaults" ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "none", "debounce": false, "invert": false}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) },
+				"Ok":					function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("ioRecordToggleBox").classList.add("hidden") ; },
 
-						}
+				"BNC Trigger Button >> End Recording": function() { dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) ; },
+				"Reset All to Defaults": function() { dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "none", "debounce": false, "invert": false}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) },
+				"BNC Trigger Button >> Toggle Recording": function() { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("ioRecordToggleBox").classList.remove("hidden") ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "io1", "debounce": true, "invert": true}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "comb", "debounce": true, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "recording", "debounce": false, "invert": true}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "delay", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 1.0 }', pageUpdate) ; },
 
-
-/*
-'{
-	"ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingStopRec": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingGate": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingCombXor": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingStartRec": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false},
-	"ioMappingIo1": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false},
-	"ioMappingTrigger": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingDelay": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false},
-	"ioMappingShutter": {"source": "none", "debounce": false, "invert": false},
-	"ioThresholdIo1": 2.5,
-	"ioThresholdIo2": 2.5,
-	"ioDelayTime": 0.0
-}'
-*/
+				}
 
 function dropDownSelect (element) {
 	if (element.innerText in dropDownFunctions) // if the key-value exists
@@ -1986,8 +1663,12 @@ function pageUpdate(rawData){
 		batteryPercent(lastKnownBatteryLevel, lastKnownExternalPower) ; // update the battery indicator
 	}
 
-	if ("exposureMode" in parsedData)
+	if ("exposureMode" in parsedData) {
 		lastKnownExposureMode = parsedData.exposureMode ;
+
+		document.getElementById("exposureModeSelection").firstChild.textContent = (parsedData.exposureMode == "shutterGating") ? "Shutter Gating" : "Frame Trigger" ;
+
+	}
 
 	if ("ioSourceStatus" in parsedData) { // these are all the 'inputs' that can be selected
 
@@ -2016,25 +1697,6 @@ function pageUpdate(rawData){
 		document.getElementById("recordingSourceStatus").classList.replace(document.getElementById("recordingSourceStatus").classList[1], parsedData.ioSourceStatus.recording) ;
 		document.getElementById("startRecSourceStatus").classList.replace(document.getElementById("startRecSourceStatus").classList[1], parsedData.ioSourceStatus.software) ;
 		document.getElementById("softwareSourceStatus").classList.replace(document.getElementById("softwareSourceStatus").classList[1], parsedData.ioSourceStatus.startRec) ;
-
-//      "alwaysHigh": true,
-//      "none": false,
-//      "io1": true,
-//      "io2": false
-//      "io3": false,
-
-//      "delay": false,
-//      "nextSeg": false,
-//      "timingIo": true,
-//      "dispFrame": false,
-
-//      "comb": false,
-//      "shutter": true,
-//      "toggle": true,
-//      "endRec": false,
-//      "recording": false,
-//      "software": false,
-//      "startRec": false,
 
 		var allInputs = document.getElementsByClassName("ioInputStatus") ;
 
@@ -2094,18 +1756,8 @@ function pageUpdate(rawData){
 	}
 
 	if ("ioOutputStatus" in parsedData) { // these are all the 'outputs' which are reported back
-//      "gate": false,
-//      "delay": false,
-//      "start": false,
-//      "comb": false,
-//      "shutter": false,
-//      "toggle": true,
-//      "stop": false,
-//      "io1": true,
-//      "io2": true
-
 		document.getElementById("ioMappingStopRecStatus").classList.replace(document.getElementById("ioMappingStopRecStatus").classList[1], parsedData.ioOutputStatus.stop) ;
-		document.getElementById("ioMappingGateStatus").classList.replace(document.getElementById("ioMappingGateStatus").classList[1], parsedData.ioOutputStatus.gate) ;
+//		document.getElementById("ioMappingGateStatus").classList.replace(document.getElementById("ioMappingGateStatus").classList[1], parsedData.ioOutputStatus.gate) ;
 
 		document.getElementById("ioMappingToggleSetStatus").classList.replace(document.getElementById("ioMappingToggleSetStatus").classList[1], parsedData.ioOutputStatus.toggle) ;
 		document.getElementById("ioMappingToggleFlipStatus").classList.replace(document.getElementById("ioMappingToggleFlipStatus").classList[1], parsedData.ioOutputStatus.toggle) ;
@@ -2118,7 +1770,7 @@ function pageUpdate(rawData){
 		document.getElementById("ioMappingShutterStatus").classList.replace(document.getElementById("ioMappingShutterStatus").classList[1], parsedData.ioOutputStatus.shutter) ;
 
 
-		document.getElementById("gateOutputStatus").classList.replace(document.getElementById("gateOutputStatus").classList[1], parsedData.ioOutputStatus.gate) ;
+//		document.getElementById("gateOutputStatus").classList.replace(document.getElementById("gateOutputStatus").classList[1], parsedData.ioOutputStatus.gate) ;
 		document.getElementById("delayOutputStatus").classList.replace(document.getElementById("delayOutputStatus").classList[1], parsedData.ioOutputStatus.delay) ;
 		document.getElementById("startOutputStatus").classList.replace(document.getElementById("startOutputStatus").classList[1], parsedData.ioOutputStatus.start) ;
 		document.getElementById("combOutputStatus").classList.replace(document.getElementById("combOutputStatus").classList[1], parsedData.ioOutputStatus.comb) ;
@@ -2136,12 +1788,10 @@ function pageUpdate(rawData){
 	if ("ioThresholdIo1" in parsedData) {
 		if (document.getElementById("IO1Threshold") != document.activeElement)
 			document.getElementById("IO1Threshold").value = parsedData.ioThresholdIo1.toFixed(1) ;
-//		document.getElementById("").value = parsedData.ioThresholdIo1 ;
 	}
 	if ("ioThresholdIo2" in parsedData) {
 		if (document.getElementById("IO2Threshold") != document.activeElement)
 			document.getElementById("IO2Threshold").value = parsedData.ioThresholdIo2.toFixed(1) ;
-//		document.getElementById("").value = parsedData.ioThresholdIo2 ;
 	}
 
 	if ("ioDelayTime" in parsedData) {
@@ -2260,12 +1910,12 @@ function pageUpdate(rawData){
 		stateSelecter(document.getElementById("ioMappingStartRecInvert"), parsedData.ioMappingStartRec.invert) ;
 	}
 
-	if ("ioMappingGate" in parsedData) {
+/*	if ("ioMappingGate" in parsedData) {
 		document.getElementById("ioMappingGateSource").firstChild.textContent = sourceName(parsedData.ioMappingGate.source) ;
 		stateSelecter(document.getElementById("ioMappingGateDebounce"), parsedData.ioMappingGate.debounce) ; // set the debounce state
 		stateSelecter(document.getElementById("ioMappingGateInvert"), parsedData.ioMappingGate.invert) ;
 	}
-
+*/
 
 	if ("ioMappingTrigger" in parsedData) {
 		switch(parsedData.ioMappingTrigger.source) {
@@ -2337,104 +1987,6 @@ function pageUpdate(rawData){
 
 		}
 	}
-/*
-      "ioMappingCombOr3": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingStopRec": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingGate": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingCombOr1": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingCombXor": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingToggleSet": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingToggleFlip": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-
-      "ioMappingStartRec": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingIo2": { --
-         "source": "alwaysHigh",
-         "drive": 0,
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingIo1": { --
-         "source": "alwaysHigh",
-         "drive": 1,
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingTrigger": { --
-         "source": "io1",
-         "debounce": false,
-         "invert": true
-      },
-
-      "ioMappingDelay": { --
-         "source": "comb",
-         "debounce": false,
-         "invert": false
-      },
-
-
-      "ioMappingToggleClear": { --
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingCombAnd": { --
-         "source": "alwaysHigh",
-         "debounce": false,
-         "invert": false
-      },
-
-      "ioMappingShutter": {
-         "source": "none",
-         "debounce": false,
-         "invert": false
-      }
-
-   },
-*/
-
 }
 
 
