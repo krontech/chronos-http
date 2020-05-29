@@ -533,7 +533,7 @@
 			Invert:
 			<a id="ioMappingShutterInvert" class="button" onclick="debounceOrInvert(this)">False</a>
 			<br>
-			Mode:
+			Mode: 
 			<div id="exposureModeSelection" class="selectContainerHolder" onclick=""> Select <div class="selectContainer">
 				<a onclick="dropDownSelect(this)">Shutter Gating</a>
 				<a onclick="dropDownSelect(this)">Frame Trigger</a>
@@ -964,15 +964,15 @@ function tester2func() {
 
 //	dataGetter("p", "", pageUpdate) ; // get all the data
 
-	dataRequester("set", '{"ioMappingIo1": {"source": "none", "debounce": false, "invert": false}}', pageUpdate) ;
+//	dataRequester("set", '{"ioMappingIo1": {"source": "none", "debounce": false, "invert": false}}', pageUpdate) ;
 }
 
 
 function tester3func() {
 	// clear recorded buffer
-//	dataGetter("flushRecording", '', pageUpdate) ;
+	dataGetter("flushRecording", '', pageUpdate) ;
 
-	dataRequester("set", '{"ioMappingIo1": {"source": "alwaysHigh", "debounce": True, "invert": True}}', pageUpdate) ;
+//	dataRequester("set", '{"ioMappingIo1": {"source": "alwaysHigh", "debounce": True, "invert": True}}', pageUpdate) ;
 
 }
 
@@ -1418,8 +1418,8 @@ var dropDownFunctions = { "Debug Tools":	function(){ var item = document.getElem
 				"Ok":					function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("ioRecordToggleBox").classList.add("hidden") ; },
 
 				"BNC Trigger Button >> End Recording": function() { dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) ; },
-				"Reset All to Defaults": function() { dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "none", "debounce": false, "invert": false}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) },
-				"BNC Trigger Button >> Toggle Recording": function() { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("ioRecordToggleBox").classList.remove("hidden") ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "io1", "debounce": true, "invert": true}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "comb", "debounce": true, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "recording", "debounce": false, "invert": true}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "delay", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 1.0 }', pageUpdate) ; },
+				"Reset All to Defaults": function() { dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "alwaysHigh", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingIo2": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "none", "drive": 0, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "none", "debounce": false, "invert": false}, "ioMappingDelay": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "none", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.0 }', pageUpdate) ; setTimeout( function() { dataRequester('set', '{"ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}}', pageUpdate) ; }, 300) ; },
+				"BNC Trigger Button >> Toggle Recording": function() { document.getElementById("popUpBackground").classList.remove("hidden") ; document.getElementById("ioRecordToggleBox").classList.remove("hidden") ; dataRequester('set', '{ "ioMappingCombOr3": {"source": "none", "debounce": false, "invert": false}, "ioMappingStopRec": {"source": "none", "debounce": false, "invert": false}, "ioMappingGate": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombOr1": {"source": "io1", "debounce": true, "invert": true}, "ioMappingCombOr2": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombXor": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleSet": {"source": "none", "debounce": false, "invert": false}, "ioMappingToggleFlip": {"source": "none", "debounce": false, "invert": false}, "ioMappingStartRec": {"source": "none", "debounce": true, "invert": false}, "ioMappingIo2": {"source": "alwaysHigh", "drive": 0, "debounce": false, "invert": false}, "ioMappingIo1": {"source": "alwaysHigh", "drive": 2, "debounce": false, "invert": false}, "ioMappingTrigger": {"source": "io1", "debounce": true, "invert": true}, "ioMappingDelay": {"source": "recording", "debounce": false, "invert": true}, "ioMappingToggleClear": {"source": "none", "debounce": false, "invert": false}, "ioMappingCombAnd": {"source": "delay", "debounce": false, "invert": false}, "ioMappingShutter": {"source": "none", "debounce": false, "invert": false}, "ioThresholdIo1": 2.5, "ioThresholdIo2": 2.5, "ioDelayTime": 0.50 }', pageUpdate) ; setTimeout( function() { dataRequester('set', '{"ioMappingStartRec": {"source": "comb", "debounce": true, "invert": false}}', pageUpdate) ; }, 350) ; },
 
 				}
 
@@ -1806,8 +1806,10 @@ function pageUpdate(rawData){
 			document.getElementById("IO1Invert").innerHTML = ((parsedData.ioMappingIo1.invert) ? "True" : "False") ;
 			document.getElementById("IO1Drive").classList.add("disabled") ;
 		}
-		else
+		else {
 			document.getElementById("IO1Action").firstChild.textContent = "None (Do Nothing)" ;
+			document.getElementById("IO1Drive").classList.remove("disabled") ;
+		}
 
 		document.getElementById("IO1Drive").firstChild.textContent = ((parsedData.ioMappingIo1.drive == 0) ? "None (off)" : (parsedData.ioMappingIo1.drive == 1) ? "1mA" : "20mA") ;
 
@@ -1824,8 +1826,10 @@ function pageUpdate(rawData){
 			document.getElementById("IO2Invert").innerHTML = ((parsedData.ioMappingIo2.invert) ? "True" : "False") ;
 			document.getElementById("IO2Drive").classList.add("disabled") ;
 		}
-		else
+		else {
 			document.getElementById("IO2Action").firstChild.textContent = "None (Do Nothing)" ;
+			document.getElementById("IO2Drive").classList.remove("disabled") ;
+		}
 
 		document.getElementById("IO2Drive").firstChild.textContent = ((parsedData.ioMappingIo2.drive == 0) ? "None (off)" : "20mA") ;
 
