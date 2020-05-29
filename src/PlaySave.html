@@ -1360,27 +1360,27 @@ function pollOnlyUpdates() { // some information I can only get if I ask for it,
 	if (lastKnownVideoState != "filesave")
 		img.src = "/cgi-bin/screenCap?" + Math.random() ; // ask for an updated image
 
-	if (PollCounter % 4 == 0) // every 1 second
+	if (PollCounter % 2 == 0) // every 1 second
 		dataGetter('get', 'playbackPosition', pageUpdate) ; // ask for the current position while a file is being saved
 
-	if (PollCounter % 60 == 0) { // every 15 seconds
+	if (PollCounter % 30 == 0) { // every 15 seconds
 		dataGetter('get', 'batteryChargePercent', pageUpdate) ; // ask for the battery charge level
 	}
 
-	if (PollCounter % 240 == 0) { // every 60 seconds
+	if (PollCounter % 120 == 0) { // every 60 seconds
 		dataGetter('get', 'externalStorage', pageUpdate) ; // ask for the external storage devices
 	}
 
 
 	if (!useServerSentEvents) { // no server-sent events; ask for updates
-		if (PollCounter % 6 == 0)
+		if (PollCounter % 3 == 0)
 			dataGetter('get', 'state', pageUpdate) ; // check for a change in state
 
-		if (PollCounter % 10 == 0) {
+		if (PollCounter % 5 == 0) {
 			dataGetter('get', 'videoState', pageUpdate) ; // check for video state changes
 		}
 
-		if (PollCounter % 65 == 0)
+		if (PollCounter % 33 == 0)
 			dataGetter('get', 'externalPower', pageUpdate) ; // check for external power connection
 
 	}
@@ -1406,7 +1406,7 @@ switch (getCookie("ff")) { // get the save file format
 		break ;
 }
 
-var intervalID = setInterval(pollOnlyUpdates, 250) ; // poll the camera for things that are not reported
+var intervalID = setInterval(pollOnlyUpdates, 500) ; // poll the camera for things that are not reported
 
 
 
