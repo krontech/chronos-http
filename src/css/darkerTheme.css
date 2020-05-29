@@ -61,6 +61,7 @@ a { color: white; }
 	background-color: #0067B9; /* pantone 2144 */
 	color: white;
 }
+.selectContainerHolder.disabled { background-color: #1a1a1a; }
 
  /* the drop-down triangle color */
 .selectContainerHolder:after {

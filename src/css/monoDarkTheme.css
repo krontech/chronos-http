@@ -52,6 +52,10 @@ a { color: white; }
 	background-color: white;
 	color: black;
 }
+.selectContainerHolder.disabled {
+	background-color: #1a1a1a;
+	color: white;
+}
 
  /* the drop-down triangle color */
 .selectContainerHolder:after {

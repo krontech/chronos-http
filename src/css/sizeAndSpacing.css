@@ -273,6 +273,7 @@ input[type=range]:focus { outline: none; }
 	margin: -5px 0 -7px 7px;
 }
 
+
 .selectContainer {
 	position: absolute;
 	min-width: 10px;
@@ -298,9 +299,12 @@ input[type=range]:focus { outline: none; }
 	z-index: 99;
 }
 
+.selectContainerHolder.disabled { text-decoration: line-through; }
+/*.selectContainerHolder.disabled .selectContainer { text-decoration: line-through; }*/
+
 .selectContainerHolder:hover a{ display: block; }
 
-
+.selectContainerHolder.disabled a{ display: none; }
 
 .menuContainer {
 	position: absolute;

@@ -83,6 +83,7 @@ a { color: var(--TextColor) }
 	background-color: var(--ActiveBG);
 	color: var(--TextColor2);
 }
+.selectContainerHolder.disabled { background-color: var(--DisabledBG); }
 
  /* the drop-down triangle color */
 .selectContainerHolder:after {
