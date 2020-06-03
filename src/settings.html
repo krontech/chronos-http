@@ -970,6 +970,10 @@ document.getElementById("menu").onmouseleave = function() {
 }
 
 
+if (!Element.prototype.matches) {
+  Element.prototype.matches = Element.prototype.msMatchesSelector;
+}
+
 window.onclick = function(event) { // check where a click was: if it was outside a menu, close that menu
 	if ( !event.target.matches(".menuClickOk") && (event.target.parent == undefined || !event.target.parent.matches(".menuClickOk"))
 	&& (document.getElementById("menu").matches(".active")) ) {

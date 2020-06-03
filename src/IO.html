@@ -78,11 +78,13 @@
 
 #ioMappingShutterBox, #inputStatusBox { clear: left; }
 
+#refreshAllBox { max-width: 278px; }
+#refreshButton { float: right; }
+
 #legendContainer {
 	display: inline-block;
 	float: right;	
 }
-
 #legendTrue, #legendFalse { width: 220px; }
 
 
@@ -213,7 +215,7 @@
 		</div>
 
 
-		<div class="horizLayout">
+		<div class="horizLayout" style="padding-bottom: 11px;">
 			<b> Preset Configurations </b>
 <!--
 			<br>
@@ -227,7 +229,12 @@
 			</div></div>
 		</div>
 
-
+		<div id="refreshAllBox" class="horizLayout hidden">
+			<b> Refresh Parameters </b>
+			<br>
+			<a id="refreshButton" class="button" onclick="dropDownSelect(this)">Update</a>
+			<span class="instruction">This browser does not get alerted to changes from the camera. Use this button to update this page to match the camera</span>
+		</div>
 
 	</div>
 
@@ -1011,9 +1018,9 @@ function setCookie (name, value) {
 if (detectIE()) {
 	if (DebugOnOff)
 		document.getElementById("debugger2").innerHTML = "MS Browser detected" ;
-	
+
 	document.getElementById("windozeFixer").href = "css/windozeFixes.css" ;
-	
+
 	if ( (parseInt(detectIE()) <= 16) ) { // detect an older version (especially IE)
 		if (DebugOnOff)
 			document.getElementById("debugger2").innerHTML += " -- Seems to be Internet Explorer" ;
@@ -1023,8 +1030,11 @@ if (detectIE()) {
 			if ( (inputList[i].type.toLowerCase() == "number") || (inputList[i].type.toLowerCase() == "text") )
 				inputList[i].style.paddingBottom = "9px" ; // add some padding to the bottom of number or text inputs
 		}
-		
-//		document.getElementById("postTriggerSlider").addEventListener('change', function() { changeNumberOften(document.getElementById("postTriggerSlider")) ; }) ;
+
+		var newNode = document.createElement('script') ;
+		var ref = document.getElementById("windozeFixer")
+		newNode.src = "https://cdnjs.cloudflare.com/ajax/libs/classlist/1.2.20171210/classList.min.js" ;
+		ref.parentNode.insertBefore(newNode, ref) ;
 	}
 }
 
@@ -1455,6 +1465,9 @@ document.getElementById("menu").onmouseleave = function() {
 	}, 50) ;
 }
 
+if (!Element.prototype.matches) {
+  Element.prototype.matches = Element.prototype.msMatchesSelector;
+}
 
 window.onclick = function(event) { // check where a click was: if it was outside a menu, close that menu
 	if ( !event.target.matches(".menuClickOk") && (event.target.parent == undefined || !event.target.parent.matches(".menuClickOk"))
