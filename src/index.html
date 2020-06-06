@@ -1357,6 +1357,8 @@ function pageUpdate(rawData){
 
 	if ("currentGain" in parsedData) { // set the current gain (also called analog gain)
 		var truncatedValue = Math.floor(parsedData.currentGain) ; // get the value as an integer (truncated)
+		if (truncatedValue == 9)
+			truncatedValue = 16 ; // special case for the 2.1 >> something weird happens at the highest gain
 		document.getElementById("analogGain").firstChild.textContent = dbFromMult[truncatedValue] + "dB (x" + truncatedValue + ")" ;
 	}
 
