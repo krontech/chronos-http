@@ -38,12 +38,13 @@
 
 #saveVideoButton { float: right; }
 #saveVideoButton.disabled { /* when the save button is disabled */
-/*	box-shadow: 0 0 3px 3px #a00; */
 	background-color: #222;
 	text-decoration: line-through; /* cross out the save button */
 }
+
 #maxShutterButton { float: right; }
 
+#sensorBackground { margin-bottom: 5px; }
 
 #resolutionBox { clear: left; }
 
@@ -737,6 +738,7 @@ function changeExposureOften(element) {
 
 function maxShutter() {
 	dataSender ("set", '{"exposurePercent": 100}') ;
+	dataGetter("p", "", pageUpdate) ; // get all the data again to make sure that everything's updated
 }
 
 function boundInput(element) {
@@ -807,10 +809,11 @@ function applyResolution() {
 		parameters += ', "vRes": ' + document.getElementById("vRes").value ;
 		parameters += ', "hOffset": ' + document.getElementById("hOff").value ;
 		parameters += ', "vOffset": ' + document.getElementById("vOff").value ;
-		parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ) ;
-		parameters += '}}' ;
-
+//		parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ).toFixed(8) ;
+		parameters += '}, "framePeriod": ' + Math.round(parseFloat( 1 / document.getElementById("fps").value * 1000000000 )) ;
+		parameters += '}'
 		dataRequester("set", parameters, maxShutter) ; // request these settings >> set shutter to max after I get a response
+
 
 		if (DebugOnOff)
 			document.getElementById("debugger").innerHTML += "Sending these resolution settings: " + parameters ;
@@ -882,18 +885,14 @@ function checkMaxFROften() {
 
 
 function usePresetResolution(element) {
-	var temp = element.innerText.replace(/[^\d]/gi, ' ') ; // strip out anything other than digits
+	var temp = element.innerText.replace(/[^\d.]/gi, ' ') ; // strip out anything other than digits
 	var pieces = temp.split(/(\s+)/) ; // split up the contents
 
 	document.getElementById("hRes").value = pieces[0] ; // set the preset horizontal resolution
 	document.getElementById("vRes").value = pieces[2] ; // set the preset vertical resolution
 	document.getElementById("fps").value = pieces[4] ; // set the preset framerate
 
-	// calculate horizontal offset (to center the window on the sensor)
-	document.getElementById("hOff").value = Math.floor((document.getElementById("hRes").max - pieces[0]) / 2) ;
-
-	// calculate vertical offset (to center the window on the sensor)
-	document.getElementById("vOff").value = Math.floor((document.getElementById("vRes").max - pieces[2]) / 2) ;
+	centerWindow() ;
 
 	updatePreviewWindow() ; // update the sensor preview window
 }
@@ -934,12 +933,19 @@ function updatePreviewWindow() { // show a preview of the sensor usage window
 			document.getElementById("applyButton").classList.remove("disabled") ;
 
 		var window = document.getElementById("sensorWindow") ;
-		window.style.width = (hRes.value / 5) + "px" ;
+		var scaleFactor = 5 ; // default for 1.4 sensors (1280x1024) -- translate to preview size
+		if ( ( resolutionPresets[0][2] != 0) && (resolutionPresets[0][0] == 1920) || (hRes.value == "1920") ) { // using a 2.1 sensor? (1920x1200)
+			scaleFactor = 7.5 ; // set the new scale factor so it fits properly
+			document.getElementById("sensorBackground").style.height = "140px" ; // change the height of the sensor preview backgrond
+		}
+		else
+			document.getElementById("sensorBackground").style.height = "204.8px" ; // 1.4 sensor height
+		window.style.width = (hRes.value / scaleFactor) + "px" ;
 		if ( (parseInt(hOff.value) >= parseInt(hOff.min)) && (parseInt(hOff.value) <= parseInt(hOff.max)) )
-			window.style.marginLeft = (parseFloat(hOff.value) / 5 - 3) + "px" ;
-		window.style.height = (parseFloat(vRes.value) / 5) + "px";
+			window.style.marginLeft = (parseFloat(hOff.value) / scaleFactor - 3) + "px" ;
+		window.style.height = (parseFloat(vRes.value) / scaleFactor) + "px";
 		if ( (parseInt(vOff.value) >= parseInt(vOff.min)) && (parseInt(vOff.value) <= parseInt(vOff.max)) )
-			window.style.marginTop = (parseFloat(vOff.value) / 5 - 3) + "px" ;
+			window.style.marginTop = (parseFloat(vOff.value) / scaleFactor - 3) + "px" ;
 	}
 	else
 		document.getElementById("applyButton").classList.add("disabled") ;
@@ -951,8 +957,9 @@ function updatePreviewWindow() { // show a preview of the sensor usage window
 
 var resolutionPresets = [	[1920, 1200, 0],
 							[1920, 1080, 0],
-							[1680, 1050, 0],
-							[1400, 1050, 0],
+							[1696, 1050, 0],
+							[1600, 1050, 0],
+							[1408, 1050, 0],
 
 							[1280, 1024, 0],
 							[1280, 720, 0],
@@ -996,6 +1003,9 @@ function findFrameRates() {
 	}
 	else { // finished getting all of the frame rates, so populate the list
 		var list = document.getElementById("resolution") ;
+//		if (resolutionPresets[0][0] == 1920) // using a 2.1 sensor? (1920x1200)
+//			document.getElementById("sensorBackground").style.height = "140px" ; // change the height of the sensor preview background
+		updatePreviewWindow() ; // update the sensor preview window
 		list.innerHTML = "" ; // clear the list before (re)populating the list
 		for (var i = 0 ; i < resolutionPresets.length ; i++) {
 			 // put in the resolution and framerates
