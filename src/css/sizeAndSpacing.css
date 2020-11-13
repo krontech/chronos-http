@@ -903,7 +903,7 @@ a.innerDropDown.active:before {
 .deleteIcon { /* trash can lid */
 	display: inline-block;
 	height: 12px;
-	width: 19.5px;
+	width: 20px;
 	background-color: transparent;
 	margin: 0 6px;
 	border-top: 4px solid white;
