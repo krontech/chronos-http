@@ -191,6 +191,19 @@ do
 		else
 			echo "Test failed; drive not mounted" > /tmp/mountRequest.nf
 		fi
+	elif [[ "${params[1]}" == "delete:" ]] ## a delete request has been made for a file
+	then
+		echo "Delete Request issued"
+		if [[ "${params[2]}" == "/media/"* ]] && [[ "${params[2]}" != *"../"* ]]
+		then ## make sure the request only affects files on external media (and nobody's trying to be tricky by going up a folder)
+			if [[ "${params[2]}" == *".mp4" ]] || [[ "${params[2]}" == *".dng" ]] || [[ "${params[2]}" == *".tiff" ]]
+			then ## verify that only a video or image is being deleted
+				rm "${params[2]}" ## delete the file
+				echo "${params[2]} Deleted"
+			fi
+		else
+			echo "unacceptable filepath for deleting"
+		fi
 	else
 		echo "Invalid network share type: ${params[5]}"
 	fi
