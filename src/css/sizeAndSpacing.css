@@ -270,7 +270,7 @@ input[type=range]:focus { outline: none; }
 	height: 0;
 	width: 0;
 	border: 10px solid transparent;
-	margin: -5px 0 -7px 7px;`
+	margin: -5px 0 -7px 7px;
 }
 
 

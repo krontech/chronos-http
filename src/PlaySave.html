@@ -571,10 +571,6 @@ function getFileList() {
 									folderElement += '<div class="downloadListItem">' + '<a style="display: inline-block;" href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation ;
 									folderElement += "&fileName=" + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '">' + parsedList[folderIndex][index2] + '<div class="downloadIcon"></div></a>' ;
 									folderElement += '<div class="deleteIcon" onclick="deleteFile(\'' + StorageLocation + '\',\'' + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '\')"></div>' + '</div>' ;
-
-//									folderElement += '<a href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation ;
-//									folderElement += "&fileName=" + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '" >' ;
-//									folderElement += parsedList[folderIndex][index2] + "</a>" ;
 								}
 							}
 							if (parsedList[folderIndex].totalFileCount == 0)
