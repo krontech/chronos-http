@@ -82,7 +82,7 @@ a { color: black; }
 }
 
  /* drop-down list colors */
-.selectContainer a {
+.selectContainer a, .selectContainer .downloadListItem {
 	color: white;
 	background-color: #0067B9; /* pantone 2144 */
 }
@@ -151,7 +151,7 @@ a.innerDropDown.active {
 a.innerDropDown.active:hover {
 	background-color: #3D87CB; /* pantone 2143 */
 }
-.innerDropDownList a {
+.innerDropDownList a, .innerDropDownList .downloadListItem {
 	background-color: #004EA8; /* pantone 2145 */
 }
 

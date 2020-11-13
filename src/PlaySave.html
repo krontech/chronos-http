@@ -353,6 +353,12 @@
 			<br>
 			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Ok</a>
 		</div>
+		<div id="confirmDeleteBox" class="horizLayout hidden">
+			Are you sure you want to permanently delete the file "filename"?
+			<br>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">Yes (Delete)</a>
+			<a style="float: right;" class="button" onclick="dropDownSelect(this)">No (Cancel)</a>
+		</div>
 	</div>
 </div>
 
@@ -519,6 +525,24 @@ function openNext(element) {
 	}
 }
 
+
+var fileToDelete = "none"
+function deleteFile(location, fileName) { // take in a location and file, and delete it here
+	if (DebugOnOff)
+		document.getElementById("debugger2").innerHTML = "Here's what I'm working with for deleting: " + location + "  " + fileName ;
+
+	 // set the confirmation text in the warning box
+	document.getElementById("confirmDeleteBox").firstChild.textContent = "Are you sure you want to permanently delete \"" + fileName + "\"?" ;
+
+	 // show the warning box (popup) for confirmation
+	document.getElementById("popUpBackground").classList.remove("hidden") ;
+	document.getElementById("confirmDeleteBox").classList.remove("hidden") ;
+
+
+	 // the actual request will be sent when the 'Yes (Delete)' button is pressed, so this is the variable it will look at
+	fileToDelete = "/cgi-bin/pleaseGiveMeAFile?delete=" + location + "&fileName=" + fileName ;
+}
+
 function getFileList() {
 	var requestSender = new XMLHttpRequest() ;
 	requestSender.open("GET", "/cgi-bin/listFiles?" + StorageLocation) ;
@@ -534,7 +558,7 @@ function getFileList() {
 					var index = "file" + i ;
 					var folderIndex = "folder" + i ;
 					if (index in parsedList) {
-						document.getElementById("fileDownloadListInner").innerHTML += '<a href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation + "&fileName=" + parsedList[index] + '">' + parsedList[index] + "</a>";
+						document.getElementById("fileDownloadListInner").innerHTML += '<div class="downloadListItem">' + '<a style="display: inline-block;" href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation + "&fileName=" + parsedList[index] + '">' + parsedList[index] + '<div class="downloadIcon"></div></a>' + '<div class="deleteIcon" onclick="deleteFile(\'' + StorageLocation + '\',\'' + parsedList[index] + '\')"></div>' + '</div>' ;
 					}
 					else if ( (folderIndex in parsedList ) && ("folderName" in parsedList[folderIndex]) ) {
 						var folderElement = "" ;
@@ -544,9 +568,13 @@ function getFileList() {
 							for (var i2 = 0 ; i2 < parsedList[folderIndex].totalFileCount ; i2++ ) {
 								var index2 = "file" + i2 ;
 								if (index2 in parsedList[folderIndex]) {
-									folderElement += '<a href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation ;
-									folderElement += "&fileName=" + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '" >' ;
-									folderElement += parsedList[folderIndex][index2] + "</a>" ;
+									folderElement += '<div class="downloadListItem">' + '<a style="display: inline-block;" href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation ;
+									folderElement += "&fileName=" + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '">' + parsedList[folderIndex][index2] + '<div class="downloadIcon"></div></a>' ;
+									folderElement += '<div class="deleteIcon" onclick="deleteFile(\'' + StorageLocation + '\',\'' + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '\')"></div>' + '</div>' ;
+
+//									folderElement += '<a href="/cgi-bin/pleaseGiveMeAFile?location=' + StorageLocation ;
+//									folderElement += "&fileName=" + parsedList[folderIndex].folderName + "/" + parsedList[folderIndex][index2] + '" >' ;
+//									folderElement += parsedList[folderIndex][index2] + "</a>" ;
 								}
 							}
 							if (parsedList[folderIndex].totalFileCount == 0)
@@ -857,6 +885,9 @@ var dropDownFunctions = { "Refresh":		function(){ dataGetter("get", 'externalSto
 						"Update":		function() { dataGetter("p", "", pageUpdate) ; },
 
 						"Ok":				function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("errorWhileSavingBox").classList.add("hidden") ; },
+
+						"Yes (Delete)":	function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("confirmDeleteBox").classList.add("hidden") ; if (fileToDelete != "none") { var requestSender = new XMLHttpRequest() ; requestSender.open("GET", fileToDelete) ; requestSender.setRequestHeader("Content-Type", "text/plain") ; requestSender.onreadystatechange = function(){ if (this.readyState == 4 && this.status == 200) {fileToDelete = "none" ; dataGetter('get', 'externalStorage', pageUpdate) ; } } ; requestSender.send() ; } ; },
+						"No (Cancel)":	function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("confirmDeleteBox").classList.add("hidden") ; fileToDelete="none" ; },
 						}
 
 

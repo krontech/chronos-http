@@ -63,7 +63,7 @@ a { color: white; }
 }
 
  /* drop-down list colors */
-.selectContainer a {
+.selectContainer a, .selectContainer .downloadListItem {
 	color: black;
 	background-color: white;
 }
@@ -126,7 +126,7 @@ a.innerDropDown.active {
 a.innerDropDown.active:hover {
 	background-color: #aaa;
 }
-.innerDropDownList a {
+.innerDropDownList a, .innerDropDownList .downloadListItem {
 	background-color: #ddd;
 }
 
@@ -266,6 +266,23 @@ a.innerDropDown.active:before {
 	background-color: #333;
 }
 
+
+.downloadIcon {
+	border-bottom-color: black;
+}
+.downloadIcon:before {
+	border-top-color: black;
+}
+.downloadIcon:after {
+	background-color: black;
+}
+
+.deleteIcon:before, .deleteIcon:after {
+	border-color: black;
+}
+.deleteIcon {
+	border-top-color: black;
+}
 
 
 

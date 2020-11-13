@@ -91,7 +91,7 @@ a { color: var(--TextColor) }
 }
 
  /* drop-down list colors */
-.selectContainer a {
+.selectContainer a, .selectContainer .downloadListItem {
 	color: var(--TextColor2);
 	background-color: var(--ActiveBG);
 }
@@ -158,7 +158,7 @@ a.innerDropDown.active {
 a.innerDropDown.active:hover {
 	background-color: var(--ActiveHoverBG);
 }
-.innerDropDownList a {
+.innerDropDownList a, .innerDropDownList .downloadListItem {
 	background-color: var(--ActiveBG2);
 }
 

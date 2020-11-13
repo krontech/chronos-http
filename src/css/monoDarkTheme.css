@@ -74,7 +74,7 @@ a { color: white; }
 }
 
  /* menu drop-down colors */
-.menuContainer a {
+.menuContainer a, .selectContainer .downloadListItem {
 	background-color: white;
 	color: black;
 }
@@ -126,7 +126,7 @@ a.innerDropDown.active {
 a.innerDropDown.active:hover {
 	background-color: #aaa;
 }
-.innerDropDownList a {
+.innerDropDownList a, .innerDropDownList .downloadListItem {
 	background-color: #ddd;
 }
 
@@ -266,6 +266,24 @@ a.innerDropDown.active:before {
 	background-color: #222;
 }
 
+
+
+.downloadIcon {
+	border-bottom-color: black;
+}
+.downloadIcon:before {
+	border-top-color: black;
+}
+.downloadIcon:after {
+	background-color: black;
+}
+
+.deleteIcon:before, .deleteIcon:after {
+	border-color: black;
+}
+.deleteIcon {
+	border-top-color: black;
+}
 
 
 
