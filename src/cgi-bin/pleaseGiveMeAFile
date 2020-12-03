@@ -61,9 +61,9 @@ then
 		echo ""
 
 		 ## I cannot delete a file from here (permission issues), so instead, I ask the 'mountNetDrive' file to do it (netDriveHelper service)
-		echo "please delete: /media/${params[1]//%20/ }/${params[3]//%20/ }" > /tmp/mountRequest.nf
+		echo "please delete: /media/${params[1]//%2F/ }/${params[3]//%2F//}" > /tmp/mountRequest.nf ## replace '%2F' with '/'
 
-		echo "deleted the file /media/${params[1]//%20/ }/${params[3]//%20/ } ; hope you meant it"
+		echo "deleted the file /media/${params[1]//%2F//}/${params[3]//%20/ } ; hope you meant it"
 	elif [[ "${params[3]//%20/ }" == *"/" ]]
 	then ## trying to delete an entire folder
 		## Not implemented
