@@ -1388,6 +1388,8 @@ function pageUpdate(rawData){
 		var truncatedValue = Math.round(parsedData.currentGain) ; // get the value as an integer (truncated)
 		if (truncatedValue == 10)
 			truncatedValue = 16 ; // special case for the 2.1 >> something weird happens at the highest gain
+		else if (truncatedValue == 3)
+			truncatedValue = 2 ; // the actual value is not exactly 2, so I'm correcting it here because it gets rounded up
 		document.getElementById("analogGain").firstChild.textContent = dbFromMult[truncatedValue] + "dB (x" + truncatedValue + ")" ;
 	}
 
