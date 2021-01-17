@@ -1103,7 +1103,6 @@ var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "")
 function toggler(element) { // toggle the class (active/inactive), change the name, and run a function for a toggle button/switch
 	var leftRight = 0 ;
 
-//	if ( (element.className !== null) && (element.className == "active") ) { // changing to 'inactive' or no state set previously
 	if (element.classList.contains("active")) { // changing to 'inactive' or no state set previously
 		element.classList.remove("active") ; // remove the "active" styling
 		element.classList.add("inactive") ; // use the "inactive" styling
