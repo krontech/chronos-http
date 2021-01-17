@@ -682,7 +682,6 @@ function setCookie (name, value) {
 	var expiryDate = new Date() ;
 
 	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*90) ; // add 90 days (time is in ms)
-//	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
 
 	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
 }
