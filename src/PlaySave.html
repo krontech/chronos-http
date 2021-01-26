@@ -415,8 +415,6 @@ switch (getCookie("thm")) {
 }
 
 if (getCookie("mc") != "m") {
-//	dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ;
-
 	setTimeout( function() { if (lastKnownState != "recording") { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; } }, 750) ;
 }
 
