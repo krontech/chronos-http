@@ -792,6 +792,10 @@ function dropDownSelect (element) {
 		dropDownFunctions[element.innerText]() ; // run the function
 }
 
+function afterResolutionApplied() {
+	dataSender ("startCalibration", '{"zeroTimeBlackCal": true, "analogCal": true}') ; // do a zero-time black-cal and an analog-cal
+	maxShutter () ;
+}
 
 function applyResolution() {
 
@@ -810,7 +814,7 @@ function applyResolution() {
 //		parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ).toFixed(8) ;
 		parameters += '}, "framePeriod": ' + Math.round(parseFloat( 1 / document.getElementById("fps").value * 1000000000 )) ;
 		parameters += '}'
-		dataRequester("set", parameters, maxShutter) ; // request these settings >> set shutter to max after I get a response
+		dataRequester("set", parameters, afterResolutionApplied()) ; // request these settings >> set shutter to max after I get a response
 
 
 		if (DebugOnOff)
