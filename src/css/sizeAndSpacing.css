@@ -249,7 +249,6 @@ input[type=range]:focus { outline: none; }
 	border: 20px solid transparent;
 	border-bottom-width: 10px;
 	cursor: pointer;
-/*	background-color: #0067B9; /* pantone 2144 */
 	background-color: transparent;
 	padding-top: 20px;
 }
