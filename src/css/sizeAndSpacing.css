@@ -411,7 +411,6 @@ input[type=text], input[type=password] {
 	bottom: 15%;
 	left: 5%;
 	width: 90%;
-/*	height: 10%; */
 	padding: 10px 0;
 	border-radius: 10px;
 	z-index: 20;
