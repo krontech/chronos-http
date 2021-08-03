@@ -302,7 +302,6 @@ input[type=range]:focus { outline: none; }
 }
 
 .selectContainerHolder.disabled { text-decoration: line-through; }
-/*.selectContainerHolder.disabled .selectContainer { text-decoration: line-through; }*/
 
 .selectContainerHolder:hover a, .selectContainerHolder:hover .downloadListItem { display: block; }
 
