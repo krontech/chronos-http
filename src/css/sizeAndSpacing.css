@@ -227,7 +227,6 @@ input[type=range]:focus { outline: none; }
 	height: 0;
 /*	border-radius: 8px; */
 	background: transparent;
-/*	background-image: linear-gradient(to right, black, white);*/
 	margin: 0;
 }
 
