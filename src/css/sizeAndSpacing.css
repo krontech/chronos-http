@@ -195,7 +195,6 @@ input[type=range]:focus { outline: none; }
 	height: 12px;
 	border-radius: 8px;
 	background: white;
-/*	background-image: linear-gradient(to right, black, white);*/
 	border: 3px solid black;
 	margin: 0 2%;
 }
