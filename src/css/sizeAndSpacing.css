@@ -215,7 +215,6 @@ input[type=range]:focus { outline: none; }
 	border-radius: 10px;
 	border: 3px solid black;
 	cursor: pointer;
-/*	background-color: #0067B9; /* pantone 2144 */
 	background-color: white;
 }
 
