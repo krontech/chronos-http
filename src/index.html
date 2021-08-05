@@ -836,7 +836,6 @@ function getMaxFrameRate() {
 		if ("minFramePeriod" in jsonBack) {
 			var fpsBox = document.getElementById("fps") ;
 			fpsBox.value = parseFloat(1000000000 / parseFloat(jsonBack.minFramePeriod)).toFixed(2) ;
-//			fpsBox.max = (1000000000 / parseFloat(jsonBack.minFramePeriod)).toFixed(2) ;
 			fpsBox.max = fpsBox.value ;
 
 			if (!fpsBox.validity.valid)
