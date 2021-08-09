@@ -537,7 +537,7 @@ function deleteFile(location, fileName) { // take in a location and file, and de
 
 
 	 // the actual request will be sent when the 'Yes (Delete)' button is pressed, so this is the variable it will look at
-	fileToDelete = "/cgi-bin/pleaseGiveMeAFile?delete=" + location + "&fileName=" + fileName ;
+	fileToDelete = "/cgi-bin/pleaseGiveMeAFile?delete=" + location + "&fileName=" + encodeURIComponent(fileName) ;
 }
 
 function getFileList() {
