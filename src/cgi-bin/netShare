@@ -129,7 +129,5 @@ else
 
 fi
 
-#echo "length is: ${#params[@]}"
-
 
 
