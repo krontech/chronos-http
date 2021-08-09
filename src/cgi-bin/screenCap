@@ -14,3 +14,4 @@ echo ""
 flock -x -w 0.02 /tmp/cam-screencap.jpg -c "cp /tmp/cam-screencap.jpg /tmp/tmp.jpg && mv /tmp/tmp.jpg /tmp/screenShot.jpg"
 
 cat /tmp/screenShot.jpg ## return the image data
+

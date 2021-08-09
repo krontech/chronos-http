@@ -121,3 +121,4 @@ else
 	echo "the correct format is: ip/cgi-bin/pleaseGiveMeAFile?location=deviceName&fileName=nameOfFile"
 	echo ""
 fi
+

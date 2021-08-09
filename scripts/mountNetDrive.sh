@@ -219,5 +219,3 @@ exit
 #echo "you gave me this: nfs/smb: $1  IPAddress: $2  folderLocation: $3"
 
 
-
-

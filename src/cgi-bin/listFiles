@@ -62,3 +62,4 @@ then
 else
 	echo "Media device not found. Is it connected?"
 fi
+
