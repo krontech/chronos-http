@@ -158,7 +158,6 @@
 			<img id="logoImage" src="Chronos High Speed logo.png">
 		</div>
 
-		<!-- <b class="title">&nbsp;CHRONOS</b> -->
 		<div class="subTitle">by <a href="https://www.krontech.ca" target="_blank">Kron Technologies</a></div>
 	</div>
 
@@ -416,8 +415,6 @@ switch (getCookie("thm")) {
 }
 
 if (getCookie("mc") != "m") {
-//	dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ;
-
 	setTimeout( function() { if (lastKnownState != "recording") { dataRequester("startPlayback", '{"framerate": 0}', pageUpdate) ; } }, 750) ;
 }
 

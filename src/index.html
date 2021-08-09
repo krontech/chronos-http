@@ -145,7 +145,6 @@
 			<img id="logoImage" src="Chronos High Speed logo.png">
 		</div>
 
-		<!-- <b class="title">&nbsp;CHRONOS</b> -->
 		<div class="subTitle">by <a href="https://www.krontech.ca" target="_blank">Kron Technologies</a></div>
 	</div>
 
@@ -478,7 +477,6 @@ function setCookie (name, value) {
 	var expiryDate = new Date() ;
 
 	expiryDate.setTime(expiryDate.getTime() + 1000*60*60*24*90) ; // add 90 days (time is in ms)
-//	expiryDate.setTime(expiryDate.getTime() + 1000*60*20) ; // add 20 minutes (time is in ms)
 
 	document.cookie = name + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/" ;
 }
@@ -813,7 +811,11 @@ function dropDownSelect (element) {
 		dropDownFunctions[element.innerText]() ; // run the function
 }
 
-
+function afterResolutionApplied() {
+	dataSender ("startCalibration", '{"zeroTimeBlackCal": true, "analogCal": true}') ; // do a zero-time black-cal and an analog-cal
+	maxShutter () ;
+}
+  
 function applyResolution() {
 
 	var hRes = document.getElementById("hRes") ;
@@ -831,7 +833,7 @@ function applyResolution() {
 //		parameters += ', "minFrameTime": ' + parseFloat( 1 / document.getElementById("fps").value ).toFixed(8) ;
 		parameters += '}, "framePeriod": ' + Math.round(parseFloat( 1 / document.getElementById("fps").value * 1000000000 )) ;
 		parameters += '}'
-		dataRequester("set", parameters, maxShutter) ; // request these settings >> set shutter to max after I get a response
+		dataRequester("set", parameters, afterResolutionApplied()) ; // request these settings >> set shutter to max after I get a response
 
 
 		if (DebugOnOff)
@@ -853,7 +855,6 @@ function getMaxFrameRate() {
 		if ("minFramePeriod" in jsonBack) {
 			var fpsBox = document.getElementById("fps") ;
 			fpsBox.value = parseFloat(1000000000 / parseFloat(jsonBack.minFramePeriod)).toFixed(2) ;
-//			fpsBox.max = (1000000000 / parseFloat(jsonBack.minFramePeriod)).toFixed(2) ;
 			fpsBox.max = fpsBox.value ;
 
 			if (!fpsBox.validity.valid)
@@ -1124,7 +1125,6 @@ var buttonFunctions = {	"record":		[ function(){ dataSender("stopRecording", "")
 function toggler(element) { // toggle the class (active/inactive), change the name, and run a function for a toggle button/switch
 	var leftRight = 0 ;
 
-//	if ( (element.className !== null) && (element.className == "active") ) { // changing to 'inactive' or no state set previously
 	if (element.classList.contains("active")) { // changing to 'inactive' or no state set previously
 		element.classList.remove("active") ; // remove the "active" styling
 		element.classList.add("inactive") ; // use the "inactive" styling

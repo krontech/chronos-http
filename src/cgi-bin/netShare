@@ -13,6 +13,7 @@ IFS=$backupIFS
 
 echo "Content-type: application/json"
 echo "Cache-Control: no-cache"
+echo "Access-Control-Allow-Origin: *"
 echo ""
 
 
@@ -127,8 +128,6 @@ else
 	echo "\"info\": \"The command should be of the form: netShare?nfs=192.168.12.22&mount=/drive/folder[[&uname=pwd]]\"}"
 
 fi
-
-#echo "length is: ${#params[@]}"
 
 
 
