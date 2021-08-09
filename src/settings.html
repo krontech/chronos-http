@@ -85,7 +85,7 @@
 
 
 
-#colMatrixa, #colMatrixd, #colMatrixg, #colourPreset1Btn, #colourPreset2Btn, #colourIdentityBtn,
+#colMatrixa, #colMatrixd, #colMatrixg, #colourPreset1Btn, #colourPreset2Btn, #colourIdentityBtn, #colourPreset1Btn21, #colourPreset2Btn21,
 #whiteBalNuma, #autoSaveButton {
 	margin-left: 0;
 }
@@ -247,9 +247,11 @@
 				<input id="colMatrixg" type="number" min="-5.0" max="5.0" step="0.001"><input id="colMatrixh" type="number" min="-5.0" max="5.0" step="0.001"><input id="colMatrixi" type="number" min="-5.0" max="5.0" step="0.001">
 				<br>
 				<a id="colourPreset1Btn" class="button" onclick="justRunSomething(this)">CIECAM16</a>
+				<a id="colourPreset1Btn21" class="button hidden" onclick="justRunSomething(this)">ACWPPD55</a>
 				<span class="instruction"> (Default)</span>
 				<br>
 				<a id="colourPreset2Btn" class="button" onclick="justRunSomething(this)">CIECAM02</a>
+				<a id="colourPreset2Btn21" class="button hidden" onclick="justRunSomething(this)">CCWPPD55</a>
 				<br>
 				<a id="colourIdentityBtn" class="button" onclick="justRunSomething(this)">Identity</a>
 				<a id="colourApplyBtn" class="button" onclick="justRunSomething(this)">Apply</a>
@@ -922,6 +924,8 @@ var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{
 						"colourApplyBtn":		function() { detourRequester("set", '{"colorMatrix": [' + document.getElementById("colMatrixa").value + ', ' + document.getElementById("colMatrixb").value + ', ' + document.getElementById("colMatrixc").value + ', ' + document.getElementById("colMatrixd").value + ', ' + document.getElementById("colMatrixe").value + ', ' + document.getElementById("colMatrixf").value + ', ' + document.getElementById("colMatrixg").value + ', ' + document.getElementById("colMatrixh").value + ', ' + document.getElementById("colMatrixi").value + ']}', pageUpdate) ; },
 						"colourPreset1Btn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
 						"colourPreset2Btn":		function() { detourRequester("set", '{"colorMatrix": [1.23291, 0.646729, -0.776367,  -0.321777, 1.68994, -0.380859,  -0.0612793, -0.640869,1.52563]}', pageUpdate) ; },
+						"colourPreset1Btn21":	function() { detourRequester("set", '{"colorMatrix": [2.20691, -0.86351, -0.23999, -0.37569, 1.63493, -0.27217, 0.01404, -0.91139, 1.72075]}', pageUpdate) ; },
+						"colourPreset2Btn21":	function() { detourRequester("set", '{"colorMatrix": [2.14923, -0.78854, -0.25728, -0.38481, 1.61877, -0.24689, -0.03149, -0.79188, 1.64677]}', pageUpdate) ;},
 
 						"whiteBalApplyBtn":		function() { detourRequester("set", '{"wbColor": [' + document.getElementById("whiteBalNuma").value + ', ' + document.getElementById("whiteBalNumb").value + ', ' + document.getElementById("whiteBalNumc").value + ']}', pageUpdate) ; },
 
@@ -1219,8 +1223,16 @@ function pageUpdate(rawData){
 	}
 
 
-	if ("cameraModel" in parsedData)
+	if ("cameraModel" in parsedData) {
 		document.getElementById("cameraModel").innerHTML = "Camera Model: " + parsedData.cameraModel ;
+		if (parsedData.cameraModel.includes("CR21")) {
+			document.getElementById("colourPreset1Btn21").classList.remove("hidden") ;
+			document.getElementById("colourPreset2Btn21").classList.remove("hidden") ;
+
+			document.getElementById("colourPreset1Btn").classList.add("hidden") ;
+			document.getElementById("colourPreset2Btn").classList.add("hidden") ;
+		}
+	}
 
 	if ("cameraSerial" in parsedData)
 		document.getElementById("serialNumber").innerHTML = "Serial Number: " + parsedData.cameraSerial ;

@@ -241,6 +241,18 @@
 			</div></div>
 		</div>
 
+		<div id="digitalGainBox" class="horizLayout">
+			<b> Digital Gain </b>
+			&ensp;
+			<div id="digitalGain" class="selectContainerHolder" onclick="">SELECT<div id="digitalGainInner" class="selectContainer">
+				<a onclick="dropDownSelect(this)"> +0dB (x1) </a>
+				<a onclick="dropDownSelect(this)"> +6dB (x2) </a>
+				<a onclick="dropDownSelect(this)"> +12dB (x4) </a>
+				<a onclick="dropDownSelect(this)"> +18dB (x8) </a>
+				<a onclick="dropDownSelect(this)"> +24dB (x16) </a>
+			</div></div>
+		</div>
+
 		<div id="resolutionBox" class="horizLayout">
 			<b> Resolution </b> &ensp;
 			<div class="selectContainerHolder" onclick="">Presets<div id="resolution" class="selectContainer">
@@ -752,6 +764,13 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 						"18dB (x8)":		function(){ dataSender("set",'{"currentGain": 8}'); },
 						"24dB (x16)":		function(){ dataSender("set",'{"currentGain": 16}'); },
 
+
+						"+0dB (x1)":		function(){ dataSender("set",'{"digitalGain": 1}'); },
+						"+6dB (x2)":		function(){ dataSender("set",'{"digitalGain": 2}'); },
+						"+12dB (x4)":		function(){ dataSender("set",'{"digitalGain": 4}'); },
+						"+18dB (x8)":		function(){ dataSender("set",'{"digitalGain": 8}'); },
+						"+24dB (x16)":		function(){ dataSender("set",'{"digitalGain": 16}'); },
+
 						"8000K":			function(){ dataSender("set", '{"wbTemperature": 8000}'); },
 						"6500K":			function(){ dataSender("set", '{"wbTemperature": 6500}'); },
 						"5600K":			function(){ dataSender("set", '{"wbTemperature": 5600}'); },
@@ -796,7 +815,7 @@ function afterResolutionApplied() {
 	dataSender ("startCalibration", '{"zeroTimeBlackCal": true, "analogCal": true}') ; // do a zero-time black-cal and an analog-cal
 	maxShutter () ;
 }
-
+  
 function applyResolution() {
 
 	var hRes = document.getElementById("hRes") ;
@@ -1369,7 +1388,16 @@ function pageUpdate(rawData){
 		var truncatedValue = Math.round(parsedData.currentGain) ; // get the value as an integer (truncated)
 		if (truncatedValue == 10)
 			truncatedValue = 16 ; // special case for the 2.1 >> something weird happens at the highest gain
+		else if (truncatedValue == 3)
+			truncatedValue = 2 ; // the actual value is not exactly 2, so I'm correcting it here because it gets rounded up
 		document.getElementById("analogGain").firstChild.textContent = dbFromMult[truncatedValue] + "dB (x" + truncatedValue + ")" ;
+	}
+
+	if ("digitalGain" in parsedData) { // set the current gain (also called analog gain)
+		var truncatedValue = Math.round(parsedData.digitalGain) ; // get the value as an integer (truncated)
+		if (truncatedValue == 10)
+			truncatedValue = 16 ; // special case for the 2.1 >> something weird happens at the highest gain
+		document.getElementById("digitalGain").firstChild.textContent = dbFromMult[truncatedValue] + "dB (x" + truncatedValue + ")" ;
 	}
 
 	if ("calSuggested" in parsedData) { // something changed, and a blackCal is needed

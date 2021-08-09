@@ -1357,8 +1357,8 @@ function simpleModeWrite() {
 	}
 
 	request += '}' ;
-
-	document.getElementById("debugger2").innerHTML += "<br><br>" + "This is the \"simple mode\" request: " + request ;
+	if (DebugOnOff)
+		document.getElementById("debugger2").innerHTML += "<br><br>" + "This is the \"simple mode\" request: " + request ;
 
 	dataRequester ("set", request, pageUpdate) ;
 }

@@ -198,12 +198,13 @@ do
 		then ## make sure the request only affects files on external media (and nobody's trying to be tricky by going up a folder)
 			if [[ "${params[2]}" == *".mp4" ]] || [[ "${params[2]}" == *".dng" ]] || [[ "${params[2]}" == *".tiff" ]]
 			then ## verify that only a video or image is being deleted
-				rm "${params[2]}" ## delete the file
-				echo "${params[2]} Deleted"
+				rm "${params[2]//%20/ }" ## delete the file >> notice that I remove 'spaces' here
+				echo "${params[2]//%20/ } Deleted" ## the "//%20/ " thing replaces "%20" with a space
 			fi
 		else
 			echo "unacceptable filepath for deleting"
 		fi
+	echo "For the delete request, I got this: ${params[2]//%20/ }"
 	else
 		echo "Invalid network share type: ${params[5]}"
 	fi
@@ -216,8 +217,6 @@ echo ":::: End of program ::::"
 exit
 exit
 
+
 #echo "you gave me this: nfs/smb: $1  IPAddress: $2  folderLocation: $3"
-
-
-
 
