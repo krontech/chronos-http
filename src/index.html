@@ -167,6 +167,7 @@
 			<a href="/apidoc/"> Documentation </a>
 			<a onclick="dropDownSelect(this)">Play Mode</a>
 			<a onclick="dropDownSelect(this)">Record Mode</a>
+			<a onclick="dropDownSelect(this)">"Zero-Time" Black-Cal</a>
 <!--
 			<a onclick="dropDownSelect(this)">Debug Tools</a>
 -->
@@ -800,6 +801,8 @@ var dropDownFunctions = { "0dB (x1)":		function(){ dataSender("set",'{"currentGa
 
 						"Ok":				function() { document.getElementById("popUpBackground").classList.add("hidden") ; document.getElementById("errorWhileSavingBox").classList.add("hidden") ; document.getElementById("noRecordSegmentModeBox").classList.add("hidden") ; document.getElementById("cantApplyResBox").classList.add("hidden") ; },
 
+						"\"Zero-Time\" Black-Cal":	function() { dataSender ("startCalibration", '{"zeroTimeBlackCal": true, "analogCal": true}') ; },
+
 						}
 
 
@@ -811,7 +814,7 @@ function dropDownSelect (element) {
 }
 
 function afterResolutionApplied() {
-	dataSender ("startCalibration", '{"zeroTimeBlackCal": true, "analogCal": true}') ; // do a zero-time black-cal and an analog-cal
+//	dataSender ("startCalibration", '{"zeroTimeBlackCal": true, "analogCal": true}') ; // do a zero-time black-cal and an analog-cal >> this is often more trouble than it's worth, so I'm disabling it
 	maxShutter () ;
 }
 
