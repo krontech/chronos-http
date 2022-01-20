@@ -111,7 +111,8 @@ do
 				echo "successfully mounted"
 				## notify of the success (probably write to a file)
 				echo "successfully mounted nfs" > /tmp/mountRequest.nf
-			else
+				echo "${params[2]} ${params[3]}" > /var/camera/webNfsMount.txt
+ 			else
 				echo "mounting failed"
 				## notify of the failure (probably write to a file)
 				echo "failed to mount nfs" > /tmp/mountRequest.nf
@@ -131,6 +132,13 @@ do
 				echo "successfully mounted"
 				## notify of the success (probably write to a file)
 				echo "successfully mounted smb" > /tmp/mountRequest.nf
+				if [[ "${params[2]}" = "//"* ]]
+				then
+					echo "${params[2]}${params[3]} ${params[6]} ${params[7]}" > /var/camera/webSmbMount.txt
+				else
+					echo "//${params[2]}${params[3]} ${params[6]} ${params[7]}" > /var/camera/webSmbMount.txt
+				fi
+				
 			else
 				echo "mounting failed"
 				## notify of the failure (probably write to a file)
@@ -145,12 +153,14 @@ do
 			echo "nfs unmounted"
 			rmdir /media/nfs
 			echo "Unmounted /media/nfs successfully" > /tmp/mountRequest.nf
+			echo "" > /var/camera/webNfsMount.txt
 		elif [[ "${params[2]}" == *"smb"* ]] && [ -d /media/smb ] ## asking to unmount smb and it's been mounted
 		then
 			umount /media/smb
 			echo "smb unmounted"
 			rmdir /media/smb
 			echo "Unmounted /media/smb successfully" > /tmp/mountRequest.nf
+			echo "" > /var/camera/webNfsMount.txt
 		else
 			echo "Already unmounted; failed" > /tmp/mountRequest.nf
 		fi
