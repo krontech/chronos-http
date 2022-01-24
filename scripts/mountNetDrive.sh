@@ -160,7 +160,7 @@ do
 			echo "smb unmounted"
 			rmdir /media/smb
 			echo "Unmounted /media/smb successfully" > /tmp/mountRequest.nf
-			echo "" > /var/camera/webNfsMount.txt
+			echo "" > /var/camera/webSmbMount.txt
 		else
 			echo "Already unmounted; failed" > /tmp/mountRequest.nf
 		fi
