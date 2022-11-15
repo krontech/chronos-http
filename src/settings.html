@@ -287,9 +287,21 @@
 				<a onclick="dropDownSelect(this)">Gated Burst</a>
 <!--				<a onclick="dropDownSelect(this)">Live Slow Motion</a> -->
 			</div></div>
+			<div id="recordLengthBox">
+				Record Length (seconds):
+				<br>
+				<input id="recordLengthSeconds" type="number" min="0" step="0.001" oninput="setRecordLength(this)" style="width: 40%;">
+				<br>
+				Record Length (frames):
+				<br>
+				<input id="recordLengthFrames" type="number" min="1" max="65536" step="0.1" oninput="setRecordLength(this)" style="width: 40%;">
+				<a id="recordLengthMaxButton" class="button" onclick="setRecordLengthToMax()">Max</a>
+			</div>
 			<div id="segmentNumberBox">
 				Number of Segments:
 				<input id="segmentNum" type="number" min="1" max="500" step="1" oninput="justRunSomething(this)">
+				<br>
+				<span id="recordSegmentDescription" class="instruction">Segment size:</span>
 				<br>
 				Ring Buffer:
 				<a id="disableRBButton" class="button" onclick="toggler(this)">Enabled</a>
@@ -503,6 +515,7 @@
 <script>
 
 var DebugOnOff = false ;
+var cameraMaxFrames = 0;
 
 function resetAll() {
 	// reset all the settings
@@ -917,7 +930,9 @@ function netStorageRequest(command, type) {
 }
 
 
-var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{"recSegments": ' + value + '}', pageUpdate) ; },
+var inputFunctions = { "segmentNum":			function(value) { dataRequester("set", '{"recSegments": ' + value + '}', pageUpdate) ; 
+																  updateSegmentSize(document.getElementById("recordLengthFrames").value);
+																},
 
 						"colourDefaultBtn":		function() { detourRequester("set", '{"colorMatrix": [1.91455, -0.57666, -0.234131,  -0.30542, 1.3894, -0.0966797,  0.127197, -0.952881, 1.64917]}', pageUpdate) ; },
 						"colourIdentityBtn":	function() { detourRequester("set", '{"colorMatrix": [1.0, 0.0, 0.0,  0.0, 1.0, 0.0,  0.0, 0.0, 1.0]}', pageUpdate) ; },
@@ -949,7 +964,33 @@ function justRunSomething(element) {
 		inputFunctions[element.id](element.value) ; // run the function (with the value given)
 }
 
+function updateSegmentSize(value) {
+	var segmentSizeFrames = Math.floor(value / document.getElementById("segmentNum").value);
+	var segmentSizeSeconds = (segmentSizeFrames * lastKnownFramePeriod / 1e9).toFixed(5);
+	document.getElementById("recordSegmentDescription").innerHTML = "Segment size: " + segmentSizeSeconds + "s (" + segmentSizeFrames + " frames)";
+}
 
+function setRecordLength(element) {
+	var value = element.value;
+
+	if (element.id == "recordLengthFrames") {	
+		dataRequester("set", '{"recMaxFrames": ' + value + '}', pageUpdate); 
+		if (value < document.getElementById("segmentNum").value) {
+			document.getElementById("segmentNum").value = value;
+			dataRequester("set", '{"recSegments": ' + value + '}', pageUpdate);
+		}
+	}
+	else {
+		var numberOfFrames = (value * 1e9 / lastKnownFramePeriod).toFixed(0);
+		document.getElementById("recordLengthFrames").value = numberOfFrames;
+		dataRequester("set", '{"recMaxFrames": ' + numberOfFrames + '}', pageUpdate); 
+		if (numberOfFrames < document.getElementById("segmentNum").numberOfFrames) 
+			dataRequester("set", '{"recSegments": ' + numberOfFrames + '}', pageUpdate);
+	}
+
+	document.getElementById("segmentNum").max = numberOfFrames;
+	updateSegmentSize(document.getElementById("recordLengthFrames").value);
+}
 
 document.getElementById("menu").onmouseenter = function(){ document.getElementById("menuList").style.display = "block" ; }
 document.getElementById("menu").onmouseleave = function() {
@@ -981,14 +1022,16 @@ var nameChange = {	"displayToggleButton":	[ "Off", "On" ],
 //					"smbPassShowHide":		[ "Show", "Hide" ],
 				}
 
-var buttonFunctions = {	"menu":			[ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
+var buttonFunctions = {	"menu":					 [ function(){ document.getElementById("menuList").style.display = "" ; }, function(){ menuKeeper() ; document.getElementById("menuList").style.display = "block" ;} ],					
 
-						"debugToggle":			[ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
-						"displayToggleButton":	[ function(){ dataRequester("set", '{"backlightEnabled": false}', pageUpdate) ; }, function(){ dataRequester("set", '{"backlightEnabled": true}', pageUpdate) ; } ],
-						"autoSaveButton":		[ function(){ if (getCookie("as") > 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 0) ; } }, function() { if (getCookie("as") < 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 1) ; } } ],
+						"debugToggle":			 [ function(){ DebugOnOff = false ; document.getElementById("debugger").innerHTML = "" ; document.getElementById("debugger2").innerHTML = "" ; }, function() { DebugOnOff = true ; } ],
+						"displayToggleButton":	 [ function(){ dataRequester("set", '{"backlightEnabled": false}', pageUpdate) ; }, function(){ dataRequester("set", '{"backlightEnabled": true}', pageUpdate) ; } ],
+						"autoSaveButton":		 [ function(){ if (getCookie("as") > 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 0) ; } }, function() { if (getCookie("as") < 0) { setCookie("as", parseInt(getCookie("as") * -1)) ; } else { setCookie("as", 1) ; } } ],
 
-						"disableRBButton":		[ function(){ dataSender("set", '{"disableRingBuffer": 0}') ; }, function() { dataSender("set", '{"disableRingBuffer": 1}') ; } ],
-						"smbPassShowHide":		[ function(){ document.getElementById("smbPass").type="password" ; document.getElementById("smbPass").placeholder="******" ; }, function(){ document.getElementById("smbPass").type="text" ; document.getElementById("smbPass").placeholder="s3cr3t" ; } ],
+						"disableRBButton":		 [ function(){ dataSender("set", '{"disableRingBuffer": 0}') ; }, function() { dataSender("set", '{"disableRingBuffer": 1}') ; } ],
+						"smbPassShowHide":		 [ function(){ document.getElementById("smbPass").type="password" ; document.getElementById("smbPass").placeholder="******" ; }, function(){ document.getElementById("smbPass").type="text" ; document.getElementById("smbPass").placeholder="s3cr3t" ; } ],
+
+						"recordLengthMaxButton": [ function(){ dataRequester("set", '{"recMaxFrames": ' + cameraMaxFrames + '}', pageUpdate); }, function(){} ],
 					  }
 
 
@@ -1014,6 +1057,12 @@ function toggler(element) { // toggle the class (active/inactive), change the na
 
 	if (element.id in buttonFunctions) // if the key-value exists
 		buttonFunctions[element.id][leftRight]() ; // run the left (inactive) or right (active) function
+}
+
+function setRecordLengthToMax() {
+	dataRequester("set", '{"recMaxFrames": ' + cameraMaxFrames + '}', pageUpdate);
+	updateSegmentSize(cameraMaxFrames);
+	document.getElementById("segmentNum").max = cameraMaxFrames;
 }
 
 function stateSelecter(element, state) { // this is like toggler above, but doesn't run the function ; set the class (active/inactive), change the name
@@ -1141,6 +1190,7 @@ function pageUpdate(rawData){
 				document.getElementById("prerecordBox").classList.add("hidden") ;
 				document.getElementById("recordModeDescription").innerHTML = "Select how video<br> is captured" ;
 				document.getElementById("focusPeakingBox").classList.remove("wrapAround") ;
+				document.getElementById("recordLengthBox").classList.remove("hidden");
 				break ;
 
 			case "segmented":
@@ -1149,6 +1199,7 @@ function pageUpdate(rawData){
 				document.getElementById("prerecordBox").classList.add("hidden") ;
 				document.getElementById("recordModeDescription").innerHTML = "Select how video is captured" ;
 				document.getElementById("focusPeakingBox").classList.add("wrapAround") ;
+				document.getElementById("recordLengthBox").classList.remove("hidden");
 				break ;
 
 			case "burst":
@@ -1157,6 +1208,7 @@ function pageUpdate(rawData){
 				document.getElementById("prerecordBox").classList.remove("hidden") ;
 				document.getElementById("recordModeDescription").innerHTML = "Select how video is captured" ;
 				document.getElementById("focusPeakingBox").classList.add("wrapAround") ;
+				document.getElementById("recordLengthBox").classList.add("hidden");
 				break ;
 		}
 	}
@@ -1168,7 +1220,6 @@ function pageUpdate(rawData){
 
 	if ("disableRingBuffer" in parsedData)
 		stateSelecter(document.getElementById("disableRBButton"), parsedData.disableRingBuffer) ; // set the ring buffer status to enabled or disabled
-
 
 	if ( ("powerOnWhenMainsConnected" in parsedData) && ("powerOffWhenMainsLost" in parsedData) ) {
 
@@ -1208,8 +1259,9 @@ function pageUpdate(rawData){
 		document.getElementById("whiteBalNumc").value = parsedData.wbColor[2].toFixed(4) ;
 	}
 
-	if ("framePeriod" in parsedData)
+	if ("framePeriod" in parsedData) {
 		lastKnownFramePeriod = parsedData.framePeriod ;
+	}
 
 	if ("recPreBurst" in parsedData) {
 		document.getElementById("preRecFrameNum").value = parsedData.recPreBurst ; // set the prerecord frames
@@ -1220,8 +1272,21 @@ function pageUpdate(rawData){
 		document.getElementById("preRecFrameNum").max = parsedData.recMaxFrames ; // set the recording frame limit
 		document.getElementById("preTriggerFrameNum").max = parsedData.recMaxFrames ; // set the pre-trigger limit
 		lastKnownMaxRecFrames = parsedData.recMaxFrames ; // save the last-known maximum record length
+
+		document.getElementById("recordLengthFrames").value = parsedData.recMaxFrames;
+		if (document.getElementById("recordLengthSeconds") != document.activeElement)
+			document.getElementById("recordLengthSeconds").value = (parsedData.recMaxFrames * lastKnownFramePeriod / 1e9).toFixed(3);
+		document.getElementById("segmentNum").max = parsedData.recMaxFrames;
 	}
 
+	if ("cameraMaxFrames" in parsedData) {
+		cameraMaxFrames = parsedData.cameraMaxFrames;
+		document.getElementById("recordLengthFrames").max = parsedData.cameraMaxFrames;
+		document.getElementById("recordLengthSeconds").max = (parsedData.cameraMaxFrames * lastKnownFramePeriod / 1e9).toFixed(3);
+		document.getElementById("recordLengthSeconds").min = (1 * lastKnownFramePeriod / 1e9).toFixed(3);
+		document.getElementById("segmentNum").max = parsedData.cameraMaxFrames;
+		updateSegmentSize(document.getElementById("recordLengthFrames").value);
+	}
 
 	if ("cameraModel" in parsedData) {
 		document.getElementById("cameraModel").innerHTML = "Camera Model: " + parsedData.cameraModel ;
